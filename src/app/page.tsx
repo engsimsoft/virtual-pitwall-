@@ -90,7 +90,7 @@ export default function Home() {
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Быстрые действия</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             <Link 
-              href="/demo"
+              href="/shortcut/demo"
               className="bg-blue-600 text-white px-4 py-3 rounded-lg font-medium text-center hover:bg-blue-700 flex items-center justify-center gap-2"
             >
               <Activity className="w-5 h-5" />
