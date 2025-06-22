@@ -400,7 +400,7 @@ export default function AboutPage() {
         </div>
       </div>
 
-      <CommentSystem />
+      <CommentSystem pageId="about" pageName="О проекте" />
     </div>
   )
 } 
