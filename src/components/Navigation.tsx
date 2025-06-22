@@ -31,7 +31,7 @@ export default function Navigation({ title = "Virtual Pitwall" }: NavigationProp
     return pathname.startsWith(href)
   }
 
-  const getLinkClassName = (link: any) => {
+  const getLinkClassName = (link: typeof navigationLinks[0]) => {
     if (link.isSpecial) {
       return "bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2"
     }
@@ -49,7 +49,7 @@ export default function Navigation({ title = "Virtual Pitwall" }: NavigationProp
     }`
   }
 
-  const getMobileLinkClassName = (link: any) => {
+  const getMobileLinkClassName = (link: typeof navigationLinks[0]) => {
     if (link.isSpecial) {
       return "bg-blue-600 text-white px-4 py-3 rounded-lg font-medium flex items-center gap-2 w-full"
     }
