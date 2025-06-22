@@ -1,4 +1,4 @@
-import { Code, Server, Car, Trophy, AlertTriangle } from 'lucide-react'
+import { Code, Server, Car, Trophy, AlertTriangle, Settings } from 'lucide-react'
 import DevAccess from '@/components/DevAccess'
 import DevNavigation from '@/components/DevNavigation'
 
