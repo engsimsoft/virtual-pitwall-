@@ -1,29 +1,10 @@
-import Link from 'next/link'
 import CommentSystem from '@/components/CommentSystem'
+import Navigation from '@/components/Navigation'
 
 export default function ShortCutBenefitsPage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Навигация */}
-      <nav className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 bg-red-600 rounded-sm"></div>
-            <span className="text-xl font-bold text-gray-900">Virtual Pitwall</span>
-          </div>
-          <div className="flex space-x-6">
-            <Link href="/" className="text-gray-600 hover:text-red-600">Virtual Pitwall</Link>
-            <a href="/features" className="text-gray-600 hover:text-red-600">Features</a>
-            <a href="/shortcut" className="text-gray-600 hover:text-red-600">DK Racing</a>
-            <a href="/shortcut/demo" className="text-gray-600 hover:text-red-600">Team Demo</a>
-            <a href="/shortcut/dk" className="text-gray-600 hover:text-red-600">DK Demo</a>
-            <a href="/shortcut/benefits" className="text-red-600 font-medium">Benefits</a>
-            <a href="/dev" className="text-gray-500 hover:text-gray-700 flex items-center gap-1" title="Техническая документация (требует пароль)">
-              🔒 Developer
-            </a>
-          </div>
-        </div>
-      </nav>
+      <Navigation />
 
       {/* Hero секция */}
       <section className="bg-white py-16">

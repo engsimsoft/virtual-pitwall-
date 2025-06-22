@@ -1,43 +1,12 @@
 import Link from 'next/link'
-import { AlertTriangle, CheckCircle, Activity, Database, Clock, Users, Lock } from 'lucide-react'
+import { AlertTriangle, CheckCircle, Activity, Database, Clock, Users } from 'lucide-react'
 import CommentSystem from '@/components/CommentSystem'
+import Navigation from '@/components/Navigation'
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Header - профессиональный стиль */}
-      <header className="border-b border-gray-200 bg-white">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="text-2xl font-bold text-gray-900">
-                🏁 Virtual Pitwall
-              </div>
-              <div className="hidden sm:block text-sm text-gray-500 border-l pl-4">
-                Система телеметрии и контроля регламента
-              </div>
-            </div>
-            <nav className="hidden md:flex space-x-6">
-              <Link href="/about" className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2">
-                📚 Начать здесь
-              </Link>
-              <Link href="/" className="text-red-600 font-medium">
-                Virtual Pitwall
-              </Link>
-              <Link href="/features" className="text-gray-700 hover:text-red-600 font-medium">
-                Features
-              </Link>
-              <Link href="/shortcut" className="text-gray-700 hover:text-red-600 font-medium">
-                DK Racing
-              </Link>
-              <Link href="/dev" className="text-gray-500 hover:text-gray-700 font-medium flex items-center gap-1" title="Техническая документация (требует пароль)">
-                <Lock className="w-4 h-4" />
-                Developer
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Navigation title="🏁 Virtual Pitwall" />
 
       {/* System Status Dashboard */}
       <section className="container mx-auto px-6 py-8">

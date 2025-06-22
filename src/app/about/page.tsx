@@ -1,28 +1,11 @@
 import { MessageSquare, Users, Code, Shield, Lightbulb, Zap, Target, Rocket, Eye, Lock } from 'lucide-react'
-import Link from 'next/link'
 import CommentSystem from '@/components/CommentSystem'
+import Navigation from '@/components/Navigation'
 
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <Link href="/" className="text-xl font-bold text-gray-900">
-                Virtual Pitwall
-              </Link>
-            </div>
-            <div className="flex items-center space-x-8">
-              <Link href="/" className="text-gray-600 hover:text-red-600 transition-colors">Virtual Pitwall</Link>
-              <Link href="/features" className="text-gray-600 hover:text-red-600 transition-colors">Features</Link>
-              <Link href="/shortcut" className="text-gray-600 hover:text-red-600 transition-colors">DK Racing</Link>
-              <Link href="/about" className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">📚 Начать здесь</Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navigation />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section */}

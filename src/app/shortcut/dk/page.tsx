@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import CommentSystem from '@/components/CommentSystem';
+import Navigation from '@/components/Navigation';
 
 export default function VirtualPitwallDKPage() {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -103,23 +103,7 @@ export default function VirtualPitwallDKPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Навигация */}
-      <nav className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 bg-red-600 rounded-sm"></div>
-            <span className="text-xl font-bold text-gray-900">Virtual Pitwall DK</span>
-          </div>
-          <div className="flex space-x-6">
-            <Link href="/" className="text-gray-600 hover:text-red-600">Virtual Pitwall</Link>
-            <a href="/features" className="text-gray-600 hover:text-red-600">Features</a>
-            <a href="/shortcut" className="text-gray-600 hover:text-red-600">DK Racing</a>
-            <a href="/shortcut/demo" className="text-gray-600 hover:text-red-600">Team Demo</a>
-                         <a href="/shortcut/dk" className="text-red-600 font-medium">DK Demo</a>
-             <a href="/shortcut/benefits" className="text-gray-600 hover:text-red-600">Benefits</a>
-          </div>
-        </div>
-      </nav>
+      <Navigation title="Virtual Pitwall DK" />
 
       {/* Заголовок */}
       <section className="bg-white py-8 border-b border-gray-200">
