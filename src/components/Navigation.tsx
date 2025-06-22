@@ -9,11 +9,19 @@ interface NavigationProps {
   title?: string
 }
 
+interface NavigationLink {
+  href: string
+  label: string
+  isSpecial?: boolean
+  isSecondary?: boolean
+  icon?: React.ReactNode
+}
+
 export default function Navigation({ title = "Virtual Pitwall" }: NavigationProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const pathname = usePathname()
 
-  const navigationLinks = [
+  const navigationLinks: NavigationLink[] = [
     { href: '/about', label: '📚 Начать здесь', isSpecial: true },
     { href: '/', label: 'Virtual Pitwall' },
     { href: '/features', label: 'Features' },
@@ -31,7 +39,7 @@ export default function Navigation({ title = "Virtual Pitwall" }: NavigationProp
     return pathname.startsWith(href)
   }
 
-  const getLinkClassName = (link: typeof navigationLinks[0]) => {
+  const getLinkClassName = (link: NavigationLink) => {
     if (link.isSpecial) {
       return "bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2"
     }
@@ -49,7 +57,7 @@ export default function Navigation({ title = "Virtual Pitwall" }: NavigationProp
     }`
   }
 
-  const getMobileLinkClassName = (link: typeof navigationLinks[0]) => {
+  const getMobileLinkClassName = (link: NavigationLink) => {
     if (link.isSpecial) {
       return "bg-blue-600 text-white px-4 py-3 rounded-lg font-medium flex items-center gap-2 w-full"
     }
