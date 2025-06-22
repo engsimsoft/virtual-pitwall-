@@ -12,6 +12,9 @@ export default function ShortCutPage() {
             <span className="text-xl font-bold text-gray-900">Virtual Pitwall</span>
           </div>
           <div className="flex space-x-6">
+            <Link href="/about" className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2">
+              📚 Начать здесь
+            </Link>
             <Link href="/" className="text-gray-600 hover:text-red-600">Virtual Pitwall</Link>
             <a href="/features" className="text-gray-600 hover:text-red-600">Features</a>
             <a href="/shortcut" className="text-red-600 font-medium">DK Racing</a>

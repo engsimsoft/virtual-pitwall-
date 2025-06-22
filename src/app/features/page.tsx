@@ -18,6 +18,9 @@ export default function Features() {
               </div>
             </div>
             <nav className="hidden md:flex space-x-6">
+              <Link href="/about" className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2">
+                📚 Начать здесь
+              </Link>
               <Link href="/" className="text-gray-700 hover:text-red-600 font-medium">
                 Virtual Pitwall
               </Link>
@@ -26,15 +29,6 @@ export default function Features() {
               </Link>
               <Link href="/shortcut" className="text-gray-700 hover:text-red-600 font-medium">
                 DK Racing
-              </Link>
-              <Link href="/shortcut/demo" className="text-gray-700 hover:text-red-600 font-medium">
-                Team Demo
-              </Link>
-              <Link href="/shortcut/dk" className="text-gray-700 hover:text-red-600 font-medium">
-                DK Demo
-              </Link>
-              <Link href="/shortcut/benefits" className="text-gray-700 hover:text-red-600 font-medium">
-                Benefits
               </Link>
               <Link href="/dev" className="text-gray-500 hover:text-gray-700 font-medium flex items-center gap-1" title="Техническая документация (требует пароль)">
                 <Lock className="w-4 h-4" />
