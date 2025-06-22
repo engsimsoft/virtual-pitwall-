@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+:root {
+  /* Основные цвета - светлая тема для работы инженеров */
+  --background: #ffffff;
+  --foreground: #1f2937;
+  --muted: #f9fafb;
+  --muted-foreground: #6b7280;
+  --border: #e5e7eb;
+  --card: #ffffff;
+  --card-foreground: #1f2937;
+  
+  /* Функциональные цвета статусов */
+  --critical: #dc2626;     /* Красный - критические алерты */
+  --warning: #d97706;      /* Оранжевый - предупреждения */
+  --success: #059669;      /* Зеленый - норма/успех */
+  --info: #2563eb;         /* Синий - информация */
+  --neutral: #6b7280;      /* Серый - нейтральная информация */
+  
+  /* Цвета для данных телеметрии */
+  --data-primary: #111827;
+  --data-secondary: #4b5563;
+  --grid-line: #e5e7eb;
+  --highlight: #f3f4f6;
+  
+  /* Рабочие зоны */
+  --workspace: #ffffff;
+  --sidebar: #f9fafb;
+  --header: #ffffff;
+  --footer: #f9fafb;
+}
+
+/* Темная тема для ночных сессий */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0f172a;
+    --foreground: #f1f5f9;
+    --muted: #1e293b;
+    --muted-foreground: #94a3b8;
+    --border: #334155;
+    --card: #1e293b;
+    --card-foreground: #f1f5f9;
+    
+    /* Функциональные цвета остаются теми же для консистентности */
+    --critical: #ef4444;
+    --warning: #f59e0b;
+    --success: #10b981;
+    --info: #3b82f6;
+    --neutral: #94a3b8;
+    
+    --data-primary: #f1f5f9;
+    --data-secondary: #cbd5e1;
+    --grid-line: #334155;
+    --highlight: #1e293b;
+    
+    --workspace: #0f172a;
+    --sidebar: #1e293b;
+    --header: #1e293b;
+    --footer: #1e293b;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  font-feature-settings: "tnum" 1; /* Табулярные цифры для лучшего выравнивания данных */
+}
+
+/* Базовые стили для рабочего интерфейса */
+.workspace-container {
+  background: var(--workspace);
+  border: 1px solid var(--border);
+}
+
+.data-table {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.025em;
+}
+
+.status-critical {
+  color: var(--critical);
+  font-weight: 600;
+}
+
+.status-warning {
+  color: var(--warning);
+  font-weight: 600;
+}
+
+.status-success {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.status-info {
+  color: var(--info);
+  font-weight: 500;
+}
+
+/* Убираем все анимации и эффекты для профессиональной работы */
+*, *::before, *::after {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Высокий контраст для критически важных элементов */
+.alert-critical {
+  background: var(--critical);
+  color: white;
+  font-weight: 700;
+  border: 2px solid var(--critical);
+}
+
+.alert-warning {
+  background: #fef3c7;
+  color: var(--warning);
+  font-weight: 600;
+  border: 1px solid var(--warning);
+}
+
+.alert-success {
+  background: #d1fae5;
+  color: var(--success);
+  font-weight: 600;
+  border: 1px solid var(--success);
+}
