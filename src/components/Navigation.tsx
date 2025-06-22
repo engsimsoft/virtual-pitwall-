@@ -39,40 +39,40 @@ export default function Navigation({ title = "Virtual Pitwall" }: NavigationProp
     return pathname.startsWith(href)
   }
 
-  const getLinkClassName = (link: NavigationLink) => {
+  const getLinkClassName = (link: NavigationLink): string => {
     if (link.isSpecial) {
       return "bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2"
     }
     
     if (link.isSecondary) {
-      return `text-gray-500 hover:text-gray-700 font-medium flex items-center gap-1 px-3 py-2 rounded-lg transition-colors ${
-        isActive(link.href) ? 'text-gray-700 bg-gray-100' : ''
-      }`
+      const baseClasses = "text-gray-500 hover:text-gray-700 font-medium flex items-center gap-1 px-3 py-2 rounded-lg transition-colors"
+      const activeClasses = isActive(link.href) ? " text-gray-700 bg-gray-100" : ""
+      return baseClasses + activeClasses
     }
 
-    return `font-medium px-3 py-2 rounded-lg transition-colors ${
-      isActive(link.href) 
-        ? 'text-red-600 bg-red-50' 
-        : 'text-gray-700 hover:text-red-600 hover:bg-red-50'
-    }`
+    const baseClasses = "font-medium px-3 py-2 rounded-lg transition-colors"
+    const stateClasses = isActive(link.href) 
+      ? " text-red-600 bg-red-50" 
+      : " text-gray-700 hover:text-red-600 hover:bg-red-50"
+    return baseClasses + stateClasses
   }
 
-  const getMobileLinkClassName = (link: NavigationLink) => {
+  const getMobileLinkClassName = (link: NavigationLink): string => {
     if (link.isSpecial) {
       return "bg-blue-600 text-white px-4 py-3 rounded-lg font-medium flex items-center gap-2 w-full"
     }
     
     if (link.isSecondary) {
-      return `text-gray-500 font-medium flex items-center gap-2 px-4 py-3 rounded-lg transition-colors w-full ${
-        isActive(link.href) ? 'text-gray-700 bg-gray-100' : 'hover:bg-gray-100'
-      }`
+      const baseClasses = "text-gray-500 font-medium flex items-center gap-2 px-4 py-3 rounded-lg transition-colors w-full"
+      const activeClasses = isActive(link.href) ? " text-gray-700 bg-gray-100" : " hover:bg-gray-100"
+      return baseClasses + activeClasses
     }
 
-    return `font-medium px-4 py-3 rounded-lg transition-colors w-full text-left ${
-      isActive(link.href) 
-        ? 'text-red-600 bg-red-50' 
-        : 'text-gray-700 hover:text-red-600 hover:bg-red-50'
-    }`
+    const baseClasses = "font-medium px-4 py-3 rounded-lg transition-colors w-full text-left"
+    const stateClasses = isActive(link.href) 
+      ? " text-red-600 bg-red-50" 
+      : " text-gray-700 hover:text-red-600 hover:bg-red-50"
+    return baseClasses + stateClasses
   }
 
   return (
