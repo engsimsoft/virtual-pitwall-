@@ -1,21 +1,5 @@
 {
-  "version": 2,
   "name": "virtual-pitwall",
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  },
   "functions": {
     "src/app/**/*.tsx": {
       "maxDuration": 10
