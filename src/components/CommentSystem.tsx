@@ -73,7 +73,13 @@ export default function CommentSystem({ pageId, pageName }: CommentSystemProps) 
   useEffect(() => {
     const savedComments = localStorage.getItem(`comments_${pageId}`)
     if (savedComments) {
-      setComments(JSON.parse(savedComments))
+      try {
+        setComments(JSON.parse(savedComments))
+      } catch {
+        console.log('Ошибка загрузки комментариев, сброс данных')
+        localStorage.removeItem(`comments_${pageId}`)
+        setComments([])
+      }
     }
 
     const savedUserName = localStorage.getItem('userName')

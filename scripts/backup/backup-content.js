@@ -123,10 +123,126 @@ function formatBytes(bytes) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
-// Запуск скрипта
-if (require.main === module) {
-  console.log('🔄 Создание бэкапа контента...');
-  backupContent();
+function listBackups() {
+  ensureBackupDir();
+  
+  const backups = fs.readdirSync(BACKUP_DIR)
+    .filter(name => name.startsWith('content-backup-'))
+    .map(name => {
+      const backupPath = path.join(BACKUP_DIR, name);
+      const manifestPath = path.join(backupPath, 'manifest.json');
+      
+      if (fs.existsSync(manifestPath)) {
+        const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+        return {
+          name,
+          timestamp: manifest.timestamp,
+          size: manifest.size,
+          path: backupPath
+        };
+      }
+      return null;
+    })
+    .filter(Boolean)
+    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  
+  return backups;
 }
 
-module.exports = { backupContent }; 
+function restoreFromBackup(backupName = null) {
+  const backups = listBackups();
+  
+  if (backups.length === 0) {
+    console.log('❌ Нет доступных бэкапов для восстановления');
+    return;
+  }
+  
+  // Если не указано имя бэкапа, берем последний
+  const backup = backupName 
+    ? backups.find(b => b.name === backupName)
+    : backups[0];
+  
+  if (!backup) {
+    console.log(`❌ Бэкап "${backupName}" не найден`);
+    console.log('\nДоступные бэкапы:');
+    backups.forEach((b, i) => {
+      console.log(`  ${i + 1}. ${b.name} (${new Date(b.timestamp).toLocaleString('ru-RU')})`);
+    });
+    return;
+  }
+  
+  console.log(`🔄 Восстановление из бэкапа: ${backup.name}`);
+  console.log(`📅 Дата создания: ${new Date(backup.timestamp).toLocaleString('ru-RU')}`);
+  
+  try {
+    // Восстанавливаем docs
+    const docsBackupPath = path.join(backup.path, 'docs');
+    const docsTargetPath = path.join(__dirname, '../../docs');
+    if (fs.existsSync(docsBackupPath)) {
+      if (fs.existsSync(docsTargetPath)) {
+        fs.rmSync(docsTargetPath, { recursive: true, force: true });
+      }
+      copyDirectory(docsBackupPath, docsTargetPath);
+      console.log('✅ Документация восстановлена');
+    }
+    
+    // Восстанавливаем src/app
+    const srcBackupPath = path.join(backup.path, 'src-app');
+    const srcTargetPath = path.join(__dirname, '../../src/app');
+    if (fs.existsSync(srcBackupPath)) {
+      if (fs.existsSync(srcTargetPath)) {
+        fs.rmSync(srcTargetPath, { recursive: true, force: true });
+      }
+      copyDirectory(srcBackupPath, srcTargetPath);
+      console.log('✅ Страницы приложения восстановлены');
+    }
+    
+    // Восстанавливаем public
+    const publicBackupPath = path.join(backup.path, 'public');
+    const publicTargetPath = path.join(__dirname, '../../public');
+    if (fs.existsSync(publicBackupPath)) {
+      if (fs.existsSync(publicTargetPath)) {
+        fs.rmSync(publicTargetPath, { recursive: true, force: true });
+      }
+      copyDirectory(publicBackupPath, publicTargetPath);
+      console.log('✅ Публичные файлы восстановлены');
+    }
+    
+    console.log(`🎉 Восстановление завершено успешно!`);
+    console.log('💡 Рекомендуется перезапустить сервер разработки');
+    
+  } catch (error) {
+    console.error('❌ Ошибка восстановления:', error.message);
+    process.exit(1);
+  }
+}
+
+// Запуск скрипта
+if (require.main === module) {
+  const command = process.argv[2];
+  const backupName = process.argv[3];
+  
+  if (command === 'restore') {
+    restoreFromBackup(backupName);
+  } else if (command === 'list') {
+    const backups = listBackups();
+    console.log('📋 Доступные бэкапы:');
+    if (backups.length === 0) {
+      console.log('  Нет бэкапов');
+    } else {
+      backups.forEach((backup, i) => {
+        const date = new Date(backup.timestamp).toLocaleString('ru-RU');
+        const size = formatBytes(backup.size);
+        console.log(`  ${i + 1}. ${backup.name}`);
+        console.log(`     📅 ${date}`);
+        console.log(`     📁 ${size}`);
+        console.log('');
+      });
+    }
+  } else {
+    console.log('🔄 Создание бэкапа контента...');
+    backupContent();
+  }
+}
+
+module.exports = { backupContent, restoreFromBackup, listBackups }; 
