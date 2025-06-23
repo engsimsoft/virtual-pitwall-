@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Eye, EyeOff, Lock, Code, Cpu } from 'lucide-react'
+import { Eye, EyeOff, Lock, Code, Cpu, FileText } from 'lucide-react'
 
 export default function DevAuth() {
   const [password, setPassword] = useState('')
@@ -92,6 +92,10 @@ export default function DevAuth() {
             <div className="flex items-center text-sm text-gray-600">
               <Code className="w-4 h-4 mr-2" />
               FullStack - Веб приложение
+            </div>
+            <div className="flex items-center text-sm text-gray-600">
+              <FileText className="w-4 h-4 mr-2" />
+              MVP Tech Spec - Техническая спецификация
             </div>
           </div>
         </div>

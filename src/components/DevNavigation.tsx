@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { Cpu, Code, LogOut, Home } from 'lucide-react'
+import { Cpu, Code, LogOut, Home, FileText } from 'lucide-react'
 
 export default function DevNavigation() {
   const pathname = usePathname()
@@ -25,6 +25,12 @@ export default function DevNavigation() {
       href: '/dev/fullstack',
       icon: Code,
       description: 'Веб приложение'
+    },
+    {
+      name: 'MVP Tech Spec',
+      href: '/dev/mvp_tech_spec',
+      icon: FileText,
+      description: 'Техническая спецификация'
     }
   ]
 
