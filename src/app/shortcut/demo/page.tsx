@@ -20,20 +20,20 @@ export default function ShortCutDemoPage() {
 
   // Mock данные для телеметрии
   const [telemetryData, setTelemetryData] = useState([
-    { time: 0, rpm: 6500, temp: 85, speed: 120, gLateral: 0.8, gLong: -0.3 },
-    { time: 1, rpm: 7200, temp: 87, speed: 125, gLateral: 1.2, gLong: 0.5 },
-    { time: 2, rpm: 7800, temp: 89, speed: 135, gLateral: -0.9, gLong: -1.1 },
-    { time: 3, rpm: 7500, temp: 91, speed: 140, gLateral: 1.5, gLong: 0.2 },
-    { time: 4, rpm: 6800, temp: 88, speed: 130, gLateral: -1.3, gLong: -0.8 }
+    { time: 0, rpm: 6500, pressure: 3.2, speed: 120, gLateral: 0.8, gLong: -0.3 },
+    { time: 1, rpm: 7200, pressure: 3.1, speed: 125, gLateral: 1.2, gLong: 0.5 },
+    { time: 2, rpm: 7800, pressure: 2.9, speed: 135, gLateral: -0.9, gLong: -1.1 },
+    { time: 3, rpm: 7500, pressure: 3.0, speed: 140, gLateral: 1.5, gLong: 0.2 },
+    { time: 4, rpm: 6800, pressure: 3.3, speed: 130, gLateral: -1.3, gLong: -0.8 }
   ]);
 
   // Флот автомобилей Shortcut
   const [fleetData, setFleetData] = useState([
-    { id: 1, driver: "Иванов А.", position: 1, lapTime: "1:23.456", status: "ok", rpm: 7200, temp: 85, gForce: 1.2 },
-    { id: 7, driver: "Петров В.", position: 2, lapTime: "1:23.892", status: "warning", rpm: 7850, temp: 92, gForce: 1.8 },
-    { id: 15, driver: "Сидоров С.", position: 3, lapTime: "1:24.123", status: "ok", rpm: 7100, temp: 87, gForce: 1.1 },
-    { id: 23, driver: "Козлов Д.", position: 4, lapTime: "1:24.567", status: "critical", rpm: 8200, temp: 98, gForce: 2.1 },
-    { id: 42, driver: "Морозов К.", position: 5, lapTime: "1:24.789", status: "ok", rpm: 6900, temp: 86, gForce: 0.9 }
+    { id: 1, driver: "Иванов А.", position: 1, lapTime: "1:23.456", status: "ok", rpm: 7200, pressure: 3.2, gForce: 1.2 },
+    { id: 7, driver: "Петров В.", position: 2, lapTime: "1:23.892", status: "warning", rpm: 7850, pressure: 1.8, gForce: 1.8 },
+    { id: 15, driver: "Сидоров С.", position: 3, lapTime: "1:24.123", status: "ok", rpm: 7100, pressure: 3.1, gForce: 1.1 },
+    { id: 23, driver: "Козлов Д.", position: 4, lapTime: "1:24.567", status: "critical", rpm: 8200, pressure: 1.5, gForce: 2.1 },
+    { id: 42, driver: "Морозов К.", position: 5, lapTime: "1:24.789", status: "ok", rpm: 6900, pressure: 3.3, gForce: 0.9 }
   ]);
 
   // Симуляция real-time обновлений
@@ -46,7 +46,7 @@ export default function ShortCutDemoPage() {
         const newData = [...prev];
         const lastTime = newData[newData.length - 1].time;
         const rpm = 6000 + Math.random() * 2000;
-        const temp = 80 + Math.random() * 20;
+        const pressure = 2.5 + Math.random() * 1.5; // 2.5-4.0 Бар
         const speed = 100 + Math.random() * 50;
         const gLateral = (Math.random() - 0.5) * 3;
         const gLong = (Math.random() - 0.5) * 2.5;
@@ -54,7 +54,7 @@ export default function ShortCutDemoPage() {
         newData.push({
           time: lastTime + 1,
           rpm: Math.round(rpm),
-          temp: Math.round(temp),
+          pressure: Math.round(pressure * 10) / 10,
           speed: Math.round(speed),
           gLateral: Math.round(gLateral * 10) / 10,
           gLong: Math.round(gLong * 10) / 10
@@ -67,7 +67,7 @@ export default function ShortCutDemoPage() {
       setFleetData(prev => prev.map(car => ({
         ...car,
         rpm: 6000 + Math.random() * 2500,
-        temp: 80 + Math.random() * 25,
+        pressure: 2.5 + Math.random() * 1.5, // 2.5-4.0 Бар
         gForce: Math.random() * 2.5,
         lapTime: `1:${23 + Math.floor(Math.random() * 3)}.${Math.floor(Math.random() * 999).toString().padStart(3, '0')}`
       })));
@@ -216,9 +216,9 @@ export default function ShortCutDemoPage() {
                         </span>
                       </div>
                       <div>
-                        <span className="text-gray-500">Темп: </span>
-                        <span className={`font-mono ${car.temp > 95 ? 'text-red-600 font-bold' : 'text-gray-900'}`}>
-                          {Math.round(car.temp)}°C
+                        <span className="text-gray-500">Давл: </span>
+                        <span className={`font-mono ${car.pressure < 2.0 ? 'text-red-600 font-bold' : 'text-gray-900'}`}>
+                          {car.pressure.toFixed(1)} Бар
                         </span>
                       </div>
                       <div>
@@ -345,21 +345,21 @@ export default function ShortCutDemoPage() {
                   </p>
                 </div>
 
-                {/* Температура */}
+                {/* Давление масла */}
                 <div className="bg-white rounded-lg border border-gray-200 p-6">
                   <h3 className="text-lg font-bold text-gray-900 mb-4">
-                    🌡️ Температура ОЖ
+                    🛢️ Давление масла
                   </h3>
                   <div className="h-40">
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={telemetryData}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="time" tick={{ fontSize: 12 }} />
-                        <YAxis domain={[70, 110]} tick={{ fontSize: 12 }} />
-                        <Tooltip formatter={(value) => [`${value}°C`, 'Температура']} />
+                        <YAxis domain={[0, 5]} tick={{ fontSize: 12 }} />
+                        <Tooltip formatter={(value) => [`${value} Бар`, 'Давление']} />
                         <Line 
                           type="monotone" 
-                          dataKey="temp" 
+                          dataKey="pressure" 
                           stroke="#f59e0b" 
                           strokeWidth={2}
                           dot={{ fill: '#f59e0b', strokeWidth: 2, r: 3 }}
@@ -367,7 +367,7 @@ export default function ShortCutDemoPage() {
                         {/* Лимитная линия */}
                         <Line 
                           type="monotone" 
-                          dataKey={() => 100} 
+                          dataKey={() => 2.0} 
                           stroke="#ef4444" 
                           strokeWidth={2}
                           strokeDasharray="5,5"
@@ -377,7 +377,7 @@ export default function ShortCutDemoPage() {
                     </ResponsiveContainer>
                   </div>
                   <p className="text-xs text-gray-500 mt-2">
-                    🔴 Красная линия: критический перегрев 100°C
+                    🔴 Красная линия: критический мин давление 2.0 Бара
                   </p>
                 </div>
               </div>

@@ -208,7 +208,7 @@ export default function DevChat() {
                       <div className="flex items-center gap-2">
                         {getTypeIcon(msg.type)}
                         <span className="font-medium text-sm">{msg.author}</span>
-                        {msg.priority !== 'low' && (
+                        {msg.priority && msg.priority !== 'low' && (
                           <span className={`text-xs font-medium ${getPriorityColor(msg.priority)}`}>
                             {msg.priority.toUpperCase()}
                           </span>
