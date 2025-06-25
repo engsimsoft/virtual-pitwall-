@@ -373,49 +373,6 @@ export default function CommentsPage() {
           </div>
         </div>
 
-        {/* Admin Login Modal */}
-        {showAdminLogin && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                🔑 Вход в админ-режим
-              </h3>
-              
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Пароль администратора:
-                </label>
-                <input
-                  type="password"
-                  value={adminPassword}
-                  onChange={(e) => setAdminPassword(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleAdminLogin()}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Введите пароль..."
-                  autoFocus
-                />
-              </div>
-
-              <div className="flex items-center gap-3 justify-end">
-                <button
-                  onClick={() => {
-                    setShowAdminLogin(false)
-                    setAdminPassword('')
-                  }}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
-                >
-                  Отмена
-                </button>
-                <button
-                  onClick={handleAdminLogin}
-                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-                >
-                  Войти
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </>
     )
   }
@@ -719,6 +676,50 @@ export default function CommentsPage() {
           </div>
         </div>
       </div>
+
+      {/* Admin Login Modal */}
+      {showAdminLogin && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              🔑 Вход в админ-режим
+            </h3>
+            
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Пароль администратора:
+              </label>
+              <input
+                type="password"
+                value={adminPassword}
+                onChange={(e) => setAdminPassword(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleAdminLogin()}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Введите пароль..."
+                autoFocus
+              />
+            </div>
+
+            <div className="flex items-center gap-3 justify-end">
+              <button
+                onClick={() => {
+                  setShowAdminLogin(false)
+                  setAdminPassword('')
+                }}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+              >
+                Отмена
+              </button>
+              <button
+                onClick={handleAdminLogin}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+              >
+                Войти
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 } 
