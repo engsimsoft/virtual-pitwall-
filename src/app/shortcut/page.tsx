@@ -289,8 +289,8 @@ export default function ShortCutPage() {
             <a href="/shortcut/demo" className="bg-white text-red-600 px-8 py-3 rounded-lg font-medium hover:bg-red-50">
               Посмотреть демо
             </a>
-            <a href="/shortcut/benefits" className="border border-white px-8 py-3 rounded-lg font-medium hover:bg-red-500">
-              Изучить выгоды
+            <a href="/shortcut/dk" className="border border-white px-8 py-3 rounded-lg font-medium hover:bg-red-500">
+              DK Demo
             </a>
           </div>
         </div>

@@ -445,25 +445,7 @@ export default function ShortCutDemoPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-12 bg-red-600 text-white">
-        <div className="max-w-4xl mx-auto text-center px-6">
-          <h2 className="text-3xl font-bold mb-4">
-            Впечатлены возможностями системы?
-          </h2>
-          <p className="text-lg mb-8 text-red-100">
-            Это лишь малая часть того, что может система телеметрии ShortCut
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/shortcut/benefits" className="bg-white text-red-600 px-8 py-3 rounded-lg font-medium hover:bg-red-50">
-              💰 Посчитать экономию
-            </a>
-            <a href="/shortcut" className="border border-white px-8 py-3 rounded-lg font-medium hover:bg-red-500">
-              ← Вернуться к обзору
-            </a>
-          </div>
-        </div>
-      </section>
+
 
       {/* Comment System */}
       <CommentSystem pageId="demo" pageName="Team Demo - Демо для команд" />

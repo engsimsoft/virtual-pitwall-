@@ -27,7 +27,6 @@ export default function Navigation({ title = "Virtual Pitwall" }: NavigationProp
     { href: '/features', label: 'Features' },
     { href: '/mvp_tech_spec', label: 'MVP Tech Spec' },
     { href: '/shortcut', label: 'DK Racing' },
-    { href: '/shortcut/benefits', label: 'Benefits' },
     { href: '/dev', label: 'Developer', icon: <Lock className="w-4 h-4" />, isSecondary: true }
   ]
 
