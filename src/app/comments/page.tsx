@@ -315,63 +315,110 @@ export default function CommentsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white">
-        <Navigation />
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="text-center">
-              <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-gray-600">Загрузка комментариев...</p>
+      <>
+        <div className="min-h-screen bg-white">
+          <Navigation />
+          <div className="container mx-auto px-4 py-8">
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+                    <MessageCircle className="w-8 h-8 text-blue-600" />
+                    Центр комментариев
+                    {isAdminMode && (
+                      <span className="text-sm bg-red-100 text-red-700 px-2 py-1 rounded-full">
+                        Админ-режим
+                      </span>
+                    )}
+                  </h1>
+                  <p className="text-gray-600 mt-2">
+                    Все комментарии и предложения по проекту в одном месте
+                  </p>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  {!isAdminMode ? (
+                    <button
+                      onClick={() => setShowAdminLogin(true)}
+                      className="flex items-center gap-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-colors"
+                    >
+                      🔑 Админ
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleAdminLogout}
+                      className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
+                    >
+                      🚪 Выйти
+                    </button>
+                  )}
+                  
+                  <button
+                    onClick={exportComments}
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
+                  >
+                    <Download className="w-4 h-4" />
+                    Экспорт
+                  </button>
+                </div>
+              </div>
             </div>
-                  </div>
-      </div>
-
-      {/* Admin Login Modal */}
-      {showAdminLogin && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              🔑 Вход в админ-режим
-            </h3>
             
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Пароль администратора:
-              </label>
-              <input
-                type="password"
-                value={adminPassword}
-                onChange={(e) => setAdminPassword(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleAdminLogin()}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Введите пароль..."
-                autoFocus
-              />
-            </div>
-
-            <div className="flex items-center gap-3 justify-end">
-              <button
-                onClick={() => {
-                  setShowAdminLogin(false)
-                  setAdminPassword('')
-                }}
-                className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
-              >
-                Отмена
-              </button>
-              <button
-                onClick={handleAdminLogin}
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-              >
-                Войти
-              </button>
+            <div className="flex items-center justify-center min-h-[400px]">
+              <div className="text-center">
+                <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-gray-600">Загрузка комментариев...</p>
+              </div>
             </div>
           </div>
         </div>
-      )}
-    </div>
-  )
-}
+
+        {/* Admin Login Modal */}
+        {showAdminLogin && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                🔑 Вход в админ-режим
+              </h3>
+              
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Пароль администратора:
+                </label>
+                <input
+                  type="password"
+                  value={adminPassword}
+                  onChange={(e) => setAdminPassword(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleAdminLogin()}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Введите пароль..."
+                  autoFocus
+                />
+              </div>
+
+              <div className="flex items-center gap-3 justify-end">
+                <button
+                  onClick={() => {
+                    setShowAdminLogin(false)
+                    setAdminPassword('')
+                  }}
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                >
+                  Отмена
+                </button>
+                <button
+                  onClick={handleAdminLogin}
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                >
+                  Войти
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-white">
