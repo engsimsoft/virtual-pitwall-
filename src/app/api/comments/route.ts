@@ -68,4 +68,50 @@ export async function POST(request: NextRequest) {
     console.error('Error creating comment:', error)
     return NextResponse.json({ error: 'Failed to create comment' }, { status: 500 })
   }
+}
+
+// DELETE /api/comments - удалить комментарий
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const pageId = searchParams.get('pageId')
+    const commentId = searchParams.get('commentId')
+    
+    if (!pageId || !commentId) {
+      return NextResponse.json({ 
+        error: 'pageId and commentId are required' 
+      }, { status: 400 })
+    }
+
+    // Получаем существующие комментарии
+    const comments: Comment[] = await kv.get(`comments:${pageId}`) || []
+    
+    // Находим комментарий для удаления
+    const commentIndex = comments.findIndex(c => c.id === commentId)
+    if (commentIndex === -1) {
+      return NextResponse.json({ 
+        error: 'Comment not found' 
+      }, { status: 404 })
+    }
+
+    // Удаляем комментарий
+    const deletedComment = comments[commentIndex]
+    comments.splice(commentIndex, 1)
+    
+    // Сохраняем обновленный список
+    await kv.set(`comments:${pageId}`, comments)
+    
+    console.log(`Comment deleted: ${commentId} from page ${pageId} by admin`)
+    
+    return NextResponse.json({ 
+      success: true, 
+      deletedComment,
+      remainingCount: comments.length 
+    })
+  } catch (error) {
+    console.error('Error deleting comment:', error)
+    return NextResponse.json({ 
+      error: 'Failed to delete comment' 
+    }, { status: 500 })
+  }
 } 

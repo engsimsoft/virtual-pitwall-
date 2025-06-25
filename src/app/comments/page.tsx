@@ -67,6 +67,9 @@ export default function CommentsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [selectedStatus, setSelectedStatus] = useState<string>('all')
   const [loading, setLoading] = useState(true)
+  const [isAdminMode, setIsAdminMode] = useState(false)
+  const [showAdminLogin, setShowAdminLogin] = useState(false)
+  const [adminPassword, setAdminPassword] = useState('')
 
   // Загрузка всех комментариев со всех страниц
   useEffect(() => {
@@ -115,6 +118,12 @@ export default function CommentsPage() {
     }
 
     loadAllComments()
+    
+    // Проверяем админ-режим из sessionStorage
+    const savedAdminMode = sessionStorage.getItem('adminMode')
+    if (savedAdminMode === 'true') {
+      setIsAdminMode(true)
+    }
   }, [])
 
   // Фильтрация комментариев
@@ -187,6 +196,80 @@ export default function CommentsPage() {
     }
   }
 
+  // Админ функции
+  const handleAdminLogin = () => {
+    if (adminPassword === 'admin2025') {
+      setIsAdminMode(true)
+      setShowAdminLogin(false)
+      setAdminPassword('')
+      sessionStorage.setItem('adminMode', 'true')
+    } else {
+      alert('Неверный пароль')
+      setAdminPassword('')
+    }
+  }
+
+  const handleAdminLogout = () => {
+    setIsAdminMode(false)
+    sessionStorage.removeItem('adminMode')
+  }
+
+  // Удаление комментария
+  const deleteComment = async (commentId: string) => {
+    const comment = allComments.find(c => c.id === commentId)
+    if (!comment) return
+
+    if (!confirm(`Удалить комментарий от ${comment.author}?`)) return
+
+    try {
+      const response = await fetch(`/api/comments?pageId=${comment.page}&commentId=${commentId}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        // Обновляем локальное состояние
+        const updatedComments = allComments.filter(c => c.id !== commentId)
+        setAllComments(updatedComments)
+      } else {
+        throw new Error('Failed to delete comment')
+      }
+    } catch (error) {
+      console.error('Ошибка удаления комментария:', error)
+      alert('Ошибка удаления комментария')
+    }
+  }
+
+  // Массовые операции
+  const deleteTestComments = async () => {
+    if (!confirm('Удалить все тестовые комментарии (содержащие "тест", "test")?')) return
+    
+    const testComments = allComments.filter(c => 
+      c.content.toLowerCase().includes('тест') || 
+      c.content.toLowerCase().includes('test') ||
+      c.author.toLowerCase().includes('тест') ||
+      c.author.toLowerCase().includes('test')
+    )
+
+    for (const comment of testComments) {
+      await deleteComment(comment.id)
+    }
+  }
+
+  const deleteOldComments = async () => {
+    if (!confirm('Удалить комментарии старше 7 дней?')) return
+    
+    const weekAgo = new Date()
+    weekAgo.setDate(weekAgo.getDate() - 7)
+    
+    const oldComments = allComments.filter(c => 
+      new Date(c.timestamp) < weekAgo
+    )
+
+    for (const comment of oldComments) {
+      await deleteComment(comment.id)
+    }
+  }
+
   // Экспорт комментариев
   const exportComments = () => {
     const data = {
@@ -240,11 +323,55 @@ export default function CommentsPage() {
               <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
               <p className="text-gray-600">Загрузка комментариев...</p>
             </div>
+                  </div>
+      </div>
+
+      {/* Admin Login Modal */}
+      {showAdminLogin && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              🔑 Вход в админ-режим
+            </h3>
+            
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Пароль администратора:
+              </label>
+              <input
+                type="password"
+                value={adminPassword}
+                onChange={(e) => setAdminPassword(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleAdminLogin()}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Введите пароль..."
+                autoFocus
+              />
+            </div>
+
+            <div className="flex items-center gap-3 justify-end">
+              <button
+                onClick={() => {
+                  setShowAdminLogin(false)
+                  setAdminPassword('')
+                }}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+              >
+                Отмена
+              </button>
+              <button
+                onClick={handleAdminLogin}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+              >
+                Войти
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    )
-  }
+      )}
+    </div>
+  )
+}
 
   return (
     <div className="min-h-screen bg-white">
@@ -258,20 +385,77 @@ export default function CommentsPage() {
               <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
                 <MessageCircle className="w-8 h-8 text-blue-600" />
                 Центр комментариев
+                {isAdminMode && (
+                  <span className="text-sm bg-red-100 text-red-700 px-2 py-1 rounded-full">
+                    Админ-режим
+                  </span>
+                )}
               </h1>
               <p className="text-gray-600 mt-2">
                 Все комментарии и предложения по проекту в одном месте
               </p>
             </div>
             
-            <button
-              onClick={exportComments}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
-            >
-              <Download className="w-4 h-4" />
-              Экспорт
-            </button>
+            <div className="flex items-center gap-2">
+              {!isAdminMode ? (
+                <button
+                  onClick={() => setShowAdminLogin(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-colors"
+                >
+                  🔑 Админ
+                </button>
+              ) : (
+                <button
+                  onClick={handleAdminLogout}
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
+                >
+                  🚪 Выйти
+                </button>
+              )}
+              
+              <button
+                onClick={exportComments}
+                className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
+              >
+                <Download className="w-4 h-4" />
+                Экспорт
+              </button>
+            </div>
           </div>
+
+          {/* Admin Panel */}
+          {isAdminMode && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <h3 className="font-semibold text-red-800 mb-3 flex items-center gap-2">
+                🛠️ Админ-панель
+              </h3>
+              <div className="grid md:grid-cols-3 gap-3">
+                <button
+                  onClick={deleteTestComments}
+                  className="px-4 py-2 bg-yellow-100 hover:bg-yellow-200 text-yellow-800 rounded-lg transition-colors text-sm"
+                >
+                  🧪 Удалить тестовые
+                </button>
+                <button
+                  onClick={deleteOldComments}
+                  className="px-4 py-2 bg-orange-100 hover:bg-orange-200 text-orange-800 rounded-lg transition-colors text-sm"
+                >
+                  📅 Удалить старые (7+ дней)
+                </button>
+                <button
+                  onClick={() => {
+                    if (confirm('Удалить ВСЕ комментарии? Это действие необратимо!')) {
+                      // Массовое удаление всех комментариев
+                      allComments.forEach(comment => deleteComment(comment.id))
+                    }
+                  }}
+                  className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-800 rounded-lg transition-colors text-sm"
+                >
+                  ⚠️ Удалить все
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Statistics */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
@@ -455,18 +639,31 @@ export default function CommentsPage() {
                         </span>
                       </div>
 
-                      {/* Status Selector */}
-                      <select
-                        value={comment.status}
-                        onChange={(e) => updateCommentStatus(comment.id, e.target.value as Comment['status'])}
-                        className={`text-xs border-none rounded-full px-3 py-1 cursor-pointer ${statusStyles[comment.status]}`}
-                      >
-                        {Object.entries(statuses).map(([key, status]) => (
-                          <option key={key} value={key}>
-                            {status.icon} {status.label}
-                          </option>
-                        ))}
-                      </select>
+                      <div className="flex items-center gap-2">
+                        {/* Status Selector */}
+                        <select
+                          value={comment.status}
+                          onChange={(e) => updateCommentStatus(comment.id, e.target.value as Comment['status'])}
+                          className={`text-xs border-none rounded-full px-3 py-1 cursor-pointer ${statusStyles[comment.status]}`}
+                        >
+                          {Object.entries(statuses).map(([key, status]) => (
+                            <option key={key} value={key}>
+                              {status.icon} {status.label}
+                            </option>
+                          ))}
+                        </select>
+
+                        {/* Delete Button (Admin Only) */}
+                        {isAdminMode && (
+                          <button
+                            onClick={() => deleteComment(comment.id)}
+                            className="text-red-500 hover:text-red-700 hover:bg-red-50 p-1 rounded transition-colors"
+                            title="Удалить комментарий"
+                          >
+                            🗑️
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))
