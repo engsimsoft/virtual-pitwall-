@@ -3,71 +3,29 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, Lock } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 
 interface NavigationProps {
   title?: string
-}
-
-interface NavigationLink {
-  href: string
-  label: string
-  isSpecial?: boolean
-  isSecondary?: boolean
-  icon?: React.ReactNode
 }
 
 export default function Navigation({ title = "Virtual Pitwall" }: NavigationProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const pathname = usePathname()
 
-  const navigationLinks: NavigationLink[] = [
-    { href: '/about', label: '📚 Начать здесь', isSpecial: true },
+  const navigationLinks = [
+    { href: '/about', label: '📚 Начать здесь', icon: '📚' },
     { href: '/', label: 'Virtual Pitwall' },
     { href: '/features', label: 'Features' },
+    { href: '/tracks', label: '🏁 Tracks' },
     { href: '/mvp_tech_spec', label: 'MVP Tech Spec' },
     { href: '/shortcut', label: 'DK Racing' },
-    { href: '/dev', label: 'Developer', icon: <Lock className="w-4 h-4" />, isSecondary: true }
+    { href: '/dev', label: '🔒 Developer', icon: '🔒' }
   ]
 
-  const isActive = (href: string) => {
-    if (href === '/') {
-      return pathname === '/'
-    }
-    return pathname.startsWith(href)
-  }
-
-  const getLinkClassName = (link: NavigationLink): string => {
-    if (link.isSpecial) {
-      return "bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2"
-    }
-    
-    if (link.isSecondary) {
-      const baseClasses = "text-gray-500 hover:text-gray-700 font-medium flex items-center gap-1 px-3 py-2 rounded-lg transition-colors"
-      const activeClasses = isActive(link.href) ? " text-gray-700 bg-gray-100" : ""
-      return baseClasses + activeClasses
-    }
-
-    const baseClasses = "font-medium px-3 py-2 rounded-lg transition-colors"
-    const stateClasses = isActive(link.href) 
-      ? " text-red-600 bg-red-50" 
-      : " text-gray-700 hover:text-red-600 hover:bg-red-50"
-    return baseClasses + stateClasses
-  }
-
-  const getMobileLinkClassName = (link: NavigationLink): string => {
-    if (link.isSpecial) {
-      return "bg-blue-600 text-white px-4 py-3 rounded-lg font-medium flex items-center gap-2 w-full"
-    }
-    
-    if (link.isSecondary) {
-      const baseClasses = "text-gray-500 font-medium flex items-center gap-2 px-4 py-3 rounded-lg transition-colors w-full"
-      const activeClasses = isActive(link.href) ? " text-gray-700 bg-gray-100" : " hover:bg-gray-100"
-      return baseClasses + activeClasses
-    }
-
+  const getMobileLinkClassName = (href: string): string => {
     const baseClasses = "font-medium px-4 py-3 rounded-lg transition-colors w-full text-left"
-    const stateClasses = isActive(link.href) 
+    const stateClasses = pathname === href || pathname.startsWith(href)
       ? " text-red-600 bg-red-50" 
       : " text-gray-700 hover:text-red-600 hover:bg-red-50"
     return baseClasses + stateClasses
@@ -86,18 +44,63 @@ export default function Navigation({ title = "Virtual Pitwall" }: NavigationProp
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-2">
-            {navigationLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={getLinkClassName(link)}
-                title={link.href === '/dev' ? 'Техническая документация (требует пароль)' : undefined}
-              >
-                {link.icon}
-                {link.label}
-              </Link>
-            ))}
+          <div className="hidden lg:flex items-center space-x-6">
+            <Link 
+              href="/about" 
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                pathname === '/about' ? 'bg-blue-100 text-blue-700' : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              📚 Начать здесь
+            </Link>
+            <Link 
+              href="/" 
+              className={`text-sm font-medium transition-colors ${
+                pathname === '/' ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
+              }`}
+            >
+              Virtual Pitwall
+            </Link>
+            <Link 
+              href="/features" 
+              className={`text-sm font-medium transition-colors ${
+                pathname === '/features' ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
+              }`}
+            >
+              Features
+            </Link>
+            <Link 
+              href="/tracks" 
+              className={`text-sm font-medium transition-colors ${
+                pathname === '/tracks' ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
+              }`}
+            >
+              🏁 Tracks
+            </Link>
+            <Link 
+              href="/mvp_tech_spec" 
+              className={`text-sm font-medium transition-colors ${
+                pathname === '/mvp_tech_spec' ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
+              }`}
+            >
+              MVP Tech Spec
+            </Link>
+            <Link 
+              href="/shortcut" 
+              className={`text-sm font-medium transition-colors ${
+                pathname.startsWith('/shortcut') ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
+              }`}
+            >
+              DK Racing
+            </Link>
+            <Link 
+              href="/dev" 
+              className={`text-sm font-medium transition-colors ${
+                pathname.startsWith('/dev') ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
+              }`}
+            >
+              🔒 Developer
+            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -120,7 +123,7 @@ export default function Navigation({ title = "Virtual Pitwall" }: NavigationProp
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={getMobileLinkClassName(link)}
+                  className={getMobileLinkClassName(link.href)}
                   onClick={() => setIsMobileMenuOpen(false)}
                   title={link.href === '/dev' ? 'Техническая документация (требует пароль)' : undefined}
                 >

@@ -297,7 +297,7 @@ export default function Features() {
             Интерактивные демо показывают real-time возможности системы
           </p>
           
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Fleet Control Demo */}
             <Link href="/rental-management" className="group">
               <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-blue-300 hover:shadow-lg transition-all duration-200 h-full">
@@ -328,12 +328,42 @@ export default function Features() {
               </div>
             </Link>
 
+            {/* Track Management Demo */}
+            <Link href="/tracks" className="group">
+              <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-purple-300 hover:shadow-lg transition-all duration-200 h-full">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="bg-purple-100 p-3 rounded-lg group-hover:bg-purple-200 transition-colors">
+                    <BarChart3 className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <div className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-xs font-medium">
+                    Future Vision
+                  </div>
+                </div>
+                
+                <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors">
+                  Система управления треками
+                </h3>
+                <p className="text-gray-600 text-sm mb-4">
+                  Централизованная система рекордов и статистики для 7 треков с автоматическим определением достижений
+                </p>
+                
+                <div className="flex items-center justify-between">
+                  <span className="text-purple-600 font-medium text-sm group-hover:text-purple-700">
+                    Исследовать систему →
+                  </span>
+                  <div className="bg-purple-50 p-2 rounded-lg group-hover:bg-purple-100 transition-colors">
+                    <BarChart3 className="w-4 h-4 text-purple-600" />
+                  </div>
+                </div>
+              </div>
+            </Link>
+
             {/* Team Demo */}
             <Link href="/shortcut/demo" className="group">
               <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-green-300 hover:shadow-lg transition-all duration-200 h-full">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="bg-green-100 p-3 rounded-lg group-hover:bg-green-200 transition-colors">
-                    <BarChart3 className="w-6 h-6 text-green-600" />
+                    <Zap className="w-6 h-6 text-green-600" />
                   </div>
                   <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
                     Live Demo
