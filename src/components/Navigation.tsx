@@ -18,6 +18,7 @@ export default function Navigation({ title = "Virtual Pitwall" }: NavigationProp
     { href: '/', label: 'Virtual Pitwall' },
     { href: '/features', label: 'Features' },
     { href: '/mvp_tech_spec', label: 'MVP Tech Spec' },
+    { href: '/torgmash-proposal', label: '⚙️ Торгмаш', icon: '⚙️' },
     { href: '/comments', label: '💬 Комментарии', icon: '💬' },
     { href: '/shortcut', label: 'DK Racing' },
     { href: '/dev', label: '🔒 Developer', icon: '🔒' }
@@ -76,6 +77,14 @@ export default function Navigation({ title = "Virtual Pitwall" }: NavigationProp
               }`}
             >
               MVP Tech Spec
+            </Link>
+            <Link 
+              href="/torgmash-proposal" 
+              className={`text-sm font-medium transition-colors ${
+                pathname === '/torgmash-proposal' ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
+              }`}
+            >
+              ⚙️ Торгмаш
             </Link>
             <Link 
               href="/comments" 
