@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { MessageCircle, X, Send, User, Clock } from 'lucide-react'
+import { MessageCircle, X, Send, User, Clock, Upload, AlertCircle } from 'lucide-react'
 
 interface Comment {
   id: string
@@ -68,36 +68,103 @@ export default function CommentSystem({ pageId, pageName }: CommentSystemProps) 
   const [userName, setUserName] = useState('')
   const [category, setCategory] = useState<'ui' | 'functionality' | 'technical'>('ui')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [showMigration, setShowMigration] = useState(false)
 
-  // Load comments and username from localStorage
+  // Load comments from server and check for localStorage migration
   useEffect(() => {
-    const savedComments = localStorage.getItem(`comments_${pageId}`)
-    if (savedComments) {
+    const loadComments = async () => {
+      setIsLoading(true)
+      setError(null)
+      
       try {
-        setComments(JSON.parse(savedComments))
-      } catch {
-        console.log('Ошибка загрузки комментариев, сброс данных')
-        localStorage.removeItem(`comments_${pageId}`)
-        setComments([])
+        // Загружаем комментарии с сервера
+        const response = await fetch(`/api/comments?pageId=${pageId}`)
+        if (!response.ok) {
+          throw new Error('Failed to load comments')
+        }
+        
+        const data = await response.json()
+        setComments(data.comments || [])
+        
+        // Проверяем наличие localStorage комментариев для миграции
+        const localComments = localStorage.getItem(`comments_${pageId}`)
+        if (localComments && data.comments.length === 0) {
+          try {
+            const parsed = JSON.parse(localComments)
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              setShowMigration(true)
+            }
+          } catch {
+            // Игнорируем ошибки парсинга localStorage
+          }
+        }
+      } catch (err) {
+        setError('Ошибка загрузки комментариев')
+        console.error('Error loading comments:', err)
+        
+        // Fallback to localStorage
+        const savedComments = localStorage.getItem(`comments_${pageId}`)
+        if (savedComments) {
+          try {
+            setComments(JSON.parse(savedComments))
+          } catch {
+            console.log('Ошибка загрузки localStorage комментариев')
+          }
+        }
+      } finally {
+        setIsLoading(false)
       }
     }
 
+    loadComments()
+
+    // Load username from localStorage
     const savedUserName = localStorage.getItem('userName')
     if (savedUserName) {
       setUserName(savedUserName)
     }
   }, [pageId])
 
-  // Save comments to localStorage
-  const saveComments = (updatedComments: Comment[]) => {
-    localStorage.setItem(`comments_${pageId}`, JSON.stringify(updatedComments))
-    setComments(updatedComments)
-  }
-
   // Save username to localStorage
   const saveUserName = (name: string) => {
     localStorage.setItem('userName', name)
     setUserName(name)
+  }
+
+  // Migrate localStorage comments to server
+  const migrateComments = async () => {
+    const localComments = localStorage.getItem(`comments_${pageId}`)
+    if (!localComments) return
+
+    try {
+      const parsed = JSON.parse(localComments)
+      const response = await fetch('/api/comments/migrate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pageId, comments: parsed })
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        console.log('Migration result:', result)
+        
+        // Обновляем комментарии с сервера
+        const newResponse = await fetch(`/api/comments?pageId=${pageId}`)
+        if (newResponse.ok) {
+          const data = await newResponse.json()
+          setComments(data.comments || [])
+        }
+        
+        // Удаляем localStorage после успешной миграции
+        localStorage.removeItem(`comments_${pageId}`)
+        setShowMigration(false)
+      }
+    } catch (err) {
+      console.error('Migration failed:', err)
+      setError('Ошибка миграции комментариев')
+    }
   }
 
   // Add new comment
@@ -106,31 +173,63 @@ export default function CommentSystem({ pageId, pageName }: CommentSystemProps) 
     if (!newComment.trim() || !userName.trim()) return
 
     setIsSubmitting(true)
+    setError(null)
 
-    const comment: Comment = {
-      id: Date.now().toString(),
-      author: userName.trim(),
-      content: newComment.trim(),
-      category,
-      status: 'new',
-      timestamp: new Date().toISOString(),
-      page: pageId
+    try {
+      const response = await fetch('/api/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          pageId,
+          author: userName.trim(),
+          content: newComment.trim(),
+          category
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to submit comment')
+      }
+
+      const data = await response.json()
+      
+      // Добавляем новый комментарий в начало списка
+      setComments(prev => [data.comment, ...prev])
+      saveUserName(userName.trim())
+      setNewComment('')
+    } catch (err) {
+      setError('Ошибка отправки комментария')
+      console.error('Error submitting comment:', err)
+    } finally {
+      setIsSubmitting(false)
     }
-
-    const updatedComments = [comment, ...comments]
-    saveComments(updatedComments)
-    saveUserName(userName.trim())
-    
-    setNewComment('')
-    setIsSubmitting(false)
   }
 
   // Update comment status (for admin/dev use)
-  const updateCommentStatus = (commentId: string, newStatus: Comment['status']) => {
-    const updatedComments = comments.map(comment =>
-      comment.id === commentId ? { ...comment, status: newStatus } : comment
-    )
-    saveComments(updatedComments)
+  const updateCommentStatus = async (commentId: string, newStatus: Comment['status']) => {
+    try {
+      const response = await fetch('/api/comments/status', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          pageId,
+          commentId,
+          status: newStatus
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to update comment status')
+      }
+
+      // Обновляем локальное состояние
+      setComments(prev => prev.map(comment =>
+        comment.id === commentId ? { ...comment, status: newStatus } : comment
+      ))
+    } catch (err) {
+      setError('Ошибка обновления статуса')
+      console.error('Error updating comment status:', err)
+    }
   }
 
   // Get new comments count
@@ -216,9 +315,42 @@ export default function CommentSystem({ pageId, pageName }: CommentSystemProps) 
               </div>
             </div>
 
+            {/* Error Display */}
+            {error && (
+              <div className="mx-4 mt-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <div className="flex items-center gap-2 text-red-700">
+                  <AlertCircle className="w-4 h-4" />
+                  <span className="text-sm">{error}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Migration Banner */}
+            {showMigration && (
+              <div className="mx-4 mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-blue-700">
+                    <Upload className="w-4 h-4" />
+                    <span className="text-sm">Найдены локальные комментарии</span>
+                  </div>
+                  <button
+                    onClick={migrateComments}
+                    className="text-xs bg-blue-600 text-white px-3 py-1 rounded-full hover:bg-blue-700 transition-colors"
+                  >
+                    Синхронизировать
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* Comments List */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {filteredComments.length === 0 ? (
+              {isLoading ? (
+                <div className="text-center py-8 text-gray-500">
+                  <MessageCircle className="w-12 h-12 mx-auto mb-3 text-gray-300 animate-pulse" />
+                  <p>Загрузка комментариев...</p>
+                </div>
+              ) : filteredComments.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
                   <MessageCircle className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                   <p>Пока нет комментариев</p>
