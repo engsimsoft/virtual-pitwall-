@@ -70,26 +70,48 @@ export default function CommentsPage() {
 
   // Загрузка всех комментариев со всех страниц
   useEffect(() => {
-    const loadAllComments = () => {
+    const loadAllComments = async () => {
       const comments: Comment[] = []
       
-      pageInfos.forEach(pageInfo => {
-        const savedComments = localStorage.getItem(`comments_${pageInfo.id}`)
-        if (savedComments) {
+      try {
+        // Загружаем комментарии с сервера для каждой страницы
+        const loadPromises = pageInfos.map(async (pageInfo) => {
           try {
-            const pageComments = JSON.parse(savedComments)
-            comments.push(...pageComments)
+            const response = await fetch(`/api/comments?pageId=${pageInfo.id}`)
+            if (response.ok) {
+              const data = await response.json()
+              return data.comments || []
+            }
           } catch (error) {
             console.log(`Ошибка загрузки комментариев для ${pageInfo.id}:`, error)
+            
+            // Fallback к localStorage
+            const savedComments = localStorage.getItem(`comments_${pageInfo.id}`)
+            if (savedComments) {
+              try {
+                return JSON.parse(savedComments)
+              } catch {
+                return []
+              }
+            }
           }
-        }
-      })
+          return []
+        })
 
-      // Сортировка по времени (новые сверху)
-      comments.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-      
-      setAllComments(comments)
-      setLoading(false)
+        const pageCommentsArrays = await Promise.all(loadPromises)
+        pageCommentsArrays.forEach(pageComments => {
+          comments.push(...pageComments)
+        })
+
+        // Сортировка по времени (новые сверху)
+        comments.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+        
+        setAllComments(comments)
+      } catch (error) {
+        console.error('Ошибка загрузки комментариев:', error)
+      } finally {
+        setLoading(false)
+      }
     }
 
     loadAllComments()
@@ -115,27 +137,52 @@ export default function CommentsPage() {
   }, [allComments, selectedPage, selectedCategory, selectedStatus])
 
   // Обновление статуса комментария
-  const updateCommentStatus = (commentId: string, newStatus: Comment['status']) => {
+  const updateCommentStatus = async (commentId: string, newStatus: Comment['status']) => {
     const comment = allComments.find(c => c.id === commentId)
     if (!comment) return
 
-    // Обновляем в localStorage
-    const savedComments = localStorage.getItem(`comments_${comment.page}`)
-    if (savedComments) {
-      try {
-        const pageComments = JSON.parse(savedComments)
-        const updatedPageComments = pageComments.map((c: Comment) =>
-          c.id === commentId ? { ...c, status: newStatus } : c
-        )
-        localStorage.setItem(`comments_${comment.page}`, JSON.stringify(updatedPageComments))
+    try {
+      // Обновляем на сервере
+      const response = await fetch('/api/comments/status', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          pageId: comment.page,
+          commentId,
+          status: newStatus
+        })
+      })
 
+      if (response.ok) {
         // Обновляем локальное состояние
         const updatedAllComments = allComments.map(c =>
           c.id === commentId ? { ...c, status: newStatus } : c
         )
         setAllComments(updatedAllComments)
-      } catch (error) {
-        console.log('Ошибка обновления статуса:', error)
+      } else {
+        throw new Error('Failed to update comment status')
+      }
+    } catch (error) {
+      console.error('Ошибка обновления статуса:', error)
+      
+      // Fallback к localStorage
+      const savedComments = localStorage.getItem(`comments_${comment.page}`)
+      if (savedComments) {
+        try {
+          const pageComments = JSON.parse(savedComments)
+          const updatedPageComments = pageComments.map((c: Comment) =>
+            c.id === commentId ? { ...c, status: newStatus } : c
+          )
+          localStorage.setItem(`comments_${comment.page}`, JSON.stringify(updatedPageComments))
+
+          // Обновляем локальное состояние
+          const updatedAllComments = allComments.map(c =>
+            c.id === commentId ? { ...c, status: newStatus } : c
+          )
+          setAllComments(updatedAllComments)
+        } catch (error) {
+          console.log('Ошибка обновления статуса:', error)
+        }
       }
     }
   }
