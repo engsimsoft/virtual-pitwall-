@@ -17,8 +17,8 @@ export default function Navigation({ title = "Virtual Pitwall" }: NavigationProp
     { href: '/about', label: '📚 Начать здесь', icon: '📚' },
     { href: '/', label: 'Virtual Pitwall' },
     { href: '/features', label: 'Features' },
-    { href: '/tracks', label: '🏁 Tracks' },
     { href: '/mvp_tech_spec', label: 'MVP Tech Spec' },
+    { href: '/comments', label: '💬 Комментарии', icon: '💬' },
     { href: '/shortcut', label: 'DK Racing' },
     { href: '/dev', label: '🔒 Developer', icon: '🔒' }
   ]
@@ -70,20 +70,20 @@ export default function Navigation({ title = "Virtual Pitwall" }: NavigationProp
               Features
             </Link>
             <Link 
-              href="/tracks" 
-              className={`text-sm font-medium transition-colors ${
-                pathname === '/tracks' ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
-              }`}
-            >
-              🏁 Tracks
-            </Link>
-            <Link 
               href="/mvp_tech_spec" 
               className={`text-sm font-medium transition-colors ${
                 pathname === '/mvp_tech_spec' ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
               }`}
             >
               MVP Tech Spec
+            </Link>
+            <Link 
+              href="/comments" 
+              className={`text-sm font-medium transition-colors ${
+                pathname === '/comments' ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
+              }`}
+            >
+              💬 Комментарии
             </Link>
             <Link 
               href="/shortcut" 
