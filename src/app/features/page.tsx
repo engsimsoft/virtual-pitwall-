@@ -288,22 +288,109 @@ export default function Features() {
           </div>
         </div>
 
-        {/* Call to Action */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
-            Готовы увидеть систему в действии?
+        {/* Interactive Demos Section */}
+        <div className="bg-white border border-gray-200 rounded-lg p-8 mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-2 text-center">
+            🚀 Попробуйте в действии
           </h2>
-          <p className="text-gray-600 mb-4">
-            Протестируйте возможности системы на интерактивном демо
+          <p className="text-gray-600 text-center mb-8">
+            Интерактивные демо показывают real-time возможности системы
           </p>
-          <Link 
-            href="/demo"
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 inline-flex items-center gap-2"
-          >
-            <BarChart3 className="w-5 h-5" />
-            Открыть демо
-          </Link>
+          
+          <div className="grid md:grid-cols-3 gap-6">
+            {/* Fleet Control Demo */}
+            <Link href="/rental-management" className="group">
+              <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-blue-300 hover:shadow-lg transition-all duration-200 h-full">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="bg-blue-100 p-3 rounded-lg group-hover:bg-blue-200 transition-colors">
+                    <Database className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-medium">
+                    Business Solution
+                  </div>
+                </div>
+                
+                <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                  Цифровой паспорт техники
+                </h3>
+                <p className="text-gray-600 text-sm mb-4">
+                  Узнайте, как телеметрия решает проблему информационной асимметрии между производителями, командами и пилотами
+                </p>
+                
+                <div className="flex items-center justify-between">
+                  <span className="text-blue-600 font-medium text-sm group-hover:text-blue-700">
+                    Открыть Fleet Control →
+                  </span>
+                  <div className="bg-blue-50 p-2 rounded-lg group-hover:bg-blue-100 transition-colors">
+                    <Shield className="w-4 h-4 text-blue-600" />
+                  </div>
+                </div>
+              </div>
+            </Link>
+
+            {/* Team Demo */}
+            <Link href="/shortcut/demo" className="group">
+              <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-green-300 hover:shadow-lg transition-all duration-200 h-full">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="bg-green-100 p-3 rounded-lg group-hover:bg-green-200 transition-colors">
+                    <BarChart3 className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
+                    Live Demo
+                  </div>
+                </div>
+                
+                <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-green-600 transition-colors">
+                  Взгляд изнутри команды
+                </h3>
+                <p className="text-gray-600 text-sm mb-4">
+                  Посмотрите на real-time мониторинг 5 автомобилей глазами команды - G-G диаграммы, алерты, анализ
+                </p>
+                
+                <div className="flex items-center justify-between">
+                  <span className="text-green-600 font-medium text-sm group-hover:text-green-700">
+                    Запустить Team Demo →
+                  </span>
+                  <div className="bg-green-50 p-2 rounded-lg group-hover:bg-green-100 transition-colors">
+                    <Zap className="w-4 h-4 text-green-600" />
+                  </div>
+                </div>
+              </div>
+            </Link>
+
+            {/* DK Demo */}
+            <Link href="/shortcut/dk" className="group">
+              <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-red-300 hover:shadow-lg transition-all duration-200 h-full">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="bg-red-100 p-3 rounded-lg group-hover:bg-red-200 transition-colors">
+                    <Eye className="w-6 h-6 text-red-600" />
+                  </div>
+                  <div className="bg-red-100 text-red-800 px-3 py-1 rounded-full text-xs font-medium">
+                    Interactive
+                  </div>
+                </div>
+                
+                <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-red-600 transition-colors">
+                  Панорама гоночного уикенда
+                </h3>
+                <p className="text-gray-600 text-sm mb-4">
+                  Оцените полную картину: 20 автомобилей, 4 команды, таблица результатов с телеметрией
+                </p>
+                
+                <div className="flex items-center justify-between">
+                  <span className="text-red-600 font-medium text-sm group-hover:text-red-700">
+                    Посмотреть DK Demo →
+                  </span>
+                  <div className="bg-red-50 p-2 rounded-lg group-hover:bg-red-100 transition-colors">
+                    <AlertTriangle className="w-4 h-4 text-red-600" />
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </div>
         </div>
+
+
       </div>
 
       {/* Footer */}
