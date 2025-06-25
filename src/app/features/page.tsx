@@ -132,6 +132,141 @@ export default function Features() {
           </div>
         </div>
 
+        {/* Hybrid Data Strategy */}
+        <div className="bg-white border border-gray-200 rounded-lg p-8 mb-12">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-6 text-center">
+            🛡️ Гибридная стратегия передачи данных
+          </h2>
+          <p className="text-gray-600 text-center mb-8">
+            Система адаптируется к условиям связи для гарантированной работы на любом треке
+          </p>
+          
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* Good Connection Scenario */}
+            <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="bg-green-100 p-2 rounded-lg">
+                  <Zap className="w-6 h-6 text-green-600" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900">Хорошая LTE связь</h3>
+                <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
+                  Стандартные треки
+                </div>
+              </div>
+              
+              <div className="mb-4">
+                <div className="bg-white border border-green-200 rounded-lg p-4">
+                  <div className="font-mono text-sm text-gray-800 mb-2">
+                    ESP32 → LTE → Облако → Real-time интерфейсы
+                  </div>
+                  <div className="text-xs text-gray-600">
+                    Прямая передача данных с минимальной задержкой
+                  </div>
+                </div>
+              </div>
+              
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-600" />
+                  <span>Мгновенная передача данных</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-600" />
+                  <span>Live timing в реальном времени</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-600" />
+                  <span>Немедленные алерты</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-600" />
+                  <span>Задержка &lt; 1 секунды</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Poor Connection Scenario */}
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="bg-yellow-100 p-2 rounded-lg">
+                  <Shield className="w-6 h-6 text-yellow-600" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900">Плохая связь</h3>
+                <div className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-medium">
+                  Казань Ринг и подобные
+                </div>
+              </div>
+              
+              <div className="mb-4">
+                <div className="bg-white border border-yellow-200 rounded-lg p-4">
+                  <div className="font-mono text-sm text-gray-800 mb-2">
+                    ESP32 → SD Card → WiFi в питлейн → Облако
+                  </div>
+                  <div className="text-xs text-gray-600">
+                    Локальное хранение с синхронизацией в зонах покрытия
+                  </div>
+                </div>
+              </div>
+              
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-yellow-600" />
+                  <span>Запись всех данных локально на SD карту</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-yellow-600" />
+                  <span>Автоматическая синхронизация при въезде в питлейн</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-yellow-600" />
+                  <span>Восстановление live timing после синхронизации</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-yellow-600" />
+                  <span>Буферизация критических алертов</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Technical Details */}
+          <div className="mt-8 bg-gray-50 border border-gray-200 rounded-lg p-6">
+            <h4 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <Database className="w-5 h-5 text-blue-600" />
+              Техническая реализация гибридной системы
+            </h4>
+            
+            <div className="grid md:grid-cols-3 gap-6 text-sm">
+              <div>
+                <h5 className="font-medium text-gray-900 mb-2">Умное переключение режимов</h5>
+                <ul className="space-y-1 text-gray-600">
+                  <li>• Автоматическое определение качества сигнала</li>
+                  <li>• Переход в offline режим при потере связи</li>
+                  <li>• Восстановление online режима при появлении сигнала</li>
+                </ul>
+              </div>
+              
+              <div>
+                <h5 className="font-medium text-gray-900 mb-2">Буферизация данных</h5>
+                <ul className="space-y-1 text-gray-600">
+                  <li>• SD карта 32GB для хранения сессий</li>
+                  <li>• Сжатие данных для экономии места</li>
+                  <li>• Приоритизация критических алертов</li>
+                </ul>
+              </div>
+              
+              <div>
+                <h5 className="font-medium text-gray-900 mb-2">Синхронизация</h5>
+                <ul className="space-y-1 text-gray-600">
+                  <li>• WiFi точки доступа в питлейн зонах</li>
+                  <li>• Автоматическая передача накопленных данных</li>
+                  <li>• Проверка целостности после синхронизации</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Target Audience */}
         <div className="grid md:grid-cols-2 gap-8 mb-12">
           <div className="bg-white border border-gray-200 rounded-lg p-6">
