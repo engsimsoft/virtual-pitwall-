@@ -433,7 +433,7 @@ export default function Features() {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Fleet Control Demo */}
-            <Link href="/rental-management" className="group">
+            <Link href="/demos/fleet" className="group">
               <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-blue-300 hover:shadow-lg transition-all duration-200 h-full">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="bg-blue-100 p-3 rounded-lg group-hover:bg-blue-200 transition-colors">
@@ -463,7 +463,7 @@ export default function Features() {
             </Link>
 
             {/* Track Management Demo */}
-            <Link href="/tracks" className="group">
+            <Link href="/demos/tracks" className="group">
               <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-purple-300 hover:shadow-lg transition-all duration-200 h-full">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="bg-purple-100 p-3 rounded-lg group-hover:bg-purple-200 transition-colors">
@@ -493,7 +493,7 @@ export default function Features() {
             </Link>
 
             {/* Team Demo */}
-            <Link href="/legends/demo" className="group">
+            <Link href="/demos/team" className="group">
               <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-green-300 hover:shadow-lg transition-all duration-200 h-full">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="bg-green-100 p-3 rounded-lg group-hover:bg-green-200 transition-colors">
@@ -522,8 +522,8 @@ export default function Features() {
               </div>
             </Link>
 
-            {/* DK Demo */}
-            <Link href="/legends/dk" className="group">
+            {/* ArtLine Demo */}
+            <Link href="/demos/artline" className="group">
               <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-red-300 hover:shadow-lg transition-all duration-200 h-full">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="bg-red-100 p-3 rounded-lg group-hover:bg-red-200 transition-colors">
@@ -543,7 +543,7 @@ export default function Features() {
                 
                 <div className="flex items-center justify-between">
                   <span className="text-red-600 font-medium text-sm group-hover:text-red-700">
-                    Посмотреть DK Demo →
+                    Посмотреть ArtLine Demo →
                   </span>
                   <div className="bg-red-50 p-2 rounded-lg group-hover:bg-red-100 transition-colors">
                     <AlertTriangle className="w-4 h-4 text-red-600" />

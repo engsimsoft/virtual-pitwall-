@@ -1,201 +1,235 @@
+'use client';
+
 import Link from 'next/link'
-import { AlertTriangle, CheckCircle, Activity, Database, Clock, Users } from 'lucide-react'
+import { CheckCircle, Zap, Shield, Database } from 'lucide-react'
 import Navigation from '@/components/Navigation'
+import { motion } from 'framer-motion'
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       <Navigation title="🏁 Virtual Pitwall" />
 
-      {/* System Status Dashboard */}
-      <section className="container mx-auto px-6 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Система мониторинга телеметрии
-          </h1>
-          <p className="text-gray-600">
-            Real-time контроль параметров автомобиля и соблюдения регламента гоночной серии
-          </p>
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-b from-white to-gray-50 py-20">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            <div className="inline-block mb-6">
+              <span className="bg-red-100 text-red-800 px-4 py-2 rounded-full text-sm font-medium border border-red-200">
+                Система телеметрии для гоночных серий
+              </span>
+            </div>
+            
+            <h1 className="text-6xl font-bold text-gray-900 mb-6">
+              Virtual Pitwall
+            </h1>
+            
+            <p className="text-2xl text-gray-600 mb-12 max-w-3xl mx-auto">
+              Real-time контроль параметров автомобиля и соблюдения регламента. 
+              Технологии уровня Formula 1 для вашей гоночной серии.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+              <Link 
+                href="/demos"
+                className="group bg-green-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-green-700 transition-all duration-200 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl"
+              >
+                <span>🎮</span>
+                <span>Посмотреть демо</span>
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </Link>
+              <Link 
+                href="/features"
+                className="bg-white border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-xl font-semibold text-lg hover:border-gray-400 hover:bg-gray-50 transition-all duration-200 flex items-center justify-center gap-3"
+              >
+                <span>📖</span>
+                <span>Узнать больше</span>
+              </Link>
+            </div>
+
+            {/* Key Metrics */}
+            <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="bg-white border border-gray-200 rounded-xl p-8 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="text-5xl font-bold text-green-600 mb-2">&lt; 1с</div>
+                <div className="text-gray-900 font-semibold mb-1">Задержка алертов</div>
+                <div className="text-sm text-gray-600">Мгновенные уведомления</div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="bg-white border border-gray-200 rounded-xl p-8 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="text-5xl font-bold text-blue-600 mb-2">25 Hz</div>
+                <div className="text-gray-900 font-semibold mb-1">Частота данных</div>
+                <div className="text-sm text-gray-600">Высокая точность</div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="bg-white border border-gray-200 rounded-xl p-8 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="text-5xl font-bold text-purple-600 mb-2">99.9%</div>
+                <div className="text-gray-900 font-semibold mb-1">Uptime системы</div>
+                <div className="text-sm text-gray-600">Надежность</div>
+              </motion.div>
+            </div>
+          </motion.div>
         </div>
+      </section>
 
-        {/* Status Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-gray-900">Статус системы</h3>
-              <CheckCircle className="w-6 h-6 text-green-600" />
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Uptime</span>
-                <span className="font-mono font-semibold text-green-600">99.9%</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Задержка</span>
-                <span className="font-mono font-semibold text-green-600">&lt; 1с</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Частота данных</span>
-                <span className="font-mono font-semibold text-blue-600">25 Hz</span>
-              </div>
-            </div>
-          </div>
+      {/* For Whom Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Для кого эта система?
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Virtual Pitwall решает задачи на всех уровнях гоночного бизнеса
+            </p>
+          </motion.div>
 
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-gray-900">Активные сессии</h3>
-              <Activity className="w-6 h-6 text-blue-600" />
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Race Control</span>
-                <span className="font-mono font-semibold text-green-600">ONLINE</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Команды</span>
-                <span className="font-mono font-semibold text-blue-600">12/24</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Автомобили</span>
-                <span className="font-mono font-semibold text-blue-600">18/24</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-gray-900">Нарушения</h3>
-              <AlertTriangle className="w-6 h-6 text-orange-500" />
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-gray-600">За сегодня</span>
-                <span className="font-mono font-semibold text-orange-600">3</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Критичные</span>
-                <span className="font-mono font-semibold text-red-600">1</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Предупреждения</span>
-                <span className="font-mono font-semibold text-orange-600">2</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Быстрые действия</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Link 
-              href="/legends/demo"
-              className="bg-blue-600 text-white px-4 py-3 rounded-lg font-medium text-center hover:bg-blue-700 flex items-center justify-center gap-2"
+          <div className="grid md:grid-cols-3 gap-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="bg-gradient-to-br from-red-50 to-orange-50 border border-red-200 rounded-xl p-8"
             >
-              <Activity className="w-5 h-5" />
-              Открыть демо
-            </Link>
-            <Link 
-              href="/features"
-              className="bg-white border border-gray-300 text-gray-700 px-4 py-3 rounded-lg font-medium text-center hover:bg-gray-50 flex items-center justify-center gap-2"
+              <div className="w-16 h-16 bg-red-600 rounded-xl flex items-center justify-center mb-6 mx-auto">
+                <Shield className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Race Control</h3>
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>Мониторинг всех автомобилей</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>Автоматические алерты</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>Борьба с читерством</span>
+                </li>
+              </ul>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-200 rounded-xl p-8"
             >
-              <Database className="w-5 h-5" />
-              Возможности
-            </Link>
-            <button className="bg-white border border-gray-300 text-gray-700 px-4 py-3 rounded-lg font-medium hover:bg-gray-50 flex items-center justify-center gap-2">
-              <Clock className="w-5 h-5" />
-              История сессий
-            </button>
-            <button className="bg-white border border-gray-300 text-gray-700 px-4 py-3 rounded-lg font-medium hover:bg-gray-50 flex items-center justify-center gap-2">
-              <Users className="w-5 h-5" />
-              Управление
-            </button>
-          </div>
-        </div>
+              <div className="w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center mb-6 mx-auto">
+                <Zap className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Команды</h3>
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>Контроль своих автомобилей</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>Предупреждение поломок</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>Интеграция с MoTeC</span>
+                </li>
+              </ul>
+            </motion.div>
 
-        {/* System Capabilities */}
-        <div className="grid md:grid-cols-2 gap-8">
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Основные возможности</h3>
-            <ul className="space-y-3">
-              <li className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <div className="font-medium text-gray-900">Real-time мониторинг</div>
-                  <div className="text-sm text-gray-600">Мгновенные алерты при превышении лимитов</div>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <div className="font-medium text-gray-900">Автоматический контроль</div>
-                  <div className="text-sm text-gray-600">Проверка соблюдения технического регламента</div>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <div className="font-medium text-gray-900">Интеграция MoTeC</div>
-                  <div className="text-sm text-gray-600">Прямое подключение к i2 Pro системе</div>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <div className="font-medium text-gray-900">Облачный доступ</div>
-                  <div className="text-sm text-gray-600">Работа из любой точки трассы</div>
-                </div>
-              </li>
-            </ul>
-          </div>
-
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Технические параметры</h3>
-            <div className="space-y-4">
-              <div className="border border-gray-200 rounded-lg p-4">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-gray-600">Задержка алертов</span>
-                  <span className="font-mono text-xl font-bold text-green-600">&lt; 1с</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-green-600 h-2 rounded-full" style={{width: '95%'}}></div>
-                </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-8"
+            >
+              <div className="w-16 h-16 bg-purple-600 rounded-xl flex items-center justify-center mb-6 mx-auto">
+                <Database className="w-8 h-8 text-white" />
               </div>
-              
-              <div className="border border-gray-200 rounded-lg p-4">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-gray-600">Частота обновления</span>
-                  <span className="font-mono text-xl font-bold text-blue-600">25 Hz</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-blue-600 h-2 rounded-full" style={{width: '100%'}}></div>
-                </div>
-              </div>
-              
-              <div className="border border-gray-200 rounded-lg p-4">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-gray-600">Uptime системы</span>
-                  <span className="font-mono text-xl font-bold text-green-600">99.9%</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-green-600 h-2 rounded-full" style={{width: '99%'}}></div>
-                </div>
-              </div>
-            </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Производители</h3>
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>Цифровой паспорт техники</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>Контроль износа двигателей</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>Защита от перегрузки</span>
+                </li>
+              </ul>
+            </motion.div>
           </div>
         </div>
       </section>
 
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-green-600 to-blue-600 text-white">
+        <div className="max-w-4xl mx-auto text-center px-6">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl font-bold mb-6">
+              Готовы увидеть систему в действии?
+            </h2>
+            <p className="text-xl mb-10 text-green-50">
+              Интерактивные демонстрации покажут все возможности Virtual Pitwall
+            </p>
+            <Link 
+              href="/demos"
+              className="inline-flex items-center gap-3 bg-white text-green-600 px-10 py-5 rounded-xl font-bold text-xl hover:bg-green-50 transition-all duration-200 shadow-2xl hover:shadow-3xl hover:scale-105"
+            >
+              <span>🎮</span>
+              <span>Посмотреть все демо</span>
+              <span>→</span>
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Footer */}
-      <footer className="bg-gray-50 border-t border-gray-200 mt-12">
-        <div className="container mx-auto px-6 py-6">
+      <footer className="bg-gray-50 border-t border-gray-200">
+        <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="text-center text-gray-600">
             <p>© 2025 Virtual Pitwall. Система телеметрии для гоночных серий.</p>
           </div>
         </div>
       </footer>
-
-      {/* Comment System */}
     </div>
   )
 }
