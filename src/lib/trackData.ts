@@ -307,15 +307,15 @@ export const tracks: Track[] = [
     }
   },
   {
-    id: "ural-ring",
-    name: "Ural Ring",
-    location: "Екатеринбург, Свердловская область",
-    length: "2.800 км", 
+    id: "adm-raceway",
+    name: "ADM Raceway",
+    location: "Мячково, Московская область",
+    length: "2.550 км",
     sectors: 3,
-    elevation: "255м над уровнем моря",
-    opened: "2017",
+    elevation: "150м над уровнем моря",
+    opened: "2015",
     lapRecord: {
-      time: "1:36.789",
+      time: "1:34.567",
       driver: "Егор Олешкевич",
       team: "SMP Racing",
       date: "2024-11-03",
@@ -323,14 +323,14 @@ export const tracks: Track[] = [
     },
     sectorRecords: {
       sector1: {
-        time: "30.567",
+        time: "29.345",
         driver: "Егор Олешкевич",
         team: "SMP Racing",
         date: "2024-11-03",
         car: "Dallara F3 T318"
       },
       sector2: {
-        time: "36.222",
+        time: "35.222",
         driver: "Иван Матвеев",
         team: "Prema Racing",
         date: "2024-10-15",
@@ -347,19 +347,19 @@ export const tracks: Track[] = [
     currentActivity: {
       activeCars: 16,
       sessionType: "Квалификация",
-      weather: "Облачно",
-      temperature: "12°C"
+      weather: "Солнечно",
+      temperature: "20°C"
     },
     recentLaps: [
       {
-        time: "1:37.234",
+        time: "1:35.234",
         driver: "Максим Петров",
         team: "Carlin",
         date: "2024-12-27 14:29",
         car: "Dallara F3 T318"
       },
       {
-        time: "1:38.567",
+        time: "1:36.567",
         driver: "Денис Козлов",
         team: "MP Motorsport",
         date: "2024-12-27 14:27",
@@ -368,7 +368,7 @@ export const tracks: Track[] = [
     ],
     yearlyStats: {
       totalLaps: 11234,
-      averageLapTime: "1:45.234",
+      averageLapTime: "1:43.234",
       recordBreaks: 5,
       activeDrivers: 78
     }
