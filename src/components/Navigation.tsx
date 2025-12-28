@@ -14,13 +14,11 @@ export default function Navigation({ title = "Virtual Pitwall" }: NavigationProp
   const pathname = usePathname()
 
   const navigationLinks = [
-    { href: '/about', label: '📚 Начать здесь', icon: '📚' },
     { href: '/', label: 'Virtual Pitwall' },
     { href: '/features', label: 'Features' },
     { href: '/mvp_tech_spec', label: 'MVP Tech Spec' },
     { href: '/torgmash-proposal', label: '⚙️ Торгмаш', icon: '⚙️' },
-    { href: '/legends', label: 'ArtLine' },
-    { href: '/dev', label: '🔒 Developer', icon: '🔒' }
+    { href: '/legends', label: 'ArtLine' }
   ]
 
   const getMobileLinkClassName = (href: string): string => {
@@ -45,16 +43,8 @@ export default function Navigation({ title = "Virtual Pitwall" }: NavigationProp
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-6">
-            <Link 
-              href="/about" 
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                pathname === '/about' ? 'bg-blue-100 text-blue-700' : 'text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              📚 Начать здесь
-            </Link>
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className={`text-sm font-medium transition-colors ${
                 pathname === '/' ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
               }`}
@@ -92,14 +82,6 @@ export default function Navigation({ title = "Virtual Pitwall" }: NavigationProp
               }`}
             >
               ArtLine
-            </Link>
-            <Link 
-              href="/dev" 
-              className={`text-sm font-medium transition-colors ${
-                pathname.startsWith('/dev') ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
-              }`}
-            >
-              🔒 Developer
             </Link>
           </div>
 
