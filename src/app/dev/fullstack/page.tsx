@@ -448,10 +448,10 @@ Notification`}
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">🏗️ Fleet Configuration</h3>
                 
                 <div className="bg-gray-900 p-4 rounded-lg mb-6">
-                  <h4 className="text-white mb-3">ShortCut Moscow Fleet Setup</h4>
+                  <h4 className="text-white mb-3">Legends EVO Moscow Fleet Setup</h4>
                   <pre className="text-green-400 text-sm font-mono">
-{`ShortCut Moscow Fleet (Moscow Raceway):
-├── Car Type: Sports Prototype ShortCut
+{`Legends EVO Moscow Fleet (Moscow Raceway):
+├── Car Type: Sports Prototype Legends EVO
 ├── Engine: Лада 1.6л 200 л.с. (Торгмаш Инжиниринг)
 ├── Total Fleet Size: 100 vehicles
 ├── Max Concurrent Usage: 40 vehicles on track

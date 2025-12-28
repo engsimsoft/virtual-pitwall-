@@ -1,7 +1,6 @@
 'use client'
 
 import Navigation from '../../components/Navigation'
-import CommentSystem from '../../components/CommentSystem'
 import { Wifi, Database, Shield, Zap, Activity, MapPin, Settings } from 'lucide-react'
 
 export default function PublicMVPTechSpec() {
@@ -524,7 +523,6 @@ export default function PublicMVPTechSpec() {
       </div>
       
       {/* Система комментариев */}
-      <CommentSystem pageId="mvp_tech_spec" pageName="MVP Tech Spec" />
     </div>
   )
 } 

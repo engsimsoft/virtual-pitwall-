@@ -5,7 +5,6 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { Settings, TrendingUp, Zap, Shield, DollarSign, ChevronRight, ChevronDown, Calculator } from 'lucide-react';
 import Link from 'next/link';
 import Navigation from '@/components/Navigation';
-import CommentSystem from '@/components/CommentSystem';
 
 // Данные для сравнительных графиков
 const comparisonData = [
@@ -66,7 +65,7 @@ export default function TorgmashProposal() {
           </div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             25+ лет экспертизы в моделировании и производстве гоночных двигателей. 
-            Техническое предложение по повышению надежности силовых установок DK Racing.
+            Техническое предложение по повышению надежности силовых установок ArtLine Engineering.
           </p>
         </div>
 
@@ -167,7 +166,7 @@ export default function TorgmashProposal() {
                   <div className="bg-red-50 p-4 rounded-lg">
                     <h4 className="font-semibold text-red-900 mb-2">Текущая ситуация</h4>
                     <ul className="text-red-800 space-y-1 text-sm">
-                      <li>• DK Racing Version: пик мощности при 8200+ об/мин</li>
+                      <li>• ArtLine Engineering Version: пик мощности при 8200+ об/мин</li>
                       <li>• Регламентное ограничение: 8000 об/мин</li>
                       <li>• Гонщики регулярно достигают отсечки</li>
                       <li>• Негативное влияние на надежность</li>
@@ -220,7 +219,7 @@ export default function TorgmashProposal() {
                           dataKey="dk_hp" 
                           stroke="#dc2626" 
                           strokeWidth={2}
-                          name="DK Racing Version"
+                          name="ArtLine Engineering Version"
                         />
                       </LineChart>
                     </ResponsiveContainer>
@@ -256,7 +255,7 @@ export default function TorgmashProposal() {
                           dataKey="dk_nm" 
                           stroke="#dc2626" 
                           strokeWidth={2}
-                          name="DK Racing Version"
+                          name="ArtLine Engineering Version"
                         />
                       </LineChart>
                     </ResponsiveContainer>
@@ -276,11 +275,11 @@ export default function TorgmashProposal() {
                       <Tooltip 
                         formatter={(value, name) => [
                           `${Number(value).toFixed(1)}%`, 
-                          name === 'torgmash' ? 'Торгмаш' : 'DK Racing'
+                          name === 'torgmash' ? 'Торгмаш' : 'ArtLine Engineering'
                         ]}
                       />
                       <Legend />
-                      <Bar dataKey="dk" fill="#dc2626" name="DK Racing Version" />
+                      <Bar dataKey="dk" fill="#dc2626" name="ArtLine Engineering Version" />
                       <Bar dataKey="torgmash" fill="#2563eb" name="Торгмаш Версия" />
                     </BarChart>
                   </ResponsiveContainer>
@@ -355,12 +354,12 @@ export default function TorgmashProposal() {
                     <strong>Общие интегральные показатели в рабочем диапазоне (4400-8000 об/мин):</strong>
                   </p>
                   <ul className="list-disc list-inside space-y-1 ml-4">
-                    <li><strong>Интеграл крутящего момента:</strong> Торгмаш 686 530 vs DK Racing 653 600 Н·м·об/мин (+5.04%)</li>
-                    <li><strong>Интеграл мощности:</strong> Торгмаш 605 590 vs DK Racing 576 980 л.с.·об/мин (+4.96%)</li>
+                    <li><strong>Интеграл крутящего момента:</strong> Торгмаш 686 530 vs ArtLine Engineering 653 600 Н·м·об/мин (+5.04%)</li>
+                    <li><strong>Интеграл мощности:</strong> Торгмаш 605 590 vs ArtLine Engineering 576 980 л.с.·об/мин (+4.96%)</li>
                   </ul>
                   <div className="bg-white p-4 rounded border-l-4 border-green-500 mt-4">
                     <p className="font-semibold text-green-900">
-                      Рекомендуется к немедленному внедрению для повышения надежности и конкурентоспособности автомобилей ShortCut.
+                      Рекомендуется к немедленному внедрению для повышения надежности и конкурентоспособности автомобилей Legends EVO.
                     </p>
                   </div>
                 </div>
@@ -492,7 +491,6 @@ export default function TorgmashProposal() {
         </div>
       </main>
 
-      <CommentSystem pageId="torgmash-proposal" />
     </div>
   );
 } 

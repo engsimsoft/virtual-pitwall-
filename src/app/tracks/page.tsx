@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { tracks, Track, getRandomLapTime, getRandomDriver, getRandomTeam } from '@/lib/trackData'
 import { Trophy, MapPin, Clock, Users, Activity, BarChart3, TrendingUp } from 'lucide-react'
-import CommentSystem from '@/components/CommentSystem'
 import Navigation from '@/components/Navigation'
 
 export default function TracksPage() {
@@ -424,7 +423,6 @@ export default function TracksPage() {
       </footer>
 
       {/* Comment System */}
-      <CommentSystem pageId="tracks" pageName="Track Management System" />
     </div>
   )
 } 

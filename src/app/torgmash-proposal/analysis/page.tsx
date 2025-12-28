@@ -4,7 +4,6 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { ArrowLeft, BookOpen, Calculator, TrendingUp, Shield, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 import Navigation from '@/components/Navigation';
-import CommentSystem from '@/components/CommentSystem';
 
 // Данные для кривой усталости (S-N кривая)
 const fatigueData = [
@@ -473,7 +472,6 @@ export default function InertialAnalysis() {
         </div>
       </main>
 
-      <CommentSystem pageId="torgmash-proposal-analysis" />
     </div>
   );
 } 

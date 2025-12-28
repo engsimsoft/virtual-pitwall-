@@ -1,5 +1,4 @@
 import { MessageSquare, Users, Code, Shield, Lightbulb, Zap, Target, Rocket, Eye, Lock } from 'lucide-react'
-import CommentSystem from '@/components/CommentSystem'
 import Navigation from '@/components/Navigation'
 
 export default function AboutPage() {
@@ -383,7 +382,6 @@ export default function AboutPage() {
         </div>
       </div>
 
-      <CommentSystem pageId="about" pageName="О проекте" />
     </div>
   )
 } 

@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { CheckCircle, AlertTriangle, Clock, Shield, BarChart3, Zap, Database, Radio, Eye } from 'lucide-react'
-import CommentSystem from '@/components/CommentSystem'
 import Navigation from '@/components/Navigation'
 
 export default function Features() {
@@ -494,7 +493,7 @@ export default function Features() {
             </Link>
 
             {/* Team Demo */}
-            <Link href="/shortcut/demo" className="group">
+            <Link href="/legends/demo" className="group">
               <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-green-300 hover:shadow-lg transition-all duration-200 h-full">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="bg-green-100 p-3 rounded-lg group-hover:bg-green-200 transition-colors">
@@ -524,7 +523,7 @@ export default function Features() {
             </Link>
 
             {/* DK Demo */}
-            <Link href="/shortcut/dk" className="group">
+            <Link href="/legends/dk" className="group">
               <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-red-300 hover:shadow-lg transition-all duration-200 h-full">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="bg-red-100 p-3 rounded-lg group-hover:bg-red-200 transition-colors">
@@ -568,7 +567,6 @@ export default function Features() {
       </footer>
 
       {/* Comment System */}
-      <CommentSystem pageId="features" pageName="Features - Возможности системы" />
     </div>
   )
 } 

@@ -19,8 +19,7 @@ export default function Navigation({ title = "Virtual Pitwall" }: NavigationProp
     { href: '/features', label: 'Features' },
     { href: '/mvp_tech_spec', label: 'MVP Tech Spec' },
     { href: '/torgmash-proposal', label: '⚙️ Торгмаш', icon: '⚙️' },
-    { href: '/comments', label: '💬 Комментарии', icon: '💬' },
-    { href: '/shortcut', label: 'DK Racing' },
+    { href: '/legends', label: 'ArtLine' },
     { href: '/dev', label: '🔒 Developer', icon: '🔒' }
   ]
 
@@ -86,21 +85,13 @@ export default function Navigation({ title = "Virtual Pitwall" }: NavigationProp
             >
               ⚙️ Торгмаш
             </Link>
-            <Link 
-              href="/comments" 
+            <Link
+              href="/legends"
               className={`text-sm font-medium transition-colors ${
-                pathname === '/comments' ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
+                pathname.startsWith('/legends') ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
               }`}
             >
-              💬 Комментарии
-            </Link>
-            <Link 
-              href="/shortcut" 
-              className={`text-sm font-medium transition-colors ${
-                pathname.startsWith('/shortcut') ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
-              }`}
-            >
-              DK Racing
+              ArtLine
             </Link>
             <Link 
               href="/dev" 

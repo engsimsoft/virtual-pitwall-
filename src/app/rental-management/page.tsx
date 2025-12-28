@@ -1,4 +1,3 @@
-import CommentSystem from '@/components/CommentSystem'
 import Navigation from '@/components/Navigation'
 import { Shield, FileText, AlertTriangle, CheckCircle, Clock, Settings, BarChart3 } from 'lucide-react'
 
@@ -33,7 +32,7 @@ export default function FleetControlPage() {
             
             <div className="mb-6">
               <p className="text-gray-700 mb-4">
-                <strong>Торгмаш Инжиниринг</strong> — основной производитель гоночных двигателей для автомобилей ShortCut.
+                <strong>Торгмаш Инжиниринг</strong> — основной производитель гоночных двигателей для автомобилей Legends EVO.
               </p>
               
               <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
@@ -218,7 +217,7 @@ export default function FleetControlPage() {
 
             {/* Кейс 2 */}
             <div className="bg-green-50 border border-green-200 rounded-lg p-8">
-              <h3 className="text-xl font-bold text-green-800 mb-4">DK Racing</h3>
+              <h3 className="text-xl font-bold text-green-800 mb-4">ArtLine Engineering</h3>
               <div className="space-y-4 text-green-700">
                 <div><strong>Проблема:</strong> Управление резервным парком из 15 двигателей Торгмаш</div>
                 <div><strong>Решение:</strong> Автоматический мониторинг состояния и планирование ТО</div>
@@ -254,7 +253,7 @@ export default function FleetControlPage() {
 
             {/* Кейс 3 */}
             <div className="bg-purple-50 border border-purple-200 rounded-lg p-8">
-              <h3 className="text-xl font-bold text-purple-800 mb-4">ShortCut team owners</h3>
+              <h3 className="text-xl font-bold text-purple-800 mb-4">Legends EVO team owners</h3>
               <div className="space-y-3 text-purple-700">
                 <div><strong>Проблема:</strong> Контроль эксплуатации арендуемых автомобилей</div>
                 <div><strong>Решение:</strong> Real-time мониторинг и автоматические алерты</div>
@@ -281,7 +280,7 @@ export default function FleetControlPage() {
               <div className="text-white mt-2">
                 <div className="text-yellow-400">🔧 ДВИГАТЕЛЬ: SC_2024_001</div>
                 <div>• Производитель: Торгмаш Инжиниринг</div>
-                <div>• Модель: ShortCut Racing 2024</div>
+                <div>• Модель: Legends EVO Racing 2024</div>
                 <div>• Дата производства: 15.03.2024</div>
                 <div>• Первый запуск: 22.03.2024 14:30</div>
                 <div></div>
@@ -703,7 +702,6 @@ export default function FleetControlPage() {
       </section>
 
       {/* Система комментариев */}
-      <CommentSystem pageId="rental_management" pageName="Fleet Control" />
     </div>
   )
 } 
