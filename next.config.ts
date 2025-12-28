@@ -8,11 +8,6 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   
-  // Игнорируем ESLint ошибки для деплоя
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  
   // Редиректы для новой структуры URL
   async redirects() {
     return [
