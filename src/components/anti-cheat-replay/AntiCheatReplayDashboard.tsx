@@ -8,6 +8,9 @@ import { formatLapTime } from '@/lib/format'
 import { SessionSelector, type SessionBundle } from './SessionSelector'
 import { ScrubTimeline } from './ScrubTimeline'
 import { ReplayRpmChart } from './ReplayRpmChart'
+import { ReplayBoostChart } from './ReplayBoostChart'
+import { ReplaySpeedThrottleChart } from './ReplaySpeedThrottleChart'
+import { IncidentSummary } from './IncidentSummary'
 
 export interface ReplayBundle {
   session: Session
@@ -99,16 +102,30 @@ export function AntiCheatReplayDashboard({ bundles, defaultSessionId }: Props) {
           >
             <ReplayRpmChart samples={samples} violations={bundle.violations} currentMs={current.tMs} />
           </ChartCard>
-          <ChartCard title="Наддув" subtitle="Stage B — placeholder">
-            <PlaceholderPanel label="Boost-чарт (Stage B)" />
+          <ChartCard
+            title="Наддув"
+            subtitle="Declared CAN vs оценка по rpm×газ. Подсвечивается boost/launch."
+          >
+            <ReplayBoostChart samples={samples} violations={bundle.violations} currentMs={current.tMs} />
           </ChartCard>
-          <ChartCard title="Скорость и газ" subtitle="Stage B — placeholder">
-            <PlaceholderPanel label="Speed/Throttle (Stage B)" />
+          <ChartCard
+            title="Скорость и газ"
+            subtitle="V_GPS vs throttle. Launch-control: газ 100% при V_GPS<30."
+          >
+            <ReplaySpeedThrottleChart
+              samples={samples}
+              violations={bundle.violations}
+              currentMs={current.tMs}
+            />
           </ChartCard>
         </section>
         <aside className="flex min-h-0 flex-col gap-2">
-          <ChartCard title="Сводка инцидентов" subtitle="Stage B — placeholder">
-            <PlaceholderPanel label="IncidentSummary (Stage B)" />
+          <ChartCard title="Сводка инцидентов" subtitle="Клик по карточке — переход к моменту">
+            <IncidentSummary
+              incidents={bundle.incidents}
+              currentMs={current.tMs}
+              onSeek={seek}
+            />
           </ChartCard>
           <ChartCard title="Цепочка подписанных блоков" subtitle="Stage C — placeholder">
             <PlaceholderPanel label="HashChainViz (Stage C)" />
