@@ -102,9 +102,9 @@
 - [x] Сгенерировать парк моторов TMS, 8-12 единиц
 - [x] Сгенерировать 6-8 сессий по mock-data design rules (включая нарушения)
 - [x] Дайно-кривые на каждый мотор (синтетические, разумные)
-- [ ] Утилиты: `formatRpm`, `formatLapTime`, monospace-числовой компонент
+- [x] Утилиты: `formatRpm`, `formatLapTime`, monospace-числовой компонент
 
-Тёмная automotive-палитра (`globals.css` + компоненты) изначально входила в M1, но снята: до фиксации брендинга TMS делать палитру преждевременно — переделывать всё равно. Палитра приедет вместе с брендингом, отдельной задачей вне M1-M2.
+M1 закрыт 2026-05-10. Тёмная automotive-палитра вынесена за пределы M1-M2 до фиксации брендинга TMS — см. `decisions/2026-05-10-defer-dark-theme-until-branding.md`.
 
 ### M2 — Anti-cheat showcase (ядро отличия Telos)
 
@@ -142,6 +142,7 @@
 
 - 2026-05-10 — Pivot ArtLine Virtual Pitwall → TMS Telos UI Prototype — `decisions/2026-05-10-pivot-artline-to-tms-telos.md`
 - 2026-05-10 — Role-switcher над общими экранами вместо трёх отдельных дашбордов — `decisions/2026-05-10-role-switcher-over-shared-screens.md`
+- 2026-05-10 — Тёмная палитра отложена до фиксации брендинга TMS — `decisions/2026-05-10-defer-dark-theme-until-branding.md`
 
 ## Открытые вопросы
 
@@ -166,4 +167,4 @@
 
 ## Резюме одной фразой
 
-UI-прототип облачной части TMS Telos с фирменным flagship-экраном античита и role-switcher TMS/клиент/гонщик; M0 (инфраструктура и брендинг) закрыт, M1 (mock data) на финальном шаге — формат-утилиты, после чего дорога открыта в M2 (anti-cheat showcase). Тёмная палитра отложена до фиксации брендинга TMS.
+UI-прототип облачной части TMS Telos с фирменным flagship-экраном античита и role-switcher TMS/клиент/гонщик; M0 (инфраструктура и брендинг) и M1 (mock data) закрыты, дорога открыта в M2 (anti-cheat showcase: live-session + anti-cheat-replay). Тёмная палитра отложена до фиксации брендинга TMS.

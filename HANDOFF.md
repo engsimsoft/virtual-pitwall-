@@ -8,22 +8,16 @@
 
 ## Где остановились
 
-M0 закрыт полностью. Брендинг и метаданные обновлены: `package.json` name, `layout.tsx` (title/description/lang=ru), Navigation default title `🏁 TMS Telos` + dropdownSections очищены и дроп-кнопка скрывается при пустом массиве, footer `page.tsx`. M1 стартован: `src/lib/mockData/types.ts` фиксирует типы всех 9 доменных сущностей (Engine, Session, TelemetrySample с двумя анти-чит каналами, Incident, DynoCurve, Track, Client, Driver, Regulation). Барреля `index.ts` нет — заведётся вместе с первым data-файлом. Все коммиты этой сессии прошли typecheck `tsc --noEmit` начисто.
+M1 закрыт полностью четырьмя feat-коммитами этой сессии (`43f94fe` reference data, `a512368` time-series + incidents, `bc8741a` drop dark-theme из M1, `b7bd703` format-утилиты). Mock-корпус целостный: 3 клиента / 5 водителей / 5 трасс / 10 моторов / 10 дайно-кривых / 8 сессий с детерминированной 5 Hz телеметрией / 6 инцидентов / signed-block цепочки. ID-конвенция зафиксирована (CLI-NN, DRV-NN, TRK-NN для low-cardinality; ENG-NNN, SES-NNN, INC-NNN для high). Format-утилиты `formatRpm`/`formatLapTime` + `MonoNumber` готовы к UI. Все коммиты прошли tsc --noEmit начисто. Тёмная палитра вынесена за M1-M2 — см. ADR `decisions/2026-05-10-defer-dark-theme-until-branding.md`. Дорога открыта в M2.
 
 ## Сделано в последних сессиях
 
+- **2026-05-10 (третья сессия)** — закрытие M1: четыре коммита (`43f94fe` 6 файлов reference data, `a512368` 4 файла генератор/сессии/инциденты с детерминированным синтезом, `bc8741a` ROADMAP без dark-theme, `b7bd703` format.ts + MonoNumber.tsx). По пути: ADR `2026-05-10-defer-dark-theme-until-branding.md` (палитра ждёт брендинг TMS); смотр-tест tsx через npx упёрся в Node ESM/CJS из-за отсутствия `"type": "module"` в package.json — не бага, проверка через tsc + ручная инспекция математики окон нарушений достаточны для прототипа. Окна нарушений в генераторе принудительно поднимают rpmCan/throttle/vGPS до WOT-значений на прямой, чтобы сценарий совпадал с текстом incident summary независимо от фазы лап-цикла.
 - **2026-05-10 (вторая сессия)** — закрытие M0 (брендинг и metadata) тремя коммитами + старт M1: `d0feb4e` пивот-цельный коммит (46 файлов: deletes ArtLine + scaffolding ROADMAP/HANDOFF/decisions/.claude/presentation), `952dbe6` rebrand (5 файлов), `6061a93` types.ts. ArtLine-маркетинг в `page.tsx` (hero, секции Race Control / Команды / Производители) намеренно не тронут — открытым вопросом перенесён в ROADMAP, замена landing — задача M4. Stale-маршруты `/demos`, `/features` в `mainLinks` Navigation тоже флагнуты в открытых вопросах.
 - **2026-05-10 (первая сессия)** — Пивот ArtLine Virtual Pitwall → TMS Telos UI Prototype: удаление ArtLine-страниц и данных, проектирование структуры long-running коллаборации (ROADMAP, HANDOFF, decisions/, slash-команды), фиксация ключевых архитектурных решений. Реструктуризация шаблона: stable canon (open questions, «что не делать», реестр ADR, резюме одной фразой) полностью переехал в ROADMAP; HANDOFF сужен до журнала и снимка текущего состояния, чтобы избежать двойного источника правды.
 
 ## Следующий шаг
 
-**M1 шаг 2 — reference data (без time series).** Создать в `src/lib/mockData/`:
+**M2 — старт с `/demos/live-session`.** Это первый из двух flagship-экранов anti-cheat showcase. Маршрута сейчас нет; создать `src/app/demos/live-session/page.tsx`. Перед кодом — design pass: что выше fold (двойной RPM-чарт двумя линиями rpmCan/rpmGen + delta-индикатор, текущий boost CAN vs дайно-estimate, sparkline скорости/throttle, IMU-блок с G-circle, GPS-mini); как рисовать GPS-трек без карт-библиотеки (SVG-овал по lat/lon из samples, пометка текущей позиции); как чарты подключаются к live-сессии SES-008 (партиал 2 мин). Recharts уже в проекте — использовать. Чарты dual-axis для RPM или две линии в одном Y-домене — определить по плотности.
 
-- `clients.ts` — 3-4 клиента-арендатора (`Client[]`)
-- `drivers.ts` — по 1-2 гонщика на клиента (`Driver[]`)
-- `tracks.ts` — минимум 5 трасс из [presentation.md](presentation.md) (Москва/Moscow Raceway, Казань/Kazan Ring, Сочи Автодром, Игора Драйв, ADM Raceway), `Track[]`
-- `engines.ts` — 8-12 моторов, разнесены по клиентам, разные `EngineStatus` (несколько `live`, остальные `idle`/`maintenance`/`decommissioned` для инвентаря парка), `Engine[]`
-- `dyno.ts` — `DynoCurve` на каждый мотор, синтетическая, разумной формы (peak torque ~5500 rpm, peak power ~7500-8000 rpm, redline согласно `bornAt`/модели)
-- `index.ts` — barrel: re-export типов и data-массивов
-
-Тайм-серии и инциденты — отдельный шаг 3, на этих данных. После reference надо будет выбрать набор UUID/format-конвенции (короткие стабильные ID типа `ENG-001` против hash-like) и зафиксировать в первом data-файле — все остальные подхватят паттерн.
+Anti-cheat-replay (`/demos/anti-cheat-replay`) — следующий за live-session экран в M2, на завершённых сессиях с инцидентами (SES-003, SES-004, SES-005, SES-006). Замок: scrubbable timeline + подсветка violation-windows + визуализация signed-block цепочки.
