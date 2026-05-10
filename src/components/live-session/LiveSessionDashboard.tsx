@@ -6,6 +6,11 @@ import { MonoNumber } from '@/components/MonoNumber'
 import { formatLapTime, formatRpm } from '@/lib/format'
 import { rpmDelta, rpmDeltaSeverity } from '@/lib/antiCheat'
 import { RpmChart } from './RpmChart'
+import { BoostChart } from './BoostChart'
+import { SpeedThrottleChart } from './SpeedThrottleChart'
+import { CurrentValues } from './CurrentValues'
+import { ImuWidget } from './ImuWidget'
+import { GpsTrack } from './GpsTrack'
 
 interface Props {
   session: Session
@@ -65,31 +70,31 @@ export function LiveSessionDashboard({ session, engine, driver, track, client }:
 
           <div className="grid flex-1 min-h-0 grid-cols-2 gap-2">
             <ChartCard title="Наддув" subtitle="декларация CAN vs оценка по rpm×газ">
-              <PlaceholderPanel label="Boost-чарт — Stage B" />
+              <BoostChart samples={windowed} />
             </ChartCard>
             <ChartCard title="Скорость и газ" subtitle="GPS км/ч, throttle %">
-              <PlaceholderPanel label="Speed/Throttle — Stage B" />
+              <SpeedThrottleChart samples={windowed} />
             </ChartCard>
           </div>
         </section>
 
         <aside className="flex min-h-0 flex-col gap-2">
           <ChartCard title="Текущие значения">
-            <PlaceholderPanel label="Current values — Stage B" />
+            <CurrentValues sample={current} />
           </ChartCard>
           <div className="grid flex-1 min-h-0 grid-cols-2 gap-2">
             <ChartCard title="IMU">
-              <PlaceholderPanel label="G-circle — Stage B" />
+              <ImuWidget sample={current} />
             </ChartCard>
-            <ChartCard title="GPS-трек">
-              <PlaceholderPanel label="GPS — Stage B" />
+            <ChartCard title="GPS-трек" subtitle={`${samples.length} GPS-точек`}>
+              <GpsTrack samples={samples} currentIndex={pointer} />
             </ChartCard>
           </div>
         </aside>
       </main>
 
       <footer className="border-t border-gray-200 bg-white px-3 py-2 text-xs text-gray-600">
-        Stage A — каркас. Тикер инцидентов и signed-block bar появятся в Stage C.
+        Stage B — main row собран. Тикер инцидентов и signed-block bar появятся в Stage C.
       </footer>
     </div>
   )
@@ -184,8 +189,3 @@ function DeltaBadge({ delta, severity }: { delta: number; severity: ReturnType<t
   )
 }
 
-function PlaceholderPanel({ label }: { label: string }) {
-  return (
-    <div className="flex h-full items-center justify-center text-xs text-gray-400">{label}</div>
-  )
-}
