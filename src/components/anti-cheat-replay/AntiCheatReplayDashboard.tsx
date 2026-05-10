@@ -11,6 +11,8 @@ import { ReplayRpmChart } from './ReplayRpmChart'
 import { ReplayBoostChart } from './ReplayBoostChart'
 import { ReplaySpeedThrottleChart } from './ReplaySpeedThrottleChart'
 import { IncidentSummary } from './IncidentSummary'
+import { HashChainViz } from './HashChainViz'
+import { PlayControls } from './PlayControls'
 
 export interface ReplayBundle {
   session: Session
@@ -127,31 +129,39 @@ export function AntiCheatReplayDashboard({ bundles, defaultSessionId }: Props) {
               onSeek={seek}
             />
           </ChartCard>
-          <ChartCard title="Цепочка подписанных блоков" subtitle="Stage C — placeholder">
-            <PlaceholderPanel label="HashChainViz (Stage C)" />
+          <ChartCard
+            title="Цепочка подписанных блоков"
+            subtitle={`${bundle.session.signedBlocks.length} блоков, ${bundle.violations.length > 0 ? 'часть содержит нарушения' : 'без нарушений'}`}
+          >
+            <HashChainViz
+              blocks={bundle.session.signedBlocks}
+              violations={bundle.violations}
+              currentMs={current.tMs}
+            />
           </ChartCard>
         </aside>
       </main>
 
       <footer className="flex shrink-0 flex-col gap-1.5 border-t border-gray-200 bg-white px-3 py-2">
-        <div className="flex items-center justify-between gap-3">
-          <button
-            type="button"
-            onClick={() => setPlaying((p) => !p)}
-            className="rounded-sm border border-gray-300 bg-white px-3 py-1 text-xs font-semibold text-gray-800 hover:bg-gray-50"
-          >
-            {playing ? '⏸ Пауза' : '▶ Воспроизвести'}
-          </button>
-          <span className="text-[11px] text-gray-500">
-            Stage A — скраб и подсветка нарушений RPM. Полные контролы и hash chain — Stage B-C.
-          </span>
-        </div>
         <ScrubTimeline
           durationMs={durationMs}
           currentMs={current.tMs}
           violations={bundle.violations}
           onSeek={seek}
         />
+        <div className="flex items-center justify-between gap-3">
+          <PlayControls
+            playing={playing}
+            currentMs={current.tMs}
+            durationMs={durationMs}
+            violations={bundle.violations}
+            onPlayToggle={() => setPlaying((p) => !p)}
+            onSeek={seek}
+          />
+          <span className="text-[11px] text-gray-500">
+            ▶▶/◀◀ — перейти к следующему/предыдущему окну нарушения. Клик по полосе — скраб.
+          </span>
+        </div>
       </footer>
     </div>
   )
@@ -195,8 +205,3 @@ function ChartCard({
   )
 }
 
-function PlaceholderPanel({ label }: { label: string }) {
-  return (
-    <div className="flex h-full items-center justify-center text-xs text-gray-400">{label}</div>
-  )
-}
