@@ -1,0 +1,185 @@
+'use client'
+
+import { useEffect, useMemo, useState } from 'react'
+import type { Client, Driver, Engine, Incident, Session, Track } from '@/lib/mockData/types'
+import type { ViolationWindow } from '@/lib/mockData'
+import { MonoNumber } from '@/components/MonoNumber'
+import { formatLapTime } from '@/lib/format'
+import { SessionSelector, type SessionBundle } from './SessionSelector'
+import { ScrubTimeline } from './ScrubTimeline'
+import { ReplayRpmChart } from './ReplayRpmChart'
+
+export interface ReplayBundle {
+  session: Session
+  engine: Engine
+  driver: Driver
+  track: Track
+  client: Client
+  incidents: Incident[]
+  violations: ViolationWindow[]
+}
+
+interface Props {
+  bundles: ReplayBundle[]
+  defaultSessionId: string
+}
+
+const TICK_MS = 200
+
+export function AntiCheatReplayDashboard({ bundles, defaultSessionId }: Props) {
+  const [selectedId, setSelectedId] = useState(defaultSessionId)
+  const [pointer, setPointer] = useState(0)
+  const [playing, setPlaying] = useState(false)
+
+  const bundle = bundles.find((b) => b.session.id === selectedId) ?? bundles[0]
+  const samples = bundle.session.samples
+  const durationMs = samples[samples.length - 1]?.tMs ?? 0
+  const current = samples[Math.min(pointer, samples.length - 1)] ?? samples[0]
+
+  useEffect(() => {
+    setPointer(0)
+    setPlaying(false)
+  }, [selectedId])
+
+  useEffect(() => {
+    if (!playing) return
+    const id = setInterval(() => {
+      setPointer((p) => {
+        if (p >= samples.length - 1) {
+          setPlaying(false)
+          return p
+        }
+        return p + 1
+      })
+    }, TICK_MS)
+    return () => clearInterval(id)
+  }, [playing, samples.length])
+
+  const selectorBundles: SessionBundle[] = useMemo(
+    () =>
+      bundles.map((b) => ({
+        session: b.session,
+        label: `${b.session.id} · ${b.engine.model}`,
+        sublabel: b.violations.map((v) => v.kind).join(', '),
+      })),
+    [bundles]
+  )
+
+  const seek = (ms: number) => {
+    const idx = nearestSampleIndex(samples, ms)
+    setPointer(idx)
+  }
+
+  return (
+    <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
+      <header className="flex flex-col gap-2 border-b border-gray-200 bg-white px-3 py-2">
+        <div className="grid grid-cols-[1fr_1fr_1fr_auto] items-center gap-4 text-sm">
+          <HeaderCell label="Мотор" primary={bundle.engine.model} secondary={bundle.engine.serialNumber} />
+          <HeaderCell label="Гонщик" primary={bundle.driver.name} secondary={bundle.client.name} />
+          <HeaderCell label="Трасса" primary={bundle.track.name} secondary={bundle.track.city} />
+          <div className="text-right">
+            <div className="text-[10px] uppercase tracking-wider text-gray-500">Позиция</div>
+            <MonoNumber className="text-lg font-semibold text-gray-900">
+              {formatLapTime(current.tMs)}
+            </MonoNumber>
+          </div>
+        </div>
+        <SessionSelector
+          bundles={selectorBundles}
+          selectedId={selectedId}
+          onSelect={setSelectedId}
+        />
+      </header>
+
+      <main className="grid flex-1 min-h-0 grid-cols-[3fr_2fr] gap-2 p-2">
+        <section className="flex min-h-0 flex-col gap-2">
+          <ChartCard
+            title="Обороты"
+            subtitle="CAN vs Gen. Красные полосы — окна нарушений из VIOLATION_WINDOWS."
+          >
+            <ReplayRpmChart samples={samples} violations={bundle.violations} currentMs={current.tMs} />
+          </ChartCard>
+          <ChartCard title="Наддув" subtitle="Stage B — placeholder">
+            <PlaceholderPanel label="Boost-чарт (Stage B)" />
+          </ChartCard>
+          <ChartCard title="Скорость и газ" subtitle="Stage B — placeholder">
+            <PlaceholderPanel label="Speed/Throttle (Stage B)" />
+          </ChartCard>
+        </section>
+        <aside className="flex min-h-0 flex-col gap-2">
+          <ChartCard title="Сводка инцидентов" subtitle="Stage B — placeholder">
+            <PlaceholderPanel label="IncidentSummary (Stage B)" />
+          </ChartCard>
+          <ChartCard title="Цепочка подписанных блоков" subtitle="Stage C — placeholder">
+            <PlaceholderPanel label="HashChainViz (Stage C)" />
+          </ChartCard>
+        </aside>
+      </main>
+
+      <footer className="flex shrink-0 flex-col gap-1.5 border-t border-gray-200 bg-white px-3 py-2">
+        <div className="flex items-center justify-between gap-3">
+          <button
+            type="button"
+            onClick={() => setPlaying((p) => !p)}
+            className="rounded-sm border border-gray-300 bg-white px-3 py-1 text-xs font-semibold text-gray-800 hover:bg-gray-50"
+          >
+            {playing ? '⏸ Пауза' : '▶ Воспроизвести'}
+          </button>
+          <span className="text-[11px] text-gray-500">
+            Stage A — скраб и подсветка нарушений RPM. Полные контролы и hash chain — Stage B-C.
+          </span>
+        </div>
+        <ScrubTimeline
+          durationMs={durationMs}
+          currentMs={current.tMs}
+          violations={bundle.violations}
+          onSeek={seek}
+        />
+      </footer>
+    </div>
+  )
+}
+
+function nearestSampleIndex(samples: { tMs: number }[], ms: number): number {
+  if (samples.length === 0) return 0
+  // Сэмплы равномерные 200 ms, поэтому округлённый индекс точен.
+  const step = samples.length > 1 ? samples[1].tMs - samples[0].tMs : 200
+  const idx = Math.round(ms / step)
+  return Math.min(samples.length - 1, Math.max(0, idx))
+}
+
+function HeaderCell({ label, primary, secondary }: { label: string; primary: string; secondary: string }) {
+  return (
+    <div className="min-w-0">
+      <div className="text-[10px] uppercase tracking-wider text-gray-500">{label}</div>
+      <div className="truncate font-semibold text-gray-900">{primary}</div>
+      <div className="truncate text-[11px] text-gray-500">{secondary}</div>
+    </div>
+  )
+}
+
+function ChartCard({
+  title,
+  subtitle,
+  children,
+}: {
+  title: string
+  subtitle?: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className="flex min-h-0 flex-1 flex-col rounded-md border border-gray-200 bg-white">
+      <div className="border-b border-gray-100 px-3 py-1.5">
+        <div className="text-xs font-semibold uppercase tracking-wide text-gray-700">{title}</div>
+        {subtitle && <div className="truncate text-[11px] text-gray-500">{subtitle}</div>}
+      </div>
+      <div className="min-h-0 flex-1 p-2">{children}</div>
+    </div>
+  )
+}
+
+function PlaceholderPanel({ label }: { label: string }) {
+  return (
+    <div className="flex h-full items-center justify-center text-xs text-gray-400">{label}</div>
+  )
+}

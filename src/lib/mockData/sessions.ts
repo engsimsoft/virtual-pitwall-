@@ -1,5 +1,6 @@
 import type {
   Session,
+  SessionId,
   SessionStatus,
   EngineId,
   TrackId,
@@ -145,6 +146,13 @@ function endedAtFor(spec: SessionSpec): string | null {
   if (spec.status === 'live') return null
   return new Date(new Date(spec.startedAt).getTime() + spec.durationMs).toISOString()
 }
+
+// Окна нарушений на сессию — нужны UI для подсветки бэндов в чартах и
+// timeline. В Incident этот диапазон не лежит (только tMs), а сам спец
+// SessionSpec в этом файле private — поэтому выносим в отдельную карту.
+export const VIOLATION_WINDOWS: Record<SessionId, ViolationWindow[]> = Object.fromEntries(
+  SPECS.map((spec) => [spec.id, spec.violations])
+)
 
 export const SESSIONS: Session[] = SPECS.map((spec) => ({
   id: spec.id,
