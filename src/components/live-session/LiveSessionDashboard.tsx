@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import type { Client, Driver, Engine, Session, Track } from '@/lib/mockData/types'
+import type { Client, Driver, Engine, Incident, Session, Track } from '@/lib/mockData/types'
 import { MonoNumber } from '@/components/MonoNumber'
 import { formatLapTime, formatRpm } from '@/lib/format'
 import { rpmDelta, rpmDeltaSeverity } from '@/lib/antiCheat'
@@ -11,6 +11,8 @@ import { SpeedThrottleChart } from './SpeedThrottleChart'
 import { CurrentValues } from './CurrentValues'
 import { ImuWidget } from './ImuWidget'
 import { GpsTrack } from './GpsTrack'
+import { IncidentTicker } from './IncidentTicker'
+import { SignedBlockBar } from './SignedBlockBar'
 
 interface Props {
   session: Session
@@ -18,12 +20,22 @@ interface Props {
   driver: Driver
   track: Track
   client: Client
+  sessionIncidents: Incident[]
+  fleetFeed: { incident: Incident; sessionId: string }[]
 }
 
 const TICK_MS = 200       // совпадает с шагом 5 Hz в generator.ts
 const WINDOW_MS = 30_000  // окно прокрутки в чартах
 
-export function LiveSessionDashboard({ session, engine, driver, track, client }: Props) {
+export function LiveSessionDashboard({
+  session,
+  engine,
+  driver,
+  track,
+  client,
+  sessionIncidents,
+  fleetFeed,
+}: Props) {
   const { samples } = session
   const [pointer, setPointer] = useState(0)
 
@@ -93,8 +105,21 @@ export function LiveSessionDashboard({ session, engine, driver, track, client }:
         </aside>
       </main>
 
-      <footer className="border-t border-gray-200 bg-white px-3 py-2 text-xs text-gray-600">
-        Stage B — main row собран. Тикер инцидентов и signed-block bar появятся в Stage C.
+      <footer className="grid h-[150px] shrink-0 grid-cols-[3fr_2fr] gap-2 border-t border-gray-200 bg-white p-2">
+        <div className="min-h-0 rounded-md border border-gray-200">
+          <IncidentTicker
+            session={session}
+            sessionIncidents={sessionIncidents}
+            fleetFeed={fleetFeed}
+          />
+        </div>
+        <div className="min-h-0 rounded-md border border-gray-200">
+          <SignedBlockBar
+            blocks={session.signedBlocks}
+            currentTms={current.tMs}
+            durationMs={samples[samples.length - 1]?.tMs ?? 1}
+          />
+        </div>
       </footer>
     </div>
   )
