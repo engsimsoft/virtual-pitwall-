@@ -92,7 +92,7 @@
 - [x] `.claude/commands/handoff.md`, `.claude/commands/resume.md`
 - [x] `decisions/` папка + первое решение
 - [x] Удалить устаревший PROJECT-MEMORY.md
-- [ ] Обновить брендинг: `package.json` name, `layout.tsx` метаданные, `Navigation` дефолтный title, footer-копирайт. Очистить навигацию от ссылок на удалённые страницы.
+- [x] Обновить брендинг: `package.json` name, `layout.tsx` метаданные, `Navigation` дефолтный title, footer-копирайт. Очистить навигацию от ссылок на удалённые страницы.
 
 ### M1 — Mock data + dark theme
 
