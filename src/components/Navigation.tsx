@@ -9,7 +9,7 @@ interface NavigationProps {
   title?: string
 }
 
-export default function Navigation({ title = "Virtual Pitwall" }: NavigationProps) {
+export default function Navigation({ title = "🏁 TMS Telos" }: NavigationProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const pathname = usePathname()
@@ -20,21 +20,7 @@ export default function Navigation({ title = "Virtual Pitwall" }: NavigationProp
     { href: '/features', label: 'Возможности' },
   ]
 
-  const dropdownSections = [
-    {
-      title: 'Партнеры',
-      links: [
-        { href: '/partners/artline', label: '🏁 ArtLine Engineering' },
-        { href: '/partners/torgmash', label: '⚙️ Торгмаш Инжиниринг' },
-      ]
-    },
-    {
-      title: 'Документация',
-      links: [
-        { href: '/mvp_tech_spec', label: '📚 MVP Tech Spec' },
-      ]
-    }
-  ]
+  const dropdownSections: { title: string; links: { href: string; label: string }[] }[] = []
 
   const isActive = (href: string): boolean => {
     if (href === '/') return pathname === '/'
@@ -86,41 +72,43 @@ export default function Navigation({ title = "Virtual Pitwall" }: NavigationProp
             ))}
             
             {/* Dropdown "Ещё" */}
-            <div className="relative">
-              <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
-                className="text-sm font-medium text-gray-700 hover:text-red-600 transition-colors flex items-center gap-1"
-              >
-                Ещё
-                <ChevronDown className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
-              </button>
-              
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-xl py-2 z-50">
-                  {dropdownSections.map((section, sectionIndex) => (
-                    <div key={section.title}>
-                      {sectionIndex > 0 && <div className="border-t border-gray-100 my-2"></div>}
-                      <div className="px-4 py-2">
-                        <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                          {section.title}
+            {dropdownSections.length > 0 && (
+              <div className="relative">
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
+                  className="text-sm font-medium text-gray-700 hover:text-red-600 transition-colors flex items-center gap-1"
+                >
+                  Ещё
+                  <ChevronDown className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-xl py-2 z-50">
+                    {dropdownSections.map((section, sectionIndex) => (
+                      <div key={section.title}>
+                        {sectionIndex > 0 && <div className="border-t border-gray-100 my-2"></div>}
+                        <div className="px-4 py-2">
+                          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                            {section.title}
+                          </div>
+                          {section.links.map((link) => (
+                            <Link
+                              key={link.href}
+                              href={link.href}
+                              className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-red-600 rounded-md transition-colors"
+                              onClick={() => setIsDropdownOpen(false)}
+                            >
+                              {link.label}
+                            </Link>
+                          ))}
                         </div>
-                        {section.links.map((link) => (
-                          <Link
-                            key={link.href}
-                            href={link.href}
-                            className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-red-600 rounded-md transition-colors"
-                            onClick={() => setIsDropdownOpen(false)}
-                          >
-                            {link.label}
-                          </Link>
-                        ))}
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Mobile menu button */}

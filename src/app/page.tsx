@@ -8,7 +8,7 @@ import { motion } from 'framer-motion'
 export default function Home() {
   return (
     <div className="min-h-screen bg-white">
-      <Navigation title="🏁 Virtual Pitwall" />
+      <Navigation />
 
       {/* Hero Section */}
       <section className="relative bg-gradient-to-b from-white to-gray-50 py-20">
@@ -226,7 +226,7 @@ export default function Home() {
       <footer className="bg-gray-50 border-t border-gray-200">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="text-center text-gray-600">
-            <p>© 2025 Virtual Pitwall. Система телеметрии для гоночных серий.</p>
+            <p>© 2026 TMS Telos UI Prototype</p>
           </div>
         </div>
       </footer>
