@@ -63,6 +63,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-tms-orange: #ff4f00;
+  --color-tms-graphite: #39393f;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -104,12 +106,6 @@ body {
 .status-info {
   color: var(--info);
   font-weight: 500;
-}
-
-/* Убираем все анимации и эффекты для профессиональной работы */
-*, *::before, *::after {
-  transition: none !important;
-  animation: none !important;
 }
 
 /* Высокий контраст для критически важных элементов */
