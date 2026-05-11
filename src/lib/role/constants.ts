@@ -2,7 +2,7 @@
 // server-pages могли импортировать без втягивания 'use client' boundary.
 // См. decisions/2026-05-11-role-context-prototype-scope.md.
 
-export type Role = 'tms-engineer' | 'client' | 'driver'
+export type Role = 'tms-engineer' | 'client' | 'driver' | 'race-director'
 
 // Pinned subjects подобраны под SES-008 (единственная live-сессия в моках):
 // engine=ENG-007, client=CLI-03 «Меридиан Рейсинг», driver=DRV-04

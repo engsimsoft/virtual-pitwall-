@@ -5,7 +5,7 @@ export type ClientId = string
 export type DriverId = string
 export type IncidentId = string
 
-export type Role = 'tms-engineer' | 'client' | 'driver'
+export type Role = 'tms-engineer' | 'client' | 'driver' | 'race-director'
 
 export type EngineStatus = 'live' | 'idle' | 'maintenance' | 'decommissioned'
 

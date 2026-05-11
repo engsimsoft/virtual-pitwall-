@@ -5,6 +5,7 @@ import type { Role } from '@/lib/role/constants'
 
 const LABEL: Record<Role, string> = {
   'tms-engineer': 'TMS-инженер',
+  'race-director': 'Организатор класса',
   client: 'Клиент',
   driver: 'Гонщик',
 }

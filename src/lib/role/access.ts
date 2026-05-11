@@ -15,6 +15,7 @@ export type Dashboard =
   | 'drop-zone'
   | 'settings'
   | 'alarms'
+  | 'race-control'
 
 const ACCESS: Record<Dashboard, ReadonlyArray<Role>> = {
   fleet: ['tms-engineer', 'client'],
@@ -30,6 +31,8 @@ const ACCESS: Record<Dashboard, ReadonlyArray<Role>> = {
   settings: ['tms-engineer', 'client'],
   // Alarm Center: TMS видит всё, клиент — свои моторы, гонщик — свои сессии.
   alarms: ['tms-engineer', 'client', 'driver'],
+  // Race Control: только организатор и TMS. Организатор видит всех гонщиков класса.
+  'race-control': ['tms-engineer', 'race-director'],
 }
 
 export function dashboardVisibleToRole(dashboard: Dashboard, role: Role): boolean {

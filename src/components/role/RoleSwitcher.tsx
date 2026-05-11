@@ -10,6 +10,7 @@ interface RoleOption {
 
 const ROLES: RoleOption[] = [
   { value: 'tms-engineer', label: 'TMS', hint: 'TMS-инженер — полный доступ' },
+  { value: 'race-director', label: 'Организатор', hint: 'Организатор класса — Race Control' },
   { value: 'client', label: 'Клиент', hint: 'Клиент-арендатор — свой парк' },
   { value: 'driver', label: 'Гонщик', hint: 'Гонщик — свои сессии' },
 ]

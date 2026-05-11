@@ -8,6 +8,7 @@ import {
   ArrowRight,
   Bell,
   FileText,
+  Flag,
   Server,
   ShieldCheck,
   SlidersHorizontal,
@@ -53,6 +54,12 @@ const SCREENS: ScreenCard[] = [
     description: 'Real-time защита двигателя: алармы по RPM, давлению масла, температуре ОЖ и наддуву. Контрактные штрафы.',
     icon: Bell,
     href: '/demos/alarms',
+  },
+  {
+    title: 'Race Control',
+    description: 'Табло для организатора класса: 15 гонщиков, время кругов, сектора, флаги нарушений (track limits, RPM, overboost).',
+    icon: Flag,
+    href: '/demos/race-control',
   },
   {
     title: 'Incidents',

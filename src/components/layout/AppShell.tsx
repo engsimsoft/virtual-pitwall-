@@ -24,6 +24,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/demos/drop-zone': 'Drop Zone',
   '/demos/settings': 'Regulations',
   '/demos/alarms': 'Alarm Center',
+  '/demos/race-control': 'Race Control',
 }
 
 export function AppShell({ children }: AppShellProps) {
