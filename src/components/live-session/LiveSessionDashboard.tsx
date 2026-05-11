@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Client, Driver, Engine, Incident, Session, Track } from '@/lib/mockData/types'
 import { useRole } from '@/lib/role/RoleContext'
 import { sessionVisibleToRole } from '@/lib/role/access'
 import { Card } from '@/components/ui/Card'
+import { DeviceStatusBar } from '@/components/ui/DeviceStatusBar'
 import { MonoNumber } from '@/components/MonoNumber'
 import { EmptyForRole } from '@/components/role/EmptyForRole'
 import { formatLapTime, formatRpm } from '@/lib/format'
@@ -18,32 +19,60 @@ import { GpsTrack } from './GpsTrack'
 import { IncidentTicker } from './IncidentTicker'
 import { SignedBlockBar } from './SignedBlockBar'
 
-interface Props {
+export interface LiveSessionBundle {
   session: Session
   engine: Engine
   driver: Driver
   track: Track
   client: Client
   sessionIncidents: Incident[]
+}
+
+interface Props {
+  bundles: LiveSessionBundle[]
+  defaultSessionId: string
   fleetFeed: { incident: Incident; sessionId: string }[]
 }
 
-const TICK_MS = 200       // совпадает с шагом 5 Hz в generator.ts
-const WINDOW_MS = 30_000  // окно прокрутки в чартах
+const TICK_MS = 200
+const WINDOW_MS = 30_000
 
 export function LiveSessionDashboard({
-  session,
-  engine,
-  driver,
-  track,
-  client,
-  sessionIncidents,
+  bundles,
+  defaultSessionId,
   fleetFeed,
 }: Props) {
   const { role } = useRole()
-  const hasAccess = sessionVisibleToRole(session, engine, role)
-  const { samples } = session
+  const [selectedId, setSelectedId] = useState(defaultSessionId)
   const [pointer, setPointer] = useState(0)
+
+  const filteredBundles = useMemo(
+    () =>
+      bundles.filter((b) => sessionVisibleToRole(b.session, b.engine, role)),
+    [bundles, role]
+  )
+
+  // При смене роли selectedId может стать недоступным
+  useEffect(() => {
+    if (filteredBundles.length === 0) return
+    if (!filteredBundles.some((b) => b.session.id === selectedId)) {
+      setSelectedId(filteredBundles[0].session.id)
+      setPointer(0)
+    }
+  }, [filteredBundles, selectedId])
+
+  const bundle = filteredBundles.find((b) => b.session.id === selectedId) ?? filteredBundles[0]
+  if (!bundle) {
+    return (
+      <div className="flex h-full flex-col">
+        <EmptyForRole entity="активной live-сессии" />
+      </div>
+    )
+  }
+
+  const { session, engine, driver, track, client, sessionIncidents } = bundle
+  const { samples } = session
+  const hasAccess = sessionVisibleToRole(session, engine, role)
 
   useEffect(() => {
     if (!hasAccess) return
@@ -53,6 +82,14 @@ export function LiveSessionDashboard({
     }, TICK_MS)
     return () => clearInterval(id)
   }, [hasAccess, samples.length])
+
+  // Сброс pointer при смене сессии
+  const prevIdRef = useRef(selectedId)
+  useEffect(() => {
+    if (prevIdRef.current === selectedId) return
+    prevIdRef.current = selectedId
+    setPointer(0)
+  }, [selectedId])
 
   const current = samples[pointer] ?? samples[samples.length - 1]
   const windowed = useMemo(() => {
@@ -83,6 +120,19 @@ export function LiveSessionDashboard({
         client={client}
         session={session}
         currentTms={current.tMs}
+      />
+      <SessionSelector
+        bundles={filteredBundles}
+        selectedId={selectedId}
+        onSelect={setSelectedId}
+      />
+      <DeviceStatusBar
+        serial="TMS-TLS-0042"
+        firmware="v2.1.4"
+        lteBars={4}
+        gpsSats={12}
+        latencyMs={180}
+        lastPacketSec={0.2}
       />
 
       <main className="grid flex-1 min-h-0 grid-cols-1 gap-2 p-2 lg:grid-cols-3">
@@ -140,6 +190,42 @@ export function LiveSessionDashboard({
   )
 }
 
+function SessionSelector({
+  bundles,
+  selectedId,
+  onSelect,
+}: {
+  bundles: LiveSessionBundle[]
+  selectedId: string
+  onSelect: (id: string) => void
+}) {
+  return (
+    <div className="flex items-center gap-1.5 overflow-x-auto border-b border-border-subtle bg-surface px-3 py-1.5">
+      <span className="shrink-0 text-[10px] uppercase tracking-wider text-text-muted">Сессия</span>
+      {bundles.map((b) => {
+        const active = b.session.id === selectedId
+        return (
+          <button
+            key={b.session.id}
+            type="button"
+            onClick={() => onSelect(b.session.id)}
+            className={`shrink-0 rounded-sm border px-2 py-1 text-left text-[11px] transition-colors ${
+              active
+                ? 'border-accent bg-accent-dim text-accent'
+                : 'border-border bg-surface text-text-secondary hover:bg-background'
+            }`}
+          >
+            <div className="font-semibold">{b.session.id}</div>
+            <div className="text-[10px] text-text-muted">
+              {b.engine.model} · {b.track.name}
+            </div>
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 interface HeaderProps {
   engine: Engine
   driver: Driver
@@ -152,7 +238,9 @@ interface HeaderProps {
 function HeaderStrip({ engine, driver, track, client, session, currentTms }: HeaderProps) {
   const status = session.status === 'live' ? 'LIVE' : session.status.toUpperCase()
   const statusColor =
-    session.status === 'live' ? 'bg-status-ok-dim text-status-ok border-status-ok' : 'bg-elevated text-text-secondary border-border'
+    session.status === 'live'
+      ? 'bg-status-ok-dim text-status-ok border-status-ok'
+      : 'bg-elevated text-text-secondary border-border'
 
   return (
     <header className="grid grid-cols-[1fr_1fr_1fr_auto_auto] items-center gap-4 border-b border-border bg-surface px-3 py-2 text-sm">
@@ -185,31 +273,6 @@ function HeaderCell({ label, primary, secondary }: { label: string; primary: str
   )
 }
 
-function ChartCard({
-  title,
-  subtitle,
-  badge,
-  children,
-}: {
-  title: string
-  subtitle?: string
-  badge?: React.ReactNode
-  children: React.ReactNode
-}) {
-  return (
-    <div className="flex min-h-0 flex-1 flex-col rounded-md border border-border bg-surface">
-      <div className="flex items-baseline justify-between gap-2 border-b border-border-subtle px-3 py-1.5">
-        <div className="min-w-0">
-          <div className="text-xs font-semibold uppercase tracking-wide text-text-secondary">{title}</div>
-          {subtitle && <div className="truncate text-[11px] text-text-muted">{subtitle}</div>}
-        </div>
-        {badge}
-      </div>
-      <div className="min-h-0 flex-1 p-2">{children}</div>
-    </div>
-  )
-}
-
 function DeltaBadge({ delta, severity }: { delta: number; severity: ReturnType<typeof rpmDeltaSeverity> }) {
   const tone =
     severity === 'ok'
@@ -228,4 +291,3 @@ function DeltaBadge({ delta, severity }: { delta: number; severity: ReturnType<t
     </div>
   )
 }
-

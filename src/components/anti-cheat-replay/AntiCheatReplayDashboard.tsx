@@ -9,6 +9,7 @@ import {
   sessionVisibleToRole,
 } from '@/lib/role/access'
 import { Card } from '@/components/ui/Card'
+import { DeviceStatusBar } from '@/components/ui/DeviceStatusBar'
 import { MonoNumber } from '@/components/MonoNumber'
 import { EmptyForRole } from '@/components/role/EmptyForRole'
 import { formatLapTime } from '@/lib/format'
@@ -149,6 +150,14 @@ export function AntiCheatReplayDashboard({ bundles, defaultSessionId, initialSee
           onSelect={setSelectedId}
         />
       </header>
+      <DeviceStatusBar
+        serial="TMS-TLS-0042"
+        firmware="v2.1.4"
+        lteBars={4}
+        gpsSats={12}
+        latencyMs={180}
+        lastPacketSec={0.2}
+      />
 
       <main className="grid flex-1 min-h-0 grid-cols-1 gap-2 p-2 lg:grid-cols-[3fr_2fr]">
         <section className="flex min-h-0 flex-col gap-2">
