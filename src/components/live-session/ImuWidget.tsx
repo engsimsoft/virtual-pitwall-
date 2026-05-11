@@ -23,11 +23,11 @@ export function ImuWidget({ sample }: Props) {
   return (
     <div className="flex h-full flex-col items-center justify-between gap-1 p-1 text-xs">
       <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="h-[88px] w-[88px]" aria-label="G-circle">
-        <circle cx={CENTER} cy={CENTER} r={RADIUS} fill="#f9fafb" stroke="#d1d5db" strokeWidth={1} />
-        <circle cx={CENTER} cy={CENTER} r={RADIUS / 2} fill="none" stroke="#e5e7eb" strokeWidth={0.5} />
-        <line x1={CENTER - RADIUS} y1={CENTER} x2={CENTER + RADIUS} y2={CENTER} stroke="#d1d5db" strokeWidth={0.5} />
-        <line x1={CENTER} y1={CENTER - RADIUS} x2={CENTER} y2={CENTER + RADIUS} stroke="#d1d5db" strokeWidth={0.5} />
-        <circle cx={px} cy={py} r={3.5} fill="#dc2626" stroke="#fff" strokeWidth={1} />
+        <circle cx={CENTER} cy={CENTER} r={RADIUS} fill="var(--surface)" stroke="var(--border)" strokeWidth={1} />
+        <circle cx={CENTER} cy={CENTER} r={RADIUS / 2} fill="none" stroke="var(--border-subtle)" strokeWidth={0.5} />
+        <line x1={CENTER - RADIUS} y1={CENTER} x2={CENTER + RADIUS} y2={CENTER} stroke="var(--border)" strokeWidth={0.5} />
+        <line x1={CENTER} y1={CENTER - RADIUS} x2={CENTER} y2={CENTER + RADIUS} stroke="var(--border)" strokeWidth={0.5} />
+        <circle cx={px} cy={py} r={3.5} fill="var(--accent)" stroke="var(--surface)" strokeWidth={1} />
       </svg>
       <div className="grid w-full grid-cols-2 gap-x-2 text-[10px]">
         <Stat label="Поперечное" value={sample.accLatG.toFixed(2)} unit="G" />

@@ -34,8 +34,8 @@ export function IncidentTicker({ session, sessionIncidents, fleetFeed }: Props) 
 
   return (
     <Tile title={`Инциденты сессии ${session.id}`}>
-      <div className="mb-1 flex items-center gap-2 rounded-sm bg-status-ok-dim px-2 py-1 text-[11px] text-emerald-800">
-        <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
+      <div className="mb-1 flex items-center gap-2 rounded-sm bg-status-ok-dim px-2 py-1 text-[11px] text-status-ok">
+        <span className="inline-block h-1.5 w-1.5 rounded-full bg-status-ok" />
         Каналы синхронны, наддув в норме — без инцидентов.
       </div>
       <div className="text-[10px] uppercase tracking-wider text-text-muted">

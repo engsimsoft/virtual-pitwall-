@@ -30,15 +30,15 @@ export function GpsTrack({ samples, currentIndex }: Props) {
   return (
     <div className="flex h-full flex-col items-center justify-center p-1">
       <svg viewBox={`0 0 ${VB} ${VB}`} className="h-[120px] w-[120px]" aria-label="GPS-трек">
-        <rect x={0} y={0} width={VB} height={VB} fill="#f9fafb" />
+        <rect x={0} y={0} width={VB} height={VB} fill="var(--surface)" />
         <polyline
           points={polyline}
           fill="none"
-          stroke="#9ca3af"
+          stroke="var(--text-muted)"
           strokeWidth={0.8}
           strokeLinejoin="round"
         />
-        <circle cx={cursor.x} cy={cursor.y} r={2.4} fill="#dc2626" stroke="#fff" strokeWidth={0.8} />
+        <circle cx={cursor.x} cy={cursor.y} r={2.4} fill="var(--status-critical)" stroke="var(--surface)" strokeWidth={0.8} />
       </svg>
     </div>
   )

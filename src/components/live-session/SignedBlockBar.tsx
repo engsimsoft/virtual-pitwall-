@@ -30,8 +30,8 @@ export function SignedBlockBar({ blocks, currentTms, durationMs }: Props) {
               <div
                 key={b.index}
                 style={{ width: `${widthPct}%` }}
-                className={`flex items-center justify-center border-r border-white/80 last:border-r-0 ${
-                  active ? 'bg-status-ok-dim text-emerald-800' : 'bg-surface text-text-muted'
+                className={`flex items-center justify-center border-r border-border-subtle last:border-r-0 ${
+                  active ? 'bg-status-ok-dim text-status-ok' : 'bg-elevated text-text-muted'
                 }`}
               >
                 <MonoNumber className="text-[10px]">#{b.index}</MonoNumber>
@@ -39,7 +39,7 @@ export function SignedBlockBar({ blocks, currentTms, durationMs }: Props) {
             )
           })}
           <div
-            className="absolute top-0 h-full w-px bg-red-500"
+            className="absolute top-0 h-full w-px bg-status-critical"
             style={{ left: `${cursorPct}%` }}
           />
         </div>

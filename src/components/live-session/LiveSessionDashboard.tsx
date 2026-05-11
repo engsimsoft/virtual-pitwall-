@@ -47,12 +47,10 @@ export function LiveSessionDashboard({
   const [pointer, setPointer] = useState(0)
 
   const filteredBundles = useMemo(
-    () =>
-      bundles.filter((b) => sessionVisibleToRole(b.session, b.engine, role)),
+    () => bundles.filter((b) => sessionVisibleToRole(b.session, b.engine, role)),
     [bundles, role]
   )
 
-  // При смене роли selectedId может стать недоступным
   useEffect(() => {
     if (filteredBundles.length === 0) return
     if (!filteredBundles.some((b) => b.session.id === selectedId)) {
@@ -83,7 +81,6 @@ export function LiveSessionDashboard({
     return () => clearInterval(id)
   }, [hasAccess, samples.length])
 
-  // Сброс pointer при смене сессии
   const prevIdRef = useRef(selectedId)
   useEffect(() => {
     if (prevIdRef.current === selectedId) return
@@ -113,6 +110,7 @@ export function LiveSessionDashboard({
 
   return (
     <div className="flex h-full flex-col">
+      {/* Header strip */}
       <HeaderStrip
         engine={engine}
         driver={driver}
@@ -121,11 +119,37 @@ export function LiveSessionDashboard({
         session={session}
         currentTms={current.tMs}
       />
-      <SessionSelector
-        bundles={filteredBundles}
-        selectedId={selectedId}
-        onSelect={setSelectedId}
-      />
+
+      {/* Session chips */}
+      <div className="shrink-0 border-b border-border-subtle bg-surface px-3 py-1.5">
+        <div className="flex items-center gap-1.5 overflow-x-auto">
+          <span className="shrink-0 text-[10px] uppercase tracking-wider text-text-muted">
+            Сессия
+          </span>
+          {filteredBundles.map((b) => {
+            const active = b.session.id === selectedId
+            return (
+              <button
+                key={b.session.id}
+                type="button"
+                onClick={() => onSelectSession(b.session.id)}
+                className={`shrink-0 rounded-sm border px-2 py-1 text-left text-[11px] transition-colors ${
+                  active
+                    ? 'border-accent bg-accent-dim text-accent'
+                    : 'border-border bg-surface text-text-secondary hover:bg-background'
+                }`}
+              >
+                <div className="font-semibold">{b.session.id}</div>
+                <div className="text-[10px] text-text-muted">
+                  {b.engine.model} · {b.track.name}
+                </div>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Device status */}
       <DeviceStatusBar
         serial="TMS-TLS-0042"
         firmware="v2.1.4"
@@ -135,50 +159,88 @@ export function LiveSessionDashboard({
         lastPacketSec={0.2}
       />
 
-      <main className="grid flex-1 min-h-0 grid-cols-1 gap-2 p-2 lg:grid-cols-3">
-        <section className="flex min-h-0 flex-col gap-2 lg:col-span-2">
-          <Card
-            title="Обороты"
-            subtitle="CAN vs Gen (независимый импульсный канал)"
-            badge={<DeltaBadge delta={delta} severity={severity} />}
-          >
-            <RpmChart samples={windowed} />
-          </Card>
+      {/* Main charts area — scrollable on mobile, flex on desktop */}
+      <div className="flex-1 min-h-0 overflow-y-auto lg:overflow-hidden">
+        <div className="flex h-full flex-col gap-2 p-2 lg:flex-row">
+          {/* LEFT COLUMN — wider */}
+          <div className="flex flex-col gap-2 flex-1 min-h-0 lg:flex-[2] lg:basis-0">
+            {/* RPM chart — largest */}
+            <div className="flex-[1.3] min-h-[200px] flex flex-col">
+              <Card
+                title="Обороты"
+                subtitle="CAN vs Gen (независимый импульсный канал)"
+                badge={<DeltaBadge delta={delta} severity={severity} />}
+                className="h-full"
+              >
+                <div className="h-full w-full">
+                  <RpmChart samples={windowed} />
+                </div>
+              </Card>
+            </div>
 
-          <div className="grid flex-1 min-h-0 grid-cols-1 gap-2 md:grid-cols-2">
-            <Card title="Наддув" subtitle="декларация CAN vs оценка по rpm×газ">
-              <BoostChart samples={windowed} />
-            </Card>
-            <Card title="Скорость и газ" subtitle="GPS км/ч, throttle %">
-              <SpeedThrottleChart samples={windowed} />
-            </Card>
+            {/* Boost + Speed row */}
+            <div className="flex-1 min-h-[160px] grid grid-cols-1 md:grid-cols-2 gap-2">
+              <Card
+                title="Наддув"
+                subtitle="декларация CAN vs оценка"
+                className="h-full"
+              >
+                <div className="h-full w-full">
+                  <BoostChart samples={windowed} />
+                </div>
+              </Card>
+              <Card
+                title="Скорость и газ"
+                subtitle="GPS км/ч, throttle %"
+                className="h-full"
+              >
+                <div className="h-full w-full">
+                  <SpeedThrottleChart samples={windowed} />
+                </div>
+              </Card>
+            </div>
           </div>
-        </section>
 
-        <aside className="flex min-h-0 flex-col gap-2">
-          <Card title="Текущие значения">
-            <CurrentValues sample={current} />
-          </Card>
-          <div className="grid flex-1 min-h-0 grid-cols-2 gap-2">
-            <Card title="IMU">
-              <ImuWidget sample={current} />
-            </Card>
-            <Card title="GPS-трек" subtitle={`${samples.length} GPS-точек`}>
-              <GpsTrack samples={samples} currentIndex={pointer} />
-            </Card>
+          {/* RIGHT COLUMN — narrower */}
+          <div className="flex flex-col gap-2 flex-1 min-h-0 lg:flex-1 lg:basis-0">
+            {/* Current values */}
+            <div className="flex-1 min-h-[160px] flex flex-col">
+              <Card title="Текущие значения" className="h-full">
+                <CurrentValues sample={current} />
+              </Card>
+            </div>
+
+            {/* IMU + GPS row */}
+            <div className="flex-1 min-h-[160px] grid grid-cols-2 gap-2">
+              <Card title="IMU" className="h-full">
+                <div className="h-full w-full">
+                  <ImuWidget sample={current} />
+                </div>
+              </Card>
+              <Card
+                title="GPS-трек"
+                subtitle={`${samples.length} точек`}
+                className="h-full"
+              >
+                <div className="h-full w-full">
+                  <GpsTrack samples={samples} currentIndex={pointer} />
+                </div>
+              </Card>
+            </div>
           </div>
-        </aside>
-      </main>
+        </div>
+      </div>
 
-      <footer className="grid h-[150px] shrink-0 grid-cols-1 gap-2 border-t border-border bg-surface p-2 lg:grid-cols-[3fr_2fr]">
-        <div className="min-h-0 rounded-md border border-border">
+      {/* Footer ticker + blocks */}
+      <footer className="shrink-0 min-h-[90px] max-h-[130px] border-t border-border bg-surface p-2 grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-2">
+        <div className="min-h-0 overflow-hidden rounded-md border border-border">
           <IncidentTicker
             session={session}
             sessionIncidents={sessionIncidents}
             fleetFeed={fleetFeed}
           />
         </div>
-        <div className="min-h-0 rounded-md border border-border">
+        <div className="min-h-0 overflow-hidden rounded-md border border-border">
           <SignedBlockBar
             blocks={session.signedBlocks}
             currentTms={current.tMs}
@@ -188,42 +250,11 @@ export function LiveSessionDashboard({
       </footer>
     </div>
   )
-}
 
-function SessionSelector({
-  bundles,
-  selectedId,
-  onSelect,
-}: {
-  bundles: LiveSessionBundle[]
-  selectedId: string
-  onSelect: (id: string) => void
-}) {
-  return (
-    <div className="flex items-center gap-1.5 overflow-x-auto border-b border-border-subtle bg-surface px-3 py-1.5">
-      <span className="shrink-0 text-[10px] uppercase tracking-wider text-text-muted">Сессия</span>
-      {bundles.map((b) => {
-        const active = b.session.id === selectedId
-        return (
-          <button
-            key={b.session.id}
-            type="button"
-            onClick={() => onSelect(b.session.id)}
-            className={`shrink-0 rounded-sm border px-2 py-1 text-left text-[11px] transition-colors ${
-              active
-                ? 'border-accent bg-accent-dim text-accent'
-                : 'border-border bg-surface text-text-secondary hover:bg-background'
-            }`}
-          >
-            <div className="font-semibold">{b.session.id}</div>
-            <div className="text-[10px] text-text-muted">
-              {b.engine.model} · {b.track.name}
-            </div>
-          </button>
-        )
-      })}
-    </div>
-  )
+  function onSelectSession(id: string) {
+    setSelectedId(id)
+    setPointer(0)
+  }
 }
 
 interface HeaderProps {
@@ -236,14 +267,9 @@ interface HeaderProps {
 }
 
 function HeaderStrip({ engine, driver, track, client, session, currentTms }: HeaderProps) {
-  const status = session.status === 'live' ? 'LIVE' : session.status.toUpperCase()
-  const statusColor =
-    session.status === 'live'
-      ? 'bg-status-ok-dim text-status-ok border-status-ok'
-      : 'bg-elevated text-text-secondary border-border'
-
+  const isLive = session.status === 'live'
   return (
-    <header className="grid grid-cols-[1fr_1fr_1fr_auto_auto] items-center gap-4 border-b border-border bg-surface px-3 py-2 text-sm">
+    <header className="shrink-0 grid grid-cols-[1fr_1fr_1fr_auto_auto] items-center gap-4 border-b border-border bg-surface px-3 py-2 text-sm">
       <HeaderCell label="Мотор" primary={engine.model} secondary={engine.serialNumber} />
       <HeaderCell label="Гонщик" primary={driver.name} secondary={client.name} />
       <HeaderCell label="Трасса" primary={track.name} secondary={track.city} />
@@ -253,17 +279,34 @@ function HeaderStrip({ engine, driver, track, client, session, currentTms }: Hea
           {formatLapTime(currentTms)}
         </MonoNumber>
       </div>
-      <div className={`flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs font-semibold ${statusColor}`}>
-        {session.status === 'live' && (
-          <span className="inline-block h-1.5 w-1.5 rounded-full bg-status-ok animate-pulse-live" />
+      <div
+        className={`flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs font-semibold ${
+          isLive
+            ? 'bg-status-ok-dim text-status-ok border-status-ok'
+            : 'bg-elevated text-text-secondary border-border'
+        }`}
+      >
+        {isLive && (
+          <span className="relative inline-flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-status-ok opacity-75" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-status-ok" />
+          </span>
         )}
-        {status}
+        {isLive ? 'LIVE' : session.status.toUpperCase()}
       </div>
     </header>
   )
 }
 
-function HeaderCell({ label, primary, secondary }: { label: string; primary: string; secondary: string }) {
+function HeaderCell({
+  label,
+  primary,
+  secondary,
+}: {
+  label: string
+  primary: string
+  secondary: string
+}) {
   return (
     <div className="min-w-0">
       <div className="text-[10px] uppercase tracking-wider text-text-muted">{label}</div>
@@ -273,7 +316,13 @@ function HeaderCell({ label, primary, secondary }: { label: string; primary: str
   )
 }
 
-function DeltaBadge({ delta, severity }: { delta: number; severity: ReturnType<typeof rpmDeltaSeverity> }) {
+function DeltaBadge({
+  delta,
+  severity,
+}: {
+  delta: number
+  severity: ReturnType<typeof rpmDeltaSeverity>
+}) {
   const tone =
     severity === 'ok'
       ? 'bg-status-ok-dim text-status-ok border-status-ok'
@@ -282,7 +331,9 @@ function DeltaBadge({ delta, severity }: { delta: number; severity: ReturnType<t
         : 'bg-status-critical-dim text-status-critical border-status-critical'
   const sign = delta > 0 ? '+' : ''
   return (
-    <div className={`flex items-center gap-1.5 rounded border px-2 py-0.5 text-[11px] font-semibold ${tone}`}>
+    <div
+      className={`flex items-center gap-1.5 rounded border px-2 py-0.5 text-[11px] font-semibold ${tone}`}
+    >
       <span className="text-text-muted">Δ</span>
       <MonoNumber>
         {sign}
