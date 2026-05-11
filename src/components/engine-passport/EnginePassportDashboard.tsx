@@ -8,16 +8,17 @@ import type {
   EngineStatus,
   Incident,
   MaintenanceEvent,
-  Session,
 } from '@/lib/mockData/types'
 import { DynoCard } from './DynoCard'
 import { EngineSelector } from './EngineSelector'
+import { SessionsLog, type SessionLogRow } from './SessionsLog'
+import { MaintenanceLog } from './MaintenanceLog'
 
 export interface PassportBundle {
   engine: Engine
   client: Client | null
   dyno: DynoCurve | null
-  sessions: Session[]
+  sessions: SessionLogRow[]
   incidents: Incident[]
   maintenance: MaintenanceEvent[]
 }
@@ -79,20 +80,41 @@ export function EnginePassportDashboard({ bundles, defaultEngineId }: Props) {
         <section className="flex min-h-0 flex-col gap-2">
           <DynoCard engine={engine} dyno={dyno} />
         </section>
-        <aside className="flex min-h-0 flex-col rounded-md border border-gray-200 bg-white">
-          <div className="border-b border-gray-100 px-3 py-1.5">
-            <div className="text-xs font-semibold uppercase tracking-wide text-gray-700">
-              История и обслуживание
-            </div>
-            <div className="truncate text-[11px] text-gray-500">
-              Сессии · ремонты · инциденты — следующая стадия
-            </div>
-          </div>
-          <div className="flex flex-1 items-center justify-center px-3 text-[11px] text-gray-400">
-            Stage B
-          </div>
+        <aside className="grid min-h-0 grid-rows-2 gap-2">
+          <LogCard
+            title="Журнал сессий"
+            subtitle="newest first · клик ведёт в сессию-отчёт"
+          >
+            <SessionsLog rows={bundle.sessions} />
+          </LogCard>
+          <LogCard
+            title="Журнал обслуживания"
+            subtitle={`${bundle.maintenance.length} запис${bundle.maintenance.length === 1 ? 'ь' : bundle.maintenance.length >= 2 && bundle.maintenance.length <= 4 ? 'и' : 'ей'}`}
+          >
+            <MaintenanceLog events={bundle.maintenance} />
+          </LogCard>
         </aside>
       </main>
+    </div>
+  )
+}
+
+function LogCard({
+  title,
+  subtitle,
+  children,
+}: {
+  title: string
+  subtitle: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className="flex min-h-0 flex-col rounded-md border border-gray-200 bg-white">
+      <div className="border-b border-gray-100 px-3 py-1.5">
+        <div className="text-xs font-semibold uppercase tracking-wide text-gray-700">{title}</div>
+        <div className="truncate text-[11px] text-gray-500">{subtitle}</div>
+      </div>
+      <div className="min-h-0 flex-1">{children}</div>
     </div>
   )
 }
