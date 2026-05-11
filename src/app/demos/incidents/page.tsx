@@ -33,6 +33,8 @@ export default function IncidentsPage() {
       return {
         incident,
         engineModel: engine?.model ?? '—',
+        engineClientId: engine?.clientId ?? null,
+        sessionDriverId: session?.driverId ?? '',
         trackName: track?.name ?? '—',
         clientName: client?.name ?? null,
         sessionDate: session?.startedAt.slice(0, 10) ?? '—',

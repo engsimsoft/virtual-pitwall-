@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type {
   Client,
   DynoCurve,
@@ -8,7 +8,10 @@ import type {
   EngineStatus,
   MaintenanceEvent,
 } from '@/lib/mockData/types'
+import { useRole } from '@/lib/role/RoleContext'
+import { dashboardVisibleToRole, engineVisibleToRole } from '@/lib/role/access'
 import { DashboardTopBar } from '@/components/ui/DashboardTopBar'
+import { EmptyForRole } from '@/components/role/EmptyForRole'
 import { DynoCard } from './DynoCard'
 import { EngineSelector } from './EngineSelector'
 import { SessionsLog, type SessionLogRow } from './SessionsLog'
@@ -27,6 +30,7 @@ export interface PassportBundle {
 interface Props {
   bundles: PassportBundle[]
   defaultEngineId: string
+  driverEngineIds: string[]
 }
 
 const STATUS_LABEL: Record<EngineStatus, string> = {
@@ -43,9 +47,52 @@ const STATUS_BADGE: Record<EngineStatus, string> = {
   decommissioned: 'border-gray-200 bg-gray-100 text-gray-400',
 }
 
-export function EnginePassportDashboard({ bundles, defaultEngineId }: Props) {
+export function EnginePassportDashboard({ bundles, defaultEngineId, driverEngineIds }: Props) {
+  const { role } = useRole()
+  const hasAccess = dashboardVisibleToRole('engine-passport', role)
+  const driverEngineIdSet = useMemo(() => new Set(driverEngineIds), [driverEngineIds])
+
+  const filteredBundles = useMemo(
+    () =>
+      hasAccess
+        ? bundles.filter((b) =>
+            engineVisibleToRole(b.engine, role, driverEngineIdSet),
+          )
+        : [],
+    [hasAccess, bundles, role, driverEngineIdSet],
+  )
+
   const [selectedId, setSelectedId] = useState(defaultEngineId)
-  const bundle = bundles.find((b) => b.engine.id === selectedId) ?? bundles[0]
+
+  // При смене роли selectedId может оказаться вне scope — переключаем
+  // на первый доступный bundle.
+  useEffect(() => {
+    if (filteredBundles.length === 0) return
+    if (!filteredBundles.some((b) => b.engine.id === selectedId)) {
+      setSelectedId(filteredBundles[0].engine.id)
+    }
+  }, [filteredBundles, selectedId])
+
+  if (!hasAccess) {
+    return (
+      <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
+        <DashboardTopBar />
+        <EmptyForRole entity="доступа к паспортам моторов" />
+      </div>
+    )
+  }
+
+  if (filteredBundles.length === 0) {
+    return (
+      <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
+        <DashboardTopBar />
+        <EmptyForRole entity="моторов в её скоупе" />
+      </div>
+    )
+  }
+
+  const bundle =
+    filteredBundles.find((b) => b.engine.id === selectedId) ?? filteredBundles[0]
   const { engine, client, dyno } = bundle
 
   return (
@@ -75,7 +122,11 @@ export function EnginePassportDashboard({ bundles, defaultEngineId }: Props) {
           />
           <StatusBadge status={engine.status} />
         </div>
-        <EngineSelector bundles={bundles} selectedId={selectedId} onSelect={setSelectedId} />
+        <EngineSelector
+          bundles={filteredBundles}
+          selectedId={bundle.engine.id}
+          onSelect={setSelectedId}
+        />
       </header>
 
       <main className="grid flex-1 min-h-0 grid-cols-[2fr_1fr] gap-2 p-2">

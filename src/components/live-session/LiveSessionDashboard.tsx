@@ -2,8 +2,11 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import type { Client, Driver, Engine, Incident, Session, Track } from '@/lib/mockData/types'
+import { useRole } from '@/lib/role/RoleContext'
+import { sessionVisibleToRole } from '@/lib/role/access'
 import { MonoNumber } from '@/components/MonoNumber'
 import { DashboardTopBar } from '@/components/ui/DashboardTopBar'
+import { EmptyForRole } from '@/components/role/EmptyForRole'
 import { formatLapTime, formatRpm } from '@/lib/format'
 import { rpmDelta, rpmDeltaSeverity } from '@/lib/antiCheat'
 import { RpmChart } from './RpmChart'
@@ -37,16 +40,19 @@ export function LiveSessionDashboard({
   sessionIncidents,
   fleetFeed,
 }: Props) {
+  const { role } = useRole()
+  const hasAccess = sessionVisibleToRole(session, engine, role)
   const { samples } = session
   const [pointer, setPointer] = useState(0)
 
   useEffect(() => {
+    if (!hasAccess) return
     if (samples.length === 0) return
     const id = setInterval(() => {
       setPointer((p) => (p < samples.length - 1 ? p + 1 : p))
     }, TICK_MS)
     return () => clearInterval(id)
-  }, [samples.length])
+  }, [hasAccess, samples.length])
 
   const current = samples[pointer] ?? samples[samples.length - 1]
   const windowed = useMemo(() => {
@@ -54,6 +60,15 @@ export function LiveSessionDashboard({
     const minT = Math.max(0, current.tMs - WINDOW_MS)
     return samples.filter((s) => s.tMs >= minT && s.tMs <= current.tMs)
   }, [samples, current])
+
+  if (!hasAccess) {
+    return (
+      <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
+        <DashboardTopBar />
+        <EmptyForRole entity="активной live-сессии" />
+      </div>
+    )
+  }
 
   if (!current) return null
 

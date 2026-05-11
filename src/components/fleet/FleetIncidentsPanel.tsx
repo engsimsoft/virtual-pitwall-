@@ -7,6 +7,8 @@ import { formatLapTime } from '@/lib/format'
 export interface IncidentRow {
   incident: Incident
   engineModel: string
+  engineClientId: string | null
+  sessionDriverId: string
   href: string | null
 }
 

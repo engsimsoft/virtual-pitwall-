@@ -7,14 +7,9 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import type { Role } from './constants'
 
-export type Role = 'tms-engineer' | 'client' | 'driver'
-
-// Прикреплённые ID для не-TMS ролей. Прототип не даёт UX-выбора конкретного
-// клиента или гонщика — переключатель меняет уровень доступа, субъект
-// фиксирован. См. decisions/2026-05-11-role-context-prototype-scope.md.
-export const PINNED_CLIENT_ID = 'CLI-01'
-export const PINNED_DRIVER_ID = 'DRV-01'
+export { type Role, PINNED_CLIENT_ID, PINNED_DRIVER_ID } from './constants'
 
 interface RoleContextValue {
   role: Role

@@ -9,6 +9,7 @@ import {
   SESSIONS,
   TRACKS,
 } from '@/lib/mockData'
+import { PINNED_DRIVER_ID } from '@/lib/role/constants'
 import {
   EnginePassportDashboard,
   type PassportBundle,
@@ -90,7 +91,17 @@ export default async function EnginePassportPage({
 
   if (bundles.length === 0) notFound()
 
+  const driverEngineIds = Array.from(
+    new Set(
+      SESSIONS.filter((s) => s.driverId === PINNED_DRIVER_ID).map((s) => s.engineId)
+    )
+  )
+
   return (
-    <EnginePassportDashboard bundles={bundles} defaultEngineId={initialEngineId} />
+    <EnginePassportDashboard
+      bundles={bundles}
+      defaultEngineId={initialEngineId}
+      driverEngineIds={driverEngineIds}
+    />
   )
 }

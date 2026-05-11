@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type {
   Client,
   Driver,
@@ -10,8 +10,14 @@ import type {
   Track,
 } from '@/lib/mockData/types'
 import type { ViolationWindow } from '@/lib/mockData'
+import { useRole } from '@/lib/role/RoleContext'
+import {
+  dashboardVisibleToRole,
+  sessionVisibleToRole,
+} from '@/lib/role/access'
 import { MonoNumber } from '@/components/MonoNumber'
 import { DashboardTopBar } from '@/components/ui/DashboardTopBar'
+import { EmptyForRole } from '@/components/role/EmptyForRole'
 import { formatLapTime } from '@/lib/format'
 import { SessionPicker } from './SessionPicker'
 import { HashChainList } from './HashChainList'
@@ -34,11 +40,48 @@ interface Props {
 }
 
 export function BlackBoxDashboard({ bundles, defaultSessionId }: Props) {
-  const [selectedId, setSelectedId] = useState(defaultSessionId)
-  const bundle = bundles.find((b) => b.session.id === selectedId) ?? bundles[0]
-  const blocks = bundle.session.signedBlocks
+  const { role } = useRole()
+  const hasAccess = dashboardVisibleToRole('black-box', role)
+  const filteredBundles = useMemo(
+    () =>
+      hasAccess
+        ? bundles.filter((b) => sessionVisibleToRole(b.session, b.engine, role))
+        : [],
+    [hasAccess, bundles, role],
+  )
 
+  const [selectedId, setSelectedId] = useState(defaultSessionId)
   const [selectedBlockIndex, setSelectedBlockIndex] = useState(0)
+
+  useEffect(() => {
+    if (filteredBundles.length === 0) return
+    if (!filteredBundles.some((b) => b.session.id === selectedId)) {
+      setSelectedId(filteredBundles[0].session.id)
+      setSelectedBlockIndex(0)
+    }
+  }, [filteredBundles, selectedId])
+
+  if (!hasAccess) {
+    return (
+      <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
+        <DashboardTopBar />
+        <EmptyForRole entity="доступа к чёрному ящику" />
+      </div>
+    )
+  }
+
+  if (filteredBundles.length === 0) {
+    return (
+      <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
+        <DashboardTopBar />
+        <EmptyForRole entity="записей в её скоупе" />
+      </div>
+    )
+  }
+
+  const bundle =
+    filteredBundles.find((b) => b.session.id === selectedId) ?? filteredBundles[0]
+  const blocks = bundle.session.signedBlocks
   // Сбрасываем выбранный блок при смене сессии — индексы блоков валидны для
   // конкретной сессии, на чужой может выйти за пределы.
   const safeBlockIndex = Math.min(selectedBlockIndex, blocks.length - 1)
@@ -109,7 +152,11 @@ export function BlackBoxDashboard({ bundles, defaultSessionId }: Props) {
           />
           <ChainStatusBadge totalBlocks={blocks.length} />
         </div>
-        <SessionPicker bundles={bundles} selectedId={selectedId} onSelect={handleSessionSelect} />
+        <SessionPicker
+          bundles={filteredBundles}
+          selectedId={bundle.session.id}
+          onSelect={handleSessionSelect}
+        />
       </header>
 
       <main className="grid flex-1 min-h-0 grid-cols-[3fr_2fr] gap-2 p-2">

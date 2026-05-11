@@ -1,4 +1,5 @@
 import { CLIENTS, ENGINES, INCIDENTS, SESSIONS } from '@/lib/mockData'
+import { PINNED_DRIVER_ID } from '@/lib/role/constants'
 import { FleetDashboard, type FleetEngineRow } from '@/components/fleet/FleetDashboard'
 import type { IncidentRow } from '@/components/fleet/FleetIncidentsPanel'
 
@@ -14,8 +15,17 @@ const SEVERITY_RANK = { violation: 0, warn: 1, info: 2 } as const
 export default function FleetPage() {
   const clientById = new Map(CLIENTS.map((c) => [c.id, c]))
   const engineById = new Map(ENGINES.map((e) => [e.id, e]))
+  const sessionById = new Map(SESSIONS.map((s) => [s.id, s]))
   const liveSessionByEngine = new Map(
     SESSIONS.filter((s) => s.status === 'live').map((s) => [s.engineId, s])
+  )
+  // Engine'ы, на которых у пинённого гонщика были сессии — нужно для
+  // role-фильтрации в client-компоненте. Server считает один раз, клиент
+  // получает уже готовый список.
+  const driverEngineIds = Array.from(
+    new Set(
+      SESSIONS.filter((s) => s.driverId === PINNED_DRIVER_ID).map((s) => s.engineId)
+    )
   )
   const sessionCountByEngine = new Map<string, number>()
   for (const s of SESSIONS) {
@@ -41,6 +51,7 @@ export default function FleetPage() {
     )
     .map((incident) => {
       const engine = engineById.get(incident.engineId)
+      const session = sessionById.get(incident.sessionId)
       let href: string | null = null
       if (LIVE_SESSION_IDS.has(incident.sessionId)) {
         href = '/demos/live-session'
@@ -50,9 +61,18 @@ export default function FleetPage() {
       return {
         incident,
         engineModel: engine?.model ?? '—',
+        engineClientId: engine?.clientId ?? null,
+        sessionDriverId: session?.driverId ?? '',
         href,
       }
     })
 
-  return <FleetDashboard rows={engineRows} clients={CLIENTS} incidents={incidentRows} />
+  return (
+    <FleetDashboard
+      rows={engineRows}
+      clients={CLIENTS}
+      incidents={incidentRows}
+      driverEngineIds={driverEngineIds}
+    />
+  )
 }

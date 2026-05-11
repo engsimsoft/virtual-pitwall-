@@ -3,8 +3,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Client, Driver, Engine, Incident, Session, Track } from '@/lib/mockData/types'
 import type { ViolationWindow } from '@/lib/mockData'
+import { useRole } from '@/lib/role/RoleContext'
+import {
+  dashboardVisibleToRole,
+  sessionVisibleToRole,
+} from '@/lib/role/access'
 import { MonoNumber } from '@/components/MonoNumber'
 import { DashboardTopBar } from '@/components/ui/DashboardTopBar'
+import { EmptyForRole } from '@/components/role/EmptyForRole'
 import { formatLapTime } from '@/lib/format'
 import { SessionSelector, type SessionBundle } from './SessionSelector'
 import { ScrubTimeline } from './ScrubTimeline'
@@ -34,6 +40,16 @@ interface Props {
 const TICK_MS = 200
 
 export function AntiCheatReplayDashboard({ bundles, defaultSessionId, initialSeekMs }: Props) {
+  const { role } = useRole()
+  const hasAccess = dashboardVisibleToRole('anti-cheat-replay', role)
+  const filteredBundles = useMemo(
+    () =>
+      hasAccess
+        ? bundles.filter((b) => sessionVisibleToRole(b.session, b.engine, role))
+        : [],
+    [hasAccess, bundles, role],
+  )
+
   const [selectedId, setSelectedId] = useState(defaultSessionId)
   const [pointer, setPointer] = useState(() => {
     if (initialSeekMs === undefined) return 0
@@ -42,7 +58,36 @@ export function AntiCheatReplayDashboard({ bundles, defaultSessionId, initialSee
   })
   const [playing, setPlaying] = useState(false)
 
-  const bundle = bundles.find((b) => b.session.id === selectedId) ?? bundles[0]
+  // При смене роли selectedId может стать недоступным — откатываемся
+  // на первую доступную сессию.
+  useEffect(() => {
+    if (filteredBundles.length === 0) return
+    if (!filteredBundles.some((b) => b.session.id === selectedId)) {
+      setSelectedId(filteredBundles[0].session.id)
+      setPointer(0)
+      setPlaying(false)
+    }
+  }, [filteredBundles, selectedId])
+
+  if (!hasAccess) {
+    return (
+      <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
+        <DashboardTopBar />
+        <EmptyForRole entity="доступа к anti-cheat replay" />
+      </div>
+    )
+  }
+
+  if (filteredBundles.length === 0) {
+    return (
+      <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
+        <DashboardTopBar />
+        <EmptyForRole entity="сессий-нарушений в её скоупе" />
+      </div>
+    )
+  }
+
+  const bundle = filteredBundles.find((b) => b.session.id === selectedId) ?? filteredBundles[0]
   const samples = bundle.session.samples
   const durationMs = samples[samples.length - 1]?.tMs ?? 0
   const current = samples[Math.min(pointer, samples.length - 1)] ?? samples[0]
@@ -73,12 +118,12 @@ export function AntiCheatReplayDashboard({ bundles, defaultSessionId, initialSee
 
   const selectorBundles: SessionBundle[] = useMemo(
     () =>
-      bundles.map((b) => ({
+      filteredBundles.map((b) => ({
         session: b.session,
         label: `${b.session.id} · ${b.engine.model}`,
         sublabel: b.violations.map((v) => v.kind).join(', '),
       })),
-    [bundles]
+    [filteredBundles]
   )
 
   const seek = (ms: number) => {

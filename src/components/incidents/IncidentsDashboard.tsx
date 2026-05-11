@@ -2,14 +2,23 @@
 
 import { useMemo, useState } from 'react'
 import type { Incident, IncidentKind, IncidentSeverity } from '@/lib/mockData/types'
+import {
+  useRole,
+  PINNED_CLIENT_ID,
+  PINNED_DRIVER_ID,
+} from '@/lib/role/RoleContext'
+import { dashboardVisibleToRole } from '@/lib/role/access'
 import { MonoNumber } from '@/components/MonoNumber'
 import { DashboardTopBar } from '@/components/ui/DashboardTopBar'
+import { EmptyForRole } from '@/components/role/EmptyForRole'
 import { IncidentsTable } from './IncidentsTable'
 import { FilterBar } from './FilterBar'
 
 export interface IncidentJournalRow {
   incident: Incident
   engineModel: string
+  engineClientId: string | null
+  sessionDriverId: string
   trackName: string
   clientName: string | null
   sessionDate: string
@@ -23,30 +32,49 @@ interface Props {
 export type SeverityFilter = IncidentSeverity | 'all'
 
 export function IncidentsDashboard({ rows }: Props) {
+  const { role } = useRole()
+  const hasAccess = dashboardVisibleToRole('incidents', role)
   const [severityFilter, setSeverityFilter] = useState<SeverityFilter>('all')
   const [kindFilter, setKindFilter] = useState<IncidentKind | 'all'>('all')
 
+  const roleScopedRows = useMemo(() => {
+    if (!hasAccess) return []
+    if (role === 'tms-engineer') return rows
+    if (role === 'client')
+      return rows.filter((r) => r.engineClientId === PINNED_CLIENT_ID)
+    return rows.filter((r) => r.sessionDriverId === PINNED_DRIVER_ID)
+  }, [hasAccess, rows, role])
+
   const counts = useMemo(() => {
-    const c = { all: rows.length, violation: 0, warn: 0, info: 0 }
-    for (const r of rows) c[r.incident.severity]++
+    const c = { all: roleScopedRows.length, violation: 0, warn: 0, info: 0 }
+    for (const r of roleScopedRows) c[r.incident.severity]++
     return c
-  }, [rows])
+  }, [roleScopedRows])
 
   const kindsPresent = useMemo(() => {
     const set = new Set<IncidentKind>()
-    for (const r of rows) set.add(r.incident.kind)
+    for (const r of roleScopedRows) set.add(r.incident.kind)
     return Array.from(set)
-  }, [rows])
+  }, [roleScopedRows])
 
   const filtered = useMemo(
     () =>
-      rows.filter((r) => {
+      roleScopedRows.filter((r) => {
         if (severityFilter !== 'all' && r.incident.severity !== severityFilter) return false
         if (kindFilter !== 'all' && r.incident.kind !== kindFilter) return false
         return true
       }),
-    [rows, severityFilter, kindFilter]
+    [roleScopedRows, severityFilter, kindFilter]
   )
+
+  if (!hasAccess) {
+    return (
+      <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
+        <DashboardTopBar />
+        <EmptyForRole entity="доступа к журналу инцидентов" />
+      </div>
+    )
+  }
 
   return (
     <div className="flex h-screen flex-col bg-gray-50 text-gray-900">

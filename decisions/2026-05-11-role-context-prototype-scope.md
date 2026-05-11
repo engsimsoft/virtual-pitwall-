@@ -19,10 +19,14 @@ M4 вводит role-switcher над общими экранами (TMS-инже
 
 2. **Прикреплённые ID для не-TMS ролей.** Прототип не даёт UX-выбора
    конкретного клиента или гонщика. Для роли `client` пинится
-   `CLI-01` (Карбон-Спорт), для `driver` — `DRV-01` (Артём Воронов,
-   принадлежит CLI-01). Эти константы экспортируются из
-   `lib/role/RoleContext` как `PINNED_CLIENT_ID` / `PINNED_DRIVER_ID` и
-   используются дашбордами как scope для фильтрации.
+   `CLI-03` (Меридиан Рейсинг), для `driver` — `DRV-04` (Павел Сорокин,
+   принадлежит CLI-03). Эти ID подобраны под SES-008 — единственную
+   live-сессию в моках (`engineId: ENG-007`, `clientId: CLI-03`,
+   `driverId: DRV-04`): без совпадения не-TMS роли видели бы пустую
+   live-session, что обедняет демо. Константы экспортируются из
+   `lib/role/constants.ts` (отдельно от `'use client'`-границы
+   `RoleContext.tsx`, чтобы server-pages могли импортировать без втягивания
+   клиентского кода).
 
 3. **Переключатель — компактные pills в Navigation (landing) и в
    `DashboardTopBar` (все 6 dashboards).** Один компонент `<RoleSwitcher>`,
@@ -34,6 +38,27 @@ M4 вводит role-switcher над общими экранами (TMS-инже
    фильтрация применяется в client-component через `useRole()`. Это
    избегает протекания клиентского контекста в server-component и
    укладывается в принцип «прототип = визуализация, не data pipeline».
+
+5. **Двухуровневая авторизация: dashboard-access + entity-sub-filter.**
+   Сначала `dashboardVisibleToRole(dashboard, role)` в `lib/role/access.ts`
+   решает, имеет ли роль вообще доступ к экрану. Если нет — рендерим
+   `<EmptyForRole>` вместо контента. Если да — применяем sub-фильтр сущностей
+   (`engineVisibleToRole`, `sessionVisibleToRole`). Распределение доступов:
+
+   | Экран | TMS | Клиент | Гонщик |
+   |---|---|---|---|
+   | fleet | ✅ | ✅ свой парк | ❌ |
+   | engine-passport | ✅ | ✅ свои моторы | ❌ |
+   | incidents | ✅ | ✅ свои | ❌ |
+   | live-session | ✅ | ✅ свои live | ✅ свои live |
+   | anti-cheat-replay | ✅ | ✅ свои сессии | ❌ |
+   | black-box | ✅ | ✅ свои сессии | ❌ |
+
+   Логика «гонщик видит только live-session» — прямая трактовка ROADMAP:
+   «гонщик видит only-его данные конкретной сессии (post-event), без
+   алертов и доказательной части». Anti-cheat-replay и black-box — это и
+   есть «доказательная часть», поэтому закрыты. Fleet/passport/incidents —
+   парковый/инфраструктурный уровень, тоже не его.
 
 ## Граница: что НЕ делает переключатель
 
