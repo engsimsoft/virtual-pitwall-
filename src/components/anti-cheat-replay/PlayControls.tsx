@@ -65,8 +65,8 @@ function Btn({
 }) {
   const base = 'rounded-sm border px-2 py-1 text-[11px] font-semibold transition-colors'
   const tone = primary
-    ? 'border-gray-900 bg-gray-900 text-white hover:bg-gray-800'
-    : 'border-gray-300 bg-white text-gray-800 hover:bg-gray-50'
+    ? 'border-text-primary bg-text-primary text-text-inverse hover:bg-text-secondary'
+    : 'border-border bg-surface text-text-primary hover:bg-background'
   return (
     <button type="button" title={title} onClick={onClick} className={`${base} ${tone}`}>
       {label}

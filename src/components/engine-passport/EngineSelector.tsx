@@ -11,7 +11,7 @@ interface Props {
 export function EngineSelector({ bundles, selectedId, onSelect }: Props) {
   return (
     <div className="flex items-center gap-1.5 overflow-x-auto">
-      <span className="shrink-0 text-[10px] uppercase tracking-wider text-gray-500">Мотор</span>
+      <span className="shrink-0 text-[10px] uppercase tracking-wider text-text-muted">Мотор</span>
       {bundles.map(({ engine, client }) => {
         const active = engine.id === selectedId
         return (
@@ -21,14 +21,14 @@ export function EngineSelector({ bundles, selectedId, onSelect }: Props) {
             onClick={() => onSelect(engine.id)}
             className={`shrink-0 rounded-sm border px-2 py-1 text-left text-[11px] transition-colors ${
               active
-                ? 'border-tms-orange bg-orange-50 text-tms-graphite'
-                : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
+                ? 'border-tms-orange bg-status-warn-dim text-text-primary'
+                : 'border-border bg-surface text-text-secondary hover:bg-background'
             }`}
           >
             <div className="font-semibold">
               {engine.id} · {engine.model}
             </div>
-            <div className="text-[10px] text-gray-500">
+            <div className="text-[10px] text-text-muted">
               {client?.name ?? 'Без контракта'}
             </div>
           </button>

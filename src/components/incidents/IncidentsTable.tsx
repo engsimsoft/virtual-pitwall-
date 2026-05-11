@@ -25,7 +25,7 @@ export function IncidentsTable({ rows }: Props) {
   return (
     <div className="min-h-0 flex-1 overflow-auto">
       <table className="w-full text-[11px]">
-        <thead className="sticky top-0 z-10 border-b border-gray-200 bg-gray-50 text-[10px] uppercase tracking-wider text-gray-500">
+        <thead className="sticky top-0 z-10 border-b border-border bg-background text-[10px] uppercase tracking-wider text-text-muted">
           <tr>
             <th className="w-6 px-2 py-2"></th>
             <th className="w-20 px-2 py-2 text-left font-semibold">ID</th>
@@ -38,7 +38,7 @@ export function IncidentsTable({ rows }: Props) {
             <th className="w-16 px-2 py-2 text-right font-semibold">Action</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody className="divide-y divide-border-subtle">
           {rows.map((row) => (
             <Row key={row.incident.id} row={row} />
           ))}
@@ -51,44 +51,44 @@ export function IncidentsTable({ rows }: Props) {
 function Row({ row }: { row: IncidentJournalRow }) {
   const { incident, engineModel, trackName, clientName, sessionDate, href } = row
   return (
-    <tr className="hover:bg-gray-50">
+    <tr className="hover:bg-background">
       <td className="px-2 py-1.5 align-top">
         <SeverityDot severity={incident.severity} className="mt-1" />
       </td>
       <td className="px-2 py-1.5 align-top">
-        <MonoNumber className="text-[11px] text-gray-700">{incident.id}</MonoNumber>
+        <MonoNumber className="text-[11px] text-text-secondary">{incident.id}</MonoNumber>
       </td>
-      <td className="px-2 py-1.5 align-top text-[11px] text-gray-700">
+      <td className="px-2 py-1.5 align-top text-[11px] text-text-secondary">
         {KIND_LABEL[incident.kind] ?? incident.kind}
       </td>
       <td className="px-2 py-1.5 align-top">
-        <MonoNumber className="text-[11px] font-semibold text-gray-900">{incident.engineId}</MonoNumber>
-        <div className="truncate text-[10px] text-gray-500">{engineModel}</div>
+        <MonoNumber className="text-[11px] font-semibold text-text-primary">{incident.engineId}</MonoNumber>
+        <div className="truncate text-[10px] text-text-muted">{engineModel}</div>
       </td>
       <td className="px-2 py-1.5 align-top">
-        <MonoNumber className="text-[11px] text-gray-700">{incident.sessionId}</MonoNumber>
-        <div className="truncate text-[10px] text-gray-500">{trackName}</div>
+        <MonoNumber className="text-[11px] text-text-secondary">{incident.sessionId}</MonoNumber>
+        <div className="truncate text-[10px] text-text-muted">{trackName}</div>
       </td>
       <td className="px-2 py-1.5 align-top">
-        <MonoNumber className="text-[10px] text-gray-700">{sessionDate}</MonoNumber>
-        {clientName && <div className="truncate text-[10px] text-gray-500">{clientName}</div>}
+        <MonoNumber className="text-[10px] text-text-secondary">{sessionDate}</MonoNumber>
+        {clientName && <div className="truncate text-[10px] text-text-muted">{clientName}</div>}
       </td>
       <td className="px-2 py-1.5 text-right align-top">
-        <MonoNumber className="text-[11px] text-gray-700">{formatLapTime(incident.tMs)}</MonoNumber>
+        <MonoNumber className="text-[11px] text-text-secondary">{formatLapTime(incident.tMs)}</MonoNumber>
       </td>
-      <td className="px-2 py-1.5 align-top text-[11px] leading-snug text-gray-700">
+      <td className="px-2 py-1.5 align-top text-[11px] leading-snug text-text-secondary">
         {incident.summary}
       </td>
       <td className="px-2 py-1.5 text-right align-top">
         {href ? (
           <Link
             href={href}
-            className="inline-block rounded-sm border border-tms-orange bg-orange-50 px-2 py-0.5 text-[10px] font-semibold text-tms-graphite transition-colors hover:bg-orange-100"
+            className="inline-block rounded-sm border border-tms-orange bg-status-warn-dim px-2 py-0.5 text-[10px] font-semibold text-text-primary transition-colors hover:bg-orange-100"
           >
             Открыть
           </Link>
         ) : (
-          <span className="text-[10px] text-gray-400">—</span>
+          <span className="text-[10px] text-text-muted">—</span>
         )}
       </td>
     </tr>

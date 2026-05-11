@@ -62,7 +62,7 @@ export function ExportButton({ bundle }: Props) {
     <button
       type="button"
       onClick={handleExport}
-      className="flex shrink-0 items-center gap-1.5 rounded-sm border border-tms-orange bg-orange-50 px-2.5 py-1 text-[11px] font-semibold text-tms-graphite transition-colors hover:bg-orange-100"
+      className="flex shrink-0 items-center gap-1.5 rounded-sm border border-tms-orange bg-status-warn-dim px-2.5 py-1 text-[11px] font-semibold text-text-primary transition-colors hover:bg-orange-100"
     >
       <svg className="h-3 w-3" viewBox="0 0 12 12" fill="none">
         <path

@@ -15,7 +15,6 @@ import type {
 } from '@/lib/mockData/types'
 import { useRole } from '@/lib/role/RoleContext'
 import { dashboardVisibleToRole } from '@/lib/role/access'
-import { DashboardTopBar } from '@/components/ui/DashboardTopBar'
 import { EmptyForRole } from '@/components/role/EmptyForRole'
 
 interface SiteRow {
@@ -46,9 +45,9 @@ const STATUS_LABEL: Record<DropZoneComponentStatus, string> = {
 }
 
 const STATUS_CLASSES: Record<DropZoneComponentStatus, string> = {
-  online: 'bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20',
-  degraded: 'bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/30',
-  offline: 'bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20',
+  online: 'bg-status-ok-dim text-status-ok ring-1 ring-inset ring-green-600/20',
+  degraded: 'bg-status-warn-dim text-status-warn ring-1 ring-inset ring-amber-600/30',
+  offline: 'bg-status-critical-dim text-status-critical ring-1 ring-inset ring-red-600/20',
 }
 
 export function DropZoneDashboard({ sites }: Props) {
@@ -57,11 +56,10 @@ export function DropZoneDashboard({ sites }: Props) {
 
   if (!hasAccess) {
     return (
-      <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
-        <DashboardTopBar />
-        <header className="border-b border-gray-200 bg-white px-3 py-2">
-          <div className="text-base font-semibold text-gray-900">Drop Zone</div>
-          <div className="text-[11px] text-gray-500">
+      <div className="flex h-full flex-col bg-background text-text-primary">
+                <header className="border-b border-border bg-surface px-3 py-2">
+          <div className="text-base font-semibold text-text-primary">Drop Zone</div>
+          <div className="text-[11px] text-text-muted">
             Инфраструктура связи на проблемных трассах
           </div>
         </header>
@@ -72,9 +70,8 @@ export function DropZoneDashboard({ sites }: Props) {
 
   if (sites.length === 0) {
     return (
-      <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
-        <DashboardTopBar />
-        <EmptyForRole entity="развёрнутых Drop Zone-комплектов" />
+      <div className="flex h-full flex-col bg-background text-text-primary">
+                <EmptyForRole entity="развёрнутых Drop Zone-комплектов" />
       </div>
     )
   }
@@ -85,14 +82,13 @@ export function DropZoneDashboard({ sites }: Props) {
   const aggregate = aggregateStatus(site.components)
 
   return (
-    <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
-      <DashboardTopBar />
-      <header className="flex items-baseline justify-between gap-4 border-b border-gray-200 bg-white px-3 py-2">
+    <div className="flex h-full flex-col bg-background text-text-primary">
+            <header className="flex items-baseline justify-between gap-4 border-b border-border bg-surface px-3 py-2">
         <div>
-          <div className="text-base font-semibold text-gray-900">
+          <div className="text-base font-semibold text-text-primary">
             {site.name}
           </div>
-          <div className="text-[11px] text-gray-500">
+          <div className="text-[11px] text-text-muted">
             {track ? `${track.name} · ${track.city}` : '—'} · комплект{' '}
             {site.id}
           </div>
@@ -111,12 +107,12 @@ export function DropZoneDashboard({ sites }: Props) {
           ))}
         </section>
 
-        <aside className="flex min-h-0 flex-col rounded-md border border-gray-200 bg-white">
-          <div className="border-b border-gray-100 px-3 py-1.5">
-            <div className="text-xs font-semibold uppercase tracking-wide text-gray-700">
+        <aside className="flex min-h-0 flex-col rounded-md border border-border bg-surface">
+          <div className="border-b border-border-subtle px-3 py-1.5">
+            <div className="text-xs font-semibold uppercase tracking-wide text-text-secondary">
               Очередь в облако
             </div>
-            <div className="truncate text-[11px] text-gray-500">
+            <div className="truncate text-[11px] text-text-muted">
               Состояние edge-буфера и канала к Telos Cloud
             </div>
           </div>
@@ -138,7 +134,7 @@ export function DropZoneDashboard({ sites }: Props) {
               value={`${(site.costRub / 1000).toFixed(0)} тыс ₽`}
             />
           </div>
-          <div className="mt-auto border-t border-gray-100 bg-gray-50 px-3 py-1.5 text-[11px] text-gray-500">
+          <div className="mt-auto border-t border-border-subtle bg-background px-3 py-1.5 text-[11px] text-text-muted">
             Edge-узел продолжает приём WiFi-потоков даже при деградации
             LTE-канала — данные накапливаются в буфере и синхронизируются с
             облаком, когда аплинк стабилизируется. Buffer = 0 означает, что
@@ -161,17 +157,17 @@ function aggregateStatus(
 function ComponentCard({ component }: { component: DropZoneComponent }) {
   const Icon = ICON_BY_KIND[component.kind]
   return (
-    <div className="flex min-h-0 flex-col rounded-md border border-gray-200 bg-white">
-      <div className="flex items-center justify-between gap-3 border-b border-gray-100 px-3 py-1.5">
+    <div className="flex min-h-0 flex-col rounded-md border border-border bg-surface">
+      <div className="flex items-center justify-between gap-3 border-b border-border-subtle px-3 py-1.5">
         <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-sm bg-gray-100 text-tms-graphite">
+          <div className="flex h-7 w-7 items-center justify-center rounded-sm bg-elevated text-text-primary">
             <Icon className="h-4 w-4" />
           </div>
           <div>
-            <div className="text-[11px] uppercase tracking-wider text-gray-500">
+            <div className="text-[11px] uppercase tracking-wider text-text-muted">
               {KIND_LABEL[component.kind]}
             </div>
-            <div className="text-[13px] font-semibold text-gray-900">
+            <div className="text-[13px] font-semibold text-text-primary">
               {component.model}
             </div>
           </div>
@@ -182,21 +178,21 @@ function ComponentCard({ component }: { component: DropZoneComponent }) {
           {STATUS_LABEL[component.status]}
         </span>
       </div>
-      <div className="grid flex-1 min-h-0 grid-cols-4 gap-px bg-gray-100">
+      <div className="grid flex-1 min-h-0 grid-cols-4 gap-px bg-elevated">
         {component.metrics.map((m) => (
-          <div key={m.label} className="bg-white p-2">
-            <div className="mb-0.5 text-[10px] uppercase tracking-wider text-gray-500">
+          <div key={m.label} className="bg-surface p-2">
+            <div className="mb-0.5 text-[10px] uppercase tracking-wider text-text-muted">
               {m.label}
             </div>
-            <div className="font-mono text-[12px] text-tms-graphite">
+            <div className="font-mono text-[12px] text-text-primary">
               {m.value}
             </div>
           </div>
         ))}
       </div>
-      <div className="flex items-center justify-between gap-3 border-t border-gray-100 bg-gray-50 px-3 py-1.5">
-        <div className="text-[11px] text-gray-500">{component.note}</div>
-        <div className="font-mono text-[10px] uppercase tracking-wider text-gray-400">
+      <div className="flex items-center justify-between gap-3 border-t border-border-subtle bg-background px-3 py-1.5">
+        <div className="text-[11px] text-text-muted">{component.note}</div>
+        <div className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
           uptime {component.uptimeHours} ч
         </div>
       </div>
@@ -207,8 +203,8 @@ function ComponentCard({ component }: { component: DropZoneComponent }) {
 function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-baseline justify-between gap-3">
-      <span className="text-[11px] text-gray-500">{label}</span>
-      <span className="font-mono text-[13px] font-semibold text-tms-graphite">
+      <span className="text-[11px] text-text-muted">{label}</span>
+      <span className="font-mono text-[13px] font-semibold text-text-primary">
         {value}
       </span>
     </div>

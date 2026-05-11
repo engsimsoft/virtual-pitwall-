@@ -40,10 +40,10 @@ export function ImuWidget({ sample }: Props) {
 function Stat({ label, value, unit }: { label: string; value: string; unit: string }) {
   return (
     <div className="flex flex-col items-center">
-      <span className="text-gray-500">{label}</span>
+      <span className="text-text-muted">{label}</span>
       <span className="flex items-baseline gap-0.5">
-        <MonoNumber className="font-semibold text-gray-900">{value}</MonoNumber>
-        <span className="text-gray-400">{unit}</span>
+        <MonoNumber className="font-semibold text-text-primary">{value}</MonoNumber>
+        <span className="text-text-muted">{unit}</span>
       </span>
     </div>
   )

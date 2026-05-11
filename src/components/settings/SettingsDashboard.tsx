@@ -9,7 +9,6 @@ import type {
 } from '@/lib/mockData/types'
 import { useRole, PINNED_CLIENT_ID } from '@/lib/role/RoleContext'
 import { dashboardVisibleToRole } from '@/lib/role/access'
-import { DashboardTopBar } from '@/components/ui/DashboardTopBar'
 import { EmptyForRole } from '@/components/role/EmptyForRole'
 import { SeverityDot } from '@/components/ui/SeverityDot'
 
@@ -90,12 +89,11 @@ export function SettingsDashboard({ clients, regulations, incidents }: Props) {
   }, [incidents, selectedId])
 
   return (
-    <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
-      <DashboardTopBar />
-      <header className="flex items-baseline justify-between gap-4 border-b border-gray-200 bg-white px-3 py-2">
+    <div className="flex h-full flex-col bg-background text-text-primary">
+            <header className="flex items-baseline justify-between gap-4 border-b border-border bg-surface px-3 py-2">
         <div>
-          <div className="text-base font-semibold text-gray-900">Регламент</div>
-          <div className="text-[11px] text-gray-500">
+          <div className="text-base font-semibold text-text-primary">Регламент</div>
+          <div className="text-[11px] text-text-muted">
             Лимиты RPM/boost/temp на контракт. Изменение вступает в силу со
             следующей сессии (mock-режим, изменения не сохраняются).
           </div>
@@ -109,8 +107,8 @@ export function SettingsDashboard({ clients, regulations, incidents }: Props) {
                 onClick={() => setSelectedId(c.id)}
                 className={
                   selectedId === c.id
-                    ? 'rounded-sm border border-tms-orange bg-tms-orange/10 px-2 py-1 font-semibold text-tms-graphite'
-                    : 'rounded-sm border border-gray-200 px-2 py-1 text-gray-600 hover:border-tms-orange/60 hover:text-tms-graphite'
+                    ? 'rounded-sm border border-tms-orange bg-accent-dim px-2 py-1 font-semibold text-text-primary'
+                    : 'rounded-sm border border-border px-2 py-1 text-text-secondary hover:border-accent/60 hover:text-text-primary'
                 }
               >
                 {c.name}
@@ -126,12 +124,12 @@ export function SettingsDashboard({ clients, regulations, incidents }: Props) {
         <EmptyForRole entity="регламента" />
       ) : (
         <main className="grid flex-1 min-h-0 grid-cols-[1.4fr_1fr] gap-2 p-2">
-          <section className="flex min-h-0 flex-col rounded-md border border-gray-200 bg-white">
-            <div className="border-b border-gray-100 px-3 py-1.5">
-              <div className="text-xs font-semibold uppercase tracking-wide text-gray-700">
+          <section className="flex min-h-0 flex-col rounded-md border border-border bg-surface">
+            <div className="border-b border-border-subtle px-3 py-1.5">
+              <div className="text-xs font-semibold uppercase tracking-wide text-text-secondary">
                 {selectedClient.name}
               </div>
-              <div className="font-mono text-[10px] uppercase tracking-wider text-gray-400">
+              <div className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
                 {selectedClient.id} · контракт{' '}
                 {selectedClient.contractStart.slice(0, 7)} —{' '}
                 {selectedClient.contractEnd.slice(0, 7)}
@@ -139,7 +137,7 @@ export function SettingsDashboard({ clients, regulations, incidents }: Props) {
             </div>
             <div className="min-h-0 flex-1 overflow-auto">
               <table className="w-full text-[12px]">
-                <thead className="sticky top-0 bg-gray-50 text-left text-[10px] uppercase tracking-wider text-gray-500">
+                <thead className="sticky top-0 bg-background text-left text-[10px] uppercase tracking-wider text-text-muted">
                   <tr>
                     <th className="px-3 py-1.5 font-medium">Параметр</th>
                     <th className="px-3 py-1.5 text-right font-medium">
@@ -153,7 +151,7 @@ export function SettingsDashboard({ clients, regulations, incidents }: Props) {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="text-gray-800">
+                <tbody className="text-text-primary">
                   <ParamRow
                     name="Максимальные обороты"
                     value={selectedReg.rpmLimit}
@@ -178,47 +176,47 @@ export function SettingsDashboard({ clients, regulations, incidents }: Props) {
                     unit="°C"
                     signal="CAN oilC"
                   />
-                  <tr className="border-t border-gray-100 bg-gray-50">
-                    <td className="px-3 py-1.5 text-[11px] text-gray-600">
+                  <tr className="border-t border-border-subtle bg-background">
+                    <td className="px-3 py-1.5 text-[11px] text-text-secondary">
                       Dwell перед alert'ом
                     </td>
-                    <td className="px-3 py-1.5 text-right font-mono text-[12px] text-gray-800">
+                    <td className="px-3 py-1.5 text-right font-mono text-[12px] text-text-primary">
                       {selectedReg.violationDwellMs}
                     </td>
-                    <td className="px-3 py-1.5 text-right text-[11px] text-gray-500">
+                    <td className="px-3 py-1.5 text-right text-[11px] text-text-muted">
                       мс
                     </td>
-                    <td className="px-3 py-1.5 text-[11px] text-gray-500">
+                    <td className="px-3 py-1.5 text-[11px] text-text-muted">
                       Минимальная длительность превышения для триггера
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
-            <div className="border-t border-gray-100 bg-gray-50 px-3 py-1.5 text-[11px] text-gray-500">
+            <div className="border-t border-border-subtle bg-background px-3 py-1.5 text-[11px] text-text-muted">
               Регламент привязан к контракту клиента. Лимиты применяются ко
               всем моторам клиента; индивидуальные исключения на конкретный
               мотор оформляются отдельным приложением.
             </div>
           </section>
 
-          <aside className="flex min-h-0 flex-col rounded-md border border-gray-200 bg-white">
-            <div className="border-b border-gray-100 px-3 py-1.5">
-              <div className="text-xs font-semibold uppercase tracking-wide text-gray-700">
+          <aside className="flex min-h-0 flex-col rounded-md border border-border bg-surface">
+            <div className="border-b border-border-subtle px-3 py-1.5">
+              <div className="text-xs font-semibold uppercase tracking-wide text-text-secondary">
                 Связанные нарушения
               </div>
-              <div className="truncate text-[11px] text-gray-500">
+              <div className="truncate text-[11px] text-text-muted">
                 Последние инциденты на моторах клиента, попадающие под лимиты
               </div>
             </div>
             <div className="min-h-0 flex-1 overflow-auto">
               {relevantIncidents.length === 0 ? (
-                <div className="p-3 text-[12px] text-gray-500">
+                <div className="p-3 text-[12px] text-text-muted">
                   По регламенту {selectedClient.name} нарушений не
                   зафиксировано.
                 </div>
               ) : (
-                <ul className="divide-y divide-gray-100 text-[12px]">
+                <ul className="divide-y divide-border-subtle text-[12px]">
                   {relevantIncidents.map((row) => (
                     <RelevantIncident
                       key={row.incident.id}
@@ -248,15 +246,15 @@ function ParamRow({
   signal: string
 }) {
   return (
-    <tr className="border-t border-gray-100">
-      <td className="px-3 py-1.5 text-gray-800">{name}</td>
-      <td className="px-3 py-1.5 text-right font-mono text-[13px] font-semibold text-tms-graphite">
+    <tr className="border-t border-border-subtle">
+      <td className="px-3 py-1.5 text-text-primary">{name}</td>
+      <td className="px-3 py-1.5 text-right font-mono text-[13px] font-semibold text-text-primary">
         {value}
       </td>
-      <td className="px-3 py-1.5 text-right text-[11px] text-gray-500">
+      <td className="px-3 py-1.5 text-right text-[11px] text-text-muted">
         {unit}
       </td>
-      <td className="px-3 py-1.5 text-[11px] text-gray-500">{signal}</td>
+      <td className="px-3 py-1.5 text-[11px] text-text-muted">{signal}</td>
     </tr>
   )
 }
@@ -279,22 +277,22 @@ function RelevantIncident({
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <SeverityDot severity={incident.severity} />
-          <span className="font-mono text-[10px] uppercase tracking-wider text-gray-500">
+          <span className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
             {incident.id}
           </span>
-          <span className="text-[11px] text-gray-800">
+          <span className="text-[11px] text-text-primary">
             {KIND_LABEL[incident.kind]}
           </span>
         </div>
-        <span className="font-mono text-[10px] text-gray-400">
+        <span className="font-mono text-[10px] text-text-muted">
           {engineModel}
         </span>
       </div>
-      <div className="mt-0.5 truncate text-[11px] text-gray-600">
+      <div className="mt-0.5 truncate text-[11px] text-text-secondary">
         {incident.summary}
       </div>
       {limitValue != null && observed != null && (
-        <div className="mt-0.5 font-mono text-[10px] text-gray-500">
+        <div className="mt-0.5 font-mono text-[10px] text-text-muted">
           лимит {limitValue}
           {unit} · наблюдалось {observed}
           {unit}

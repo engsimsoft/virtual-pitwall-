@@ -31,7 +31,7 @@ export function FilterBar({
   counts,
 }: Props) {
   return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 border-b border-gray-200 bg-white px-3 py-2">
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 border-b border-border bg-surface px-3 py-2">
       <FilterGroup label="Severity">
         <Chip
           active={severityFilter === 'all'}
@@ -93,16 +93,16 @@ export function FilterBar({
 function FilterGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex items-center gap-1.5">
-      <span className="text-[10px] uppercase tracking-wider text-gray-500">{label}</span>
+      <span className="text-[10px] uppercase tracking-wider text-text-muted">{label}</span>
       <div className="flex flex-wrap items-center gap-1">{children}</div>
     </div>
   )
 }
 
 const TONE_ACTIVE: Record<'neutral' | 'violation' | 'warn' | 'info', string> = {
-  neutral: 'border-tms-orange bg-orange-50 text-tms-graphite',
-  violation: 'border-red-300 bg-red-50 text-red-800',
-  warn: 'border-amber-300 bg-amber-50 text-amber-800',
+  neutral: 'border-tms-orange bg-status-warn-dim text-text-primary',
+  violation: 'border-red-300 bg-status-critical-dim text-red-800',
+  warn: 'border-amber-300 bg-status-warn-dim text-amber-800',
   info: 'border-blue-300 bg-blue-50 text-blue-800',
 }
 
@@ -122,12 +122,12 @@ function Chip({
   const base = 'shrink-0 rounded-sm border px-2 py-0.5 text-[11px] transition-colors'
   const cls = active
     ? TONE_ACTIVE[tone]
-    : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
+    : 'border-border bg-surface text-text-secondary hover:bg-background'
   return (
     <button type="button" onClick={onClick} className={`${base} ${cls}`}>
       {children}
       {count !== undefined && (
-        <span className="ml-1 font-mono text-[10px] text-gray-500">{count}</span>
+        <span className="ml-1 font-mono text-[10px] text-text-muted">{count}</span>
       )}
     </button>
   )

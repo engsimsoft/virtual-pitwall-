@@ -15,10 +15,10 @@ const STATUS_LABEL: Record<EngineStatus, string> = {
 }
 
 const STATUS_BADGE: Record<EngineStatus, string> = {
-  live: 'border-emerald-200 bg-emerald-50 text-emerald-700',
-  idle: 'border-gray-200 bg-gray-50 text-gray-700',
-  maintenance: 'border-amber-200 bg-amber-50 text-amber-700',
-  decommissioned: 'border-gray-200 bg-gray-100 text-gray-400',
+  live: 'border-status-ok bg-status-ok-dim text-status-ok',
+  idle: 'border-border bg-background text-text-secondary',
+  maintenance: 'border-amber-200 bg-status-warn-dim text-status-warn',
+  decommissioned: 'border-border bg-elevated text-text-muted',
 }
 
 export function EngineCard({ row }: Props) {
@@ -29,33 +29,33 @@ export function EngineCard({ row }: Props) {
   return (
     <Link
       href={`/demos/engine-passport?engine=${engine.id}`}
-      className="flex min-h-0 flex-col gap-1.5 rounded-md border border-gray-200 bg-white p-2 transition-colors hover:border-tms-orange"
+      className="flex min-h-0 flex-col gap-1.5 rounded-md border border-border bg-surface p-2 transition-colors hover:border-accent"
     >
       <div className="flex items-baseline justify-between gap-2">
-        <MonoNumber className="text-[11px] font-semibold text-gray-900">{engine.id}</MonoNumber>
+        <MonoNumber className="text-[11px] font-semibold text-text-primary">{engine.id}</MonoNumber>
         <StatusBadge status={status} liveSessionId={liveSession?.id ?? null} />
       </div>
 
       <div className="min-w-0">
-        <div className="truncate text-[12px] font-semibold text-gray-900">{engine.model}</div>
-        <div className="truncate text-[10px] text-gray-500">{engine.serialNumber}</div>
+        <div className="truncate text-[12px] font-semibold text-text-primary">{engine.model}</div>
+        <div className="truncate text-[10px] text-text-muted">{engine.serialNumber}</div>
       </div>
 
-      <div className="truncate text-[11px] text-gray-700">
-        {client ? client.name : <span className="text-gray-400">Без контракта</span>}
+      <div className="truncate text-[11px] text-text-secondary">
+        {client ? client.name : <span className="text-text-muted">Без контракта</span>}
       </div>
 
-      <div className="mt-auto grid grid-cols-2 gap-1 border-t border-gray-100 pt-1.5 text-[10px] text-gray-500">
+      <div className="mt-auto grid grid-cols-2 gap-1 border-t border-border-subtle pt-1.5 text-[10px] text-text-muted">
         <Stat label="Часы" value={`${engine.totalRunHours} ч`} />
         <Stat label="Обороты" value={`${revolutionsM} млн`} />
         <Stat label="Сессий" value={`${sessionCount}`} />
-        <Stat label="Инцидентов" value={`${incidentCount}`} tone={incidentCount > 0 ? 'text-amber-700' : 'text-gray-700'} />
+        <Stat label="Инцидентов" value={`${incidentCount}`} tone={incidentCount > 0 ? 'text-status-warn' : 'text-text-secondary'} />
       </div>
     </Link>
   )
 }
 
-function Stat({ label, value, tone = 'text-gray-700' }: { label: string; value: string; tone?: string }) {
+function Stat({ label, value, tone = 'text-text-secondary' }: { label: string; value: string; tone?: string }) {
   return (
     <div className="flex items-baseline justify-between gap-1">
       <span className="uppercase tracking-wider">{label}</span>

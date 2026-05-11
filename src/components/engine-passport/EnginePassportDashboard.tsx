@@ -10,7 +10,6 @@ import type {
 } from '@/lib/mockData/types'
 import { useRole } from '@/lib/role/RoleContext'
 import { dashboardVisibleToRole, engineVisibleToRole } from '@/lib/role/access'
-import { DashboardTopBar } from '@/components/ui/DashboardTopBar'
 import { EmptyForRole } from '@/components/role/EmptyForRole'
 import { DynoCard } from './DynoCard'
 import { EngineSelector } from './EngineSelector'
@@ -41,10 +40,10 @@ const STATUS_LABEL: Record<EngineStatus, string> = {
 }
 
 const STATUS_BADGE: Record<EngineStatus, string> = {
-  live: 'border-emerald-200 bg-emerald-50 text-emerald-700',
-  idle: 'border-gray-200 bg-gray-50 text-gray-700',
-  maintenance: 'border-amber-200 bg-amber-50 text-amber-700',
-  decommissioned: 'border-gray-200 bg-gray-100 text-gray-400',
+  live: 'border-status-ok bg-status-ok-dim text-status-ok',
+  idle: 'border-border bg-background text-text-secondary',
+  maintenance: 'border-amber-200 bg-status-warn-dim text-status-warn',
+  decommissioned: 'border-border bg-elevated text-text-muted',
 }
 
 export function EnginePassportDashboard({ bundles, defaultEngineId, driverEngineIds }: Props) {
@@ -75,18 +74,16 @@ export function EnginePassportDashboard({ bundles, defaultEngineId, driverEngine
 
   if (!hasAccess) {
     return (
-      <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
-        <DashboardTopBar />
-        <EmptyForRole entity="доступа к паспортам моторов" />
+      <div className="flex h-full flex-col bg-background text-text-primary">
+                <EmptyForRole entity="доступа к паспортам моторов" />
       </div>
     )
   }
 
   if (filteredBundles.length === 0) {
     return (
-      <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
-        <DashboardTopBar />
-        <EmptyForRole entity="моторов в её скоупе" />
+      <div className="flex h-full flex-col bg-background text-text-primary">
+                <EmptyForRole entity="моторов в её скоупе" />
       </div>
     )
   }
@@ -96,9 +93,8 @@ export function EnginePassportDashboard({ bundles, defaultEngineId, driverEngine
   const { engine, client, dyno } = bundle
 
   return (
-    <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
-      <DashboardTopBar />
-      <header className="flex flex-col gap-2 border-b border-gray-200 bg-white px-3 py-2">
+    <div className="flex h-full flex-col bg-background text-text-primary">
+            <header className="flex flex-col gap-2 border-b border-border bg-surface px-3 py-2">
         <div className="grid grid-cols-[1fr_1fr_1fr_1fr_auto] items-center gap-4 text-sm">
           <HeaderCell label="Мотор" primary={engine.model} secondary={engine.serialNumber} />
           <HeaderCell
@@ -180,10 +176,10 @@ function LogCard({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex min-h-0 flex-col rounded-md border border-gray-200 bg-white">
-      <div className="border-b border-gray-100 px-3 py-1.5">
-        <div className="text-xs font-semibold uppercase tracking-wide text-gray-700">{title}</div>
-        <div className="truncate text-[11px] text-gray-500">{subtitle}</div>
+    <div className="flex min-h-0 flex-col rounded-md border border-border bg-surface">
+      <div className="border-b border-border-subtle px-3 py-1.5">
+        <div className="text-xs font-semibold uppercase tracking-wide text-text-secondary">{title}</div>
+        <div className="truncate text-[11px] text-text-muted">{subtitle}</div>
       </div>
       <div className="min-h-0 flex-1">{children}</div>
     </div>
@@ -201,9 +197,9 @@ function HeaderCell({
 }) {
   return (
     <div className="min-w-0">
-      <div className="text-[10px] uppercase tracking-wider text-gray-500">{label}</div>
-      <div className="truncate font-semibold text-gray-900">{primary}</div>
-      <div className="truncate text-[11px] text-gray-500">{secondary}</div>
+      <div className="text-[10px] uppercase tracking-wider text-text-muted">{label}</div>
+      <div className="truncate font-semibold text-text-primary">{primary}</div>
+      <div className="truncate text-[11px] text-text-muted">{secondary}</div>
     </div>
   )
 }

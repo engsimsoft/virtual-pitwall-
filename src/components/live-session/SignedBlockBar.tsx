@@ -18,11 +18,11 @@ export function SignedBlockBar({ blocks, currentTms, durationMs }: Props) {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="border-b border-gray-100 px-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-gray-600">
+      <div className="border-b border-border-subtle px-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-text-secondary">
         Подписанные блоки ({blocks.length})
       </div>
       <div className="relative flex-1 px-2 pt-2">
-        <div className="relative flex h-7 w-full overflow-hidden rounded-sm border border-gray-200 bg-gray-50">
+        <div className="relative flex h-7 w-full overflow-hidden rounded-sm border border-border bg-background">
           {blocks.map((b) => {
             const widthPct = ((b.endMs - b.startMs) / durationMs) * 100
             const active = currentTms >= b.startMs && currentTms < b.endMs
@@ -31,7 +31,7 @@ export function SignedBlockBar({ blocks, currentTms, durationMs }: Props) {
                 key={b.index}
                 style={{ width: `${widthPct}%` }}
                 className={`flex items-center justify-center border-r border-white/80 last:border-r-0 ${
-                  active ? 'bg-emerald-100 text-emerald-800' : 'bg-white text-gray-500'
+                  active ? 'bg-status-ok-dim text-emerald-800' : 'bg-surface text-text-muted'
                 }`}
               >
                 <MonoNumber className="text-[10px]">#{b.index}</MonoNumber>
@@ -43,13 +43,13 @@ export function SignedBlockBar({ blocks, currentTms, durationMs }: Props) {
             style={{ left: `${cursorPct}%` }}
           />
         </div>
-        <ul className="mt-1.5 grid grid-cols-2 gap-x-3 text-[10px] text-gray-500">
+        <ul className="mt-1.5 grid grid-cols-2 gap-x-3 text-[10px] text-text-muted">
           {blocks.map((b) => (
             <li key={b.index} className="flex items-center gap-1.5">
-              <span className="text-gray-400">#{b.index}</span>
-              <MonoNumber className="text-gray-700">{b.hash.slice(0, 8)}…</MonoNumber>
-              <span className="text-gray-400">← prev</span>
-              <MonoNumber className="text-gray-500">{b.prevHash.slice(0, 8)}…</MonoNumber>
+              <span className="text-text-muted">#{b.index}</span>
+              <MonoNumber className="text-text-secondary">{b.hash.slice(0, 8)}…</MonoNumber>
+              <span className="text-text-muted">← prev</span>
+              <MonoNumber className="text-text-muted">{b.prevHash.slice(0, 8)}…</MonoNumber>
             </li>
           ))}
         </ul>

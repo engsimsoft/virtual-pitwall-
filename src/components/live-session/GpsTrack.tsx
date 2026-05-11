@@ -19,7 +19,7 @@ export function GpsTrack({ samples, currentIndex }: Props) {
   const projected = useMemo(() => projectSamples(samples), [samples])
   if (!projected) {
     return (
-      <div className="flex h-full items-center justify-center text-[11px] text-gray-400">
+      <div className="flex h-full items-center justify-center text-[11px] text-text-muted">
         Нет GPS
       </div>
     )

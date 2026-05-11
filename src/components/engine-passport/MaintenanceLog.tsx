@@ -17,20 +17,20 @@ const KIND_LABEL: Record<MaintenanceKind, string> = {
 const KIND_BADGE: Record<MaintenanceKind, string> = {
   service: 'border-blue-200 bg-blue-50 text-blue-700',
   overhaul: 'border-purple-200 bg-purple-50 text-purple-700',
-  inspection: 'border-amber-200 bg-amber-50 text-amber-700',
-  decommission: 'border-gray-200 bg-gray-100 text-gray-500',
+  inspection: 'border-amber-200 bg-status-warn-dim text-status-warn',
+  decommission: 'border-border bg-elevated text-text-muted',
 }
 
 export function MaintenanceLog({ events }: Props) {
   if (events.length === 0) {
     return (
-      <div className="flex h-full items-center justify-center text-[11px] text-gray-400">
+      <div className="flex h-full items-center justify-center text-[11px] text-text-muted">
         Нет записей в журнале обслуживания.
       </div>
     )
   }
   return (
-    <ul className="flex h-full flex-col divide-y divide-gray-100 overflow-auto">
+    <ul className="flex h-full flex-col divide-y divide-border-subtle overflow-auto">
       {events.map((e) => (
         <li key={e.id} className="px-3 py-2">
           <div className="flex items-baseline justify-between gap-2">
@@ -39,15 +39,15 @@ export function MaintenanceLog({ events }: Props) {
             >
               {KIND_LABEL[e.kind]}
             </span>
-            <MonoNumber className="text-[10px] text-gray-500">{e.date}</MonoNumber>
+            <MonoNumber className="text-[10px] text-text-muted">{e.date}</MonoNumber>
           </div>
-          <div className="mt-1 flex items-baseline gap-2 text-[10px] text-gray-500">
+          <div className="mt-1 flex items-baseline gap-2 text-[10px] text-text-muted">
             <span>На</span>
-            <MonoNumber className="font-semibold text-gray-700">{e.runHoursAtEvent} ч</MonoNumber>
-            <span className="text-gray-400">наработки</span>
+            <MonoNumber className="font-semibold text-text-secondary">{e.runHoursAtEvent} ч</MonoNumber>
+            <span className="text-text-muted">наработки</span>
           </div>
-          <div className="mt-0.5 text-[11px] leading-snug text-gray-700">{e.summary}</div>
-          <div className="mt-0.5 text-[10px] text-gray-400">{e.id}</div>
+          <div className="mt-0.5 text-[11px] leading-snug text-text-secondary">{e.summary}</div>
+          <div className="mt-0.5 text-[10px] text-text-muted">{e.id}</div>
         </li>
       ))}
     </ul>

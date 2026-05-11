@@ -24,7 +24,7 @@ interface Props {
 export function DynoCard({ engine: _engine, dyno }: Props) {
   if (!dyno || dyno.samples.length === 0) {
     return (
-      <div className="flex h-full items-center justify-center rounded-md border border-gray-200 bg-white text-[11px] text-gray-400">
+      <div className="flex h-full items-center justify-center rounded-md border border-border bg-surface text-[11px] text-text-muted">
         Стендовая характеристика недоступна.
       </div>
     )
@@ -38,17 +38,17 @@ export function DynoCard({ engine: _engine, dyno }: Props) {
   const torqueMax = Math.ceil(peakTorque.torqueNm / 50) * 50
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col rounded-md border border-gray-200 bg-white">
-      <div className="flex items-baseline justify-between gap-3 border-b border-gray-100 px-3 py-1.5">
+    <div className="flex min-h-0 flex-1 flex-col rounded-md border border-border bg-surface">
+      <div className="flex items-baseline justify-between gap-3 border-b border-border-subtle px-3 py-1.5">
         <div className="min-w-0">
-          <div className="text-xs font-semibold uppercase tracking-wide text-gray-700">
+          <div className="text-xs font-semibold uppercase tracking-wide text-text-secondary">
             Стендовая характеристика
           </div>
-          <div className="truncate text-[11px] text-gray-500">
+          <div className="truncate text-[11px] text-text-muted">
             TMS Bench · LPS 3000 PKW (synthetic baseline)
           </div>
         </div>
-        <div className="text-right text-[10px] text-gray-500">
+        <div className="text-right text-[10px] text-text-muted">
           <div>Otto-Motor / Turbocharger</div>
           <div>
             Замер: <span className="font-mono">{dyno.measuredAt}</span>
@@ -61,14 +61,14 @@ export function DynoCard({ engine: _engine, dyno }: Props) {
           label="Пиковая мощность"
           value={`${peakPower.powerKw.toFixed(1)} кВт`}
           sub={`@ ${peakPower.rpm} об/мин`}
-          accent="text-tms-orange"
+          accent="text-accent"
           dotClass="bg-tms-orange"
         />
         <PeakTile
           label="Пиковый момент"
           value={`${peakTorque.torqueNm} Н·м`}
           sub={`@ ${peakTorque.rpm} об/мин`}
-          accent="text-tms-graphite"
+          accent="text-text-primary"
           dotClass="bg-tms-graphite"
         />
       </div>
@@ -76,7 +76,7 @@ export function DynoCard({ engine: _engine, dyno }: Props) {
       <div className="min-h-0 flex-1 px-2 pb-2">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={samples} margin={{ top: 12, right: 28, left: 8, bottom: 12 }}>
-            <CartesianGrid stroke="#e5e7eb" strokeDasharray="2 4" />
+            <CartesianGrid stroke="var(--grid-line)" strokeDasharray="2 4" />
             <XAxis
               dataKey="rpm"
               type="number"
@@ -168,12 +168,12 @@ function PeakTile({
   dotClass: string
 }) {
   return (
-    <div className="flex items-center gap-3 rounded-md border border-gray-200 bg-white px-3 py-2">
+    <div className="flex items-center gap-3 rounded-md border border-border bg-surface px-3 py-2">
       <span className={`h-2 w-2 shrink-0 rounded-full ${dotClass}`} />
       <div className="min-w-0">
-        <div className="text-[10px] uppercase tracking-wider text-gray-500">{label}</div>
+        <div className="text-[10px] uppercase tracking-wider text-text-muted">{label}</div>
         <MonoNumber className={`text-base font-semibold ${accent}`}>{value}</MonoNumber>
-        <div className="text-[10px] text-gray-500">{sub}</div>
+        <div className="text-[10px] text-text-muted">{sub}</div>
       </div>
     </div>
   )

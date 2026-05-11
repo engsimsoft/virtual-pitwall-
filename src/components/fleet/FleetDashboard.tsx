@@ -4,7 +4,6 @@ import { useMemo } from 'react'
 import type { Client, Engine, Session } from '@/lib/mockData/types'
 import { useRole, PINNED_CLIENT_ID, PINNED_DRIVER_ID } from '@/lib/role/RoleContext'
 import { dashboardVisibleToRole, engineVisibleToRole } from '@/lib/role/access'
-import { DashboardTopBar } from '@/components/ui/DashboardTopBar'
 import { EmptyForRole } from '@/components/role/EmptyForRole'
 import { FleetStatusSummary } from './FleetStatusSummary'
 import { EngineCard } from './EngineCard'
@@ -56,11 +55,10 @@ export function FleetDashboard({ rows, clients, incidents, driverEngineIds }: Pr
   }, [incidents, role])
 
   return (
-    <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
-      <DashboardTopBar />
-      <header className="flex items-baseline justify-between gap-4 border-b border-gray-200 bg-white px-3 py-2">
-        <div className="text-base font-semibold text-gray-900">Парк моторов</div>
-        <div className="text-[11px] text-gray-500">
+    <div className="flex h-full flex-col">
+      <header className="flex items-baseline justify-between gap-4 border-b border-border bg-surface px-3 py-2">
+        <div className="text-base font-semibold text-text-primary">Парк моторов</div>
+        <div className="text-[11px] text-text-muted">
           {filteredRows.length} моторов · {filteredClients.length} клиентов
         </div>
       </header>
@@ -70,22 +68,22 @@ export function FleetDashboard({ rows, clients, incidents, driverEngineIds }: Pr
       ) : filteredRows.length === 0 ? (
         <EmptyForRole entity="моторов в парке" />
       ) : (
-        <main className="grid flex-1 min-h-0 grid-cols-[2fr_1fr] gap-2 p-2">
+        <main className="grid flex-1 min-h-0 grid-cols-1 gap-2 p-2 lg:grid-cols-[2fr_1fr]">
           <section className="flex min-h-0 flex-col gap-2">
             <FleetStatusSummary rows={filteredRows} clients={filteredClients} />
-            <div className="grid flex-1 min-h-0 grid-cols-5 grid-rows-2 gap-2">
+            <div className="grid flex-1 min-h-0 grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
               {filteredRows.map((row) => (
                 <EngineCard key={row.engine.id} row={row} />
               ))}
             </div>
           </section>
 
-          <aside className="flex min-h-0 flex-col rounded-md border border-gray-200 bg-white">
-            <div className="border-b border-gray-100 px-3 py-1.5">
-              <div className="text-xs font-semibold uppercase tracking-wide text-gray-700">
+          <aside className="flex min-h-0 flex-col rounded-md border border-border bg-surface">
+            <div className="border-b border-border-subtle px-3 py-1.5">
+              <div className="text-xs font-semibold uppercase tracking-wide text-text-secondary">
                 Недавние алерты по парку
               </div>
-              <div className="truncate text-[11px] text-gray-500">
+              <div className="truncate text-[11px] text-text-muted">
                 Топ инцидентов · клик ведёт в сессию-отчёт
               </div>
             </div>

@@ -1,85 +1,172 @@
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════════════════════════════════
+   TMS Telos — Design System Tokens
+   Dual-theme: .dark = automotive dark (default), light = engineering light
+   All colors through CSS vars; components never hardcode gray/shade values.
+   ═══════════════════════════════════════════════════════════════════════ */
+
 :root {
-  /* Основные цвета - светлая тема для работы инженеров */
-  --background: #ffffff;
-  --foreground: #1f2937;
-  --muted: #f9fafb;
-  --muted-foreground: #6b7280;
-  --border: #e5e7eb;
-  --card: #ffffff;
-  --card-foreground: #1f2937;
-  
-  /* Функциональные цвета статусов */
-  --critical: #dc2626;     /* Красный - критические алерты */
-  --warning: #d97706;      /* Оранжевый - предупреждения */
-  --success: #059669;      /* Зеленый - норма/успех */
-  --info: #2563eb;         /* Синий - информация */
-  --neutral: #6b7280;      /* Серый - нейтральная информация */
-  
-  /* Цвета для данных телеметрии */
-  --data-primary: #111827;
-  --data-secondary: #4b5563;
-  --grid-line: #e5e7eb;
-  --highlight: #f3f4f6;
-  
-  /* Рабочие зоны */
-  --workspace: #ffffff;
-  --sidebar: #f9fafb;
-  --header: #ffffff;
-  --footer: #f9fafb;
+  --background: #0b0d12;
+  --surface: #111318;
+  --elevated: #1a1d24;
+  --border: #2a2e38;
+  --border-subtle: #1e222a;
+
+  --text-primary: #e8eaed;
+  --text-secondary: #9aa0a6;
+  --text-muted: #5f6368;
+  --text-inverse: #0b0d12;
+
+  --accent: #ff4f00;
+  --accent-dim: rgba(255, 79, 0, 0.12);
+  --accent-glow: rgba(255, 79, 0, 0.35);
+
+  --data-can: #3b82f6;
+  --data-gen: #f59e0b;
+  --data-gps: #10b981;
+  --data-imu: #8b5cf6;
+
+  --status-critical: #ef4444;
+  --status-critical-dim: rgba(239, 68, 68, 0.12);
+  --status-warn: #f59e0b;
+  --status-warn-dim: rgba(245, 158, 11, 0.12);
+  --status-ok: #10b981;
+  --status-ok-dim: rgba(16, 185, 129, 0.12);
+  --status-info: #3b82f6;
+  --status-info-dim: rgba(59, 130, 246, 0.12);
+  --status-neutral: #6b7280;
+
+  --grid-line: #1e222a;
+  --highlight: #1a1d24;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
 }
 
-/* Темная тема для ночных сессий */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0f172a;
-    --foreground: #f1f5f9;
-    --muted: #1e293b;
-    --muted-foreground: #94a3b8;
-    --border: #334155;
-    --card: #1e293b;
-    --card-foreground: #f1f5f9;
-    
-    /* Функциональные цвета остаются теми же для консистентности */
-    --critical: #ef4444;
-    --warning: #f59e0b;
-    --success: #10b981;
-    --info: #3b82f6;
-    --neutral: #94a3b8;
-    
-    --data-primary: #f1f5f9;
-    --data-secondary: #cbd5e1;
-    --grid-line: #334155;
-    --highlight: #1e293b;
-    
-    --workspace: #0f172a;
-    --sidebar: #1e293b;
-    --header: #1e293b;
-    --footer: #1e293b;
-  }
+/* Light theme (engineering daylight mode) */
+:root.light {
+  --background: #f8f9fa;
+  --surface: #ffffff;
+  --elevated: #f1f3f4;
+  --border: #dadce0;
+  --border-subtle: #e8eaed;
+
+  --text-primary: #202124;
+  --text-secondary: #5f6368;
+  --text-muted: #9aa0a6;
+  --text-inverse: #ffffff;
+
+  --accent: #ff4f00;
+  --accent-dim: rgba(255, 79, 0, 0.08);
+  --accent-glow: rgba(255, 79, 0, 0.20);
+
+  --data-can: #2563eb;
+  --data-gen: #d97706;
+  --data-gps: #059669;
+  --data-imu: #7c3aed;
+
+  --status-critical: #dc2626;
+  --status-critical-dim: rgba(220, 38, 38, 0.08);
+  --status-warn: #d97706;
+  --status-warn-dim: rgba(217, 119, 6, 0.08);
+  --status-ok: #059669;
+  --status-ok-dim: rgba(5, 150, 105, 0.08);
+  --status-info: #2563eb;
+  --status-info-dim: rgba(37, 99, 235, 0.08);
+  --status-neutral: #6b7280;
+
+  --grid-line: #e8eaed;
+  --highlight: #f1f3f4;
+
+  --shadow-sm: 0 1px 2px rgba(60,64,67,0.08);
+  --shadow-md: 0 4px 12px rgba(60,64,67,0.12);
 }
 
 @theme inline {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-elevated: var(--elevated);
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-inverse: var(--text-inverse);
+
+  --color-accent: var(--accent);
+  --color-accent-dim: var(--accent-dim);
+  --color-accent-glow: var(--accent-glow);
+
+  --color-data-can: var(--data-can);
+  --color-data-gen: var(--data-gen);
+  --color-data-gps: var(--data-gps);
+  --color-data-imu: var(--data-imu);
+
+  --color-status-critical: var(--status-critical);
+  --color-status-critical-dim: var(--status-critical-dim);
+  --color-status-warn: var(--status-warn);
+  --color-status-warn-dim: var(--status-warn-dim);
+  --color-status-ok: var(--status-ok);
+  --color-status-ok-dim: var(--status-ok-dim);
+  --color-status-info: var(--status-info);
+  --color-status-info-dim: var(--status-info-dim);
+  --color-status-neutral: var(--status-neutral);
+
+  --color-grid-line: var(--grid-line);
+  --color-highlight: var(--highlight);
+
   --color-tms-orange: #ff4f00;
   --color-tms-graphite: #39393f;
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+}
+
+html {
+  background: var(--background);
+  color: var(--text-primary);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-geist-sans), 'Inter', system-ui, -apple-system, sans-serif;
   line-height: 1.5;
-  font-feature-settings: "tnum" 1; /* Табулярные цифры для лучшего выравнивания данных */
+  font-feature-settings: "tnum" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Базовые стили для рабочего интерфейса */
+/* Scrollbar styling (WebKit) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Utility classes (shared by all dashboards)
+   ═══════════════════════════════════════════════════════════════════════ */
+
 .workspace-container {
-  background: var(--workspace);
+  background: var(--surface);
   border: 1px solid var(--border);
 }
 
@@ -88,44 +175,82 @@ body {
   letter-spacing: 0.025em;
 }
 
+/* Pulse animation for live indicators */
+@keyframes pulse-live {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+.animate-pulse-live {
+  animation: pulse-live 1.5s ease-in-out infinite;
+}
+
+/* Subtle shimmer for skeletons */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--elevated) 25%,
+    var(--border-subtle) 50%,
+    var(--elevated) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* Recharts theming helpers */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: var(--grid-line);
+}
+
+.recharts-tooltip-wrapper {
+  outline: none;
+}
+
+/* Status color helpers */
 .status-critical {
-  color: var(--critical);
+  color: var(--status-critical);
   font-weight: 600;
 }
 
 .status-warning {
-  color: var(--warning);
+  color: var(--status-warn);
   font-weight: 600;
 }
 
 .status-success {
-  color: var(--success);
+  color: var(--status-ok);
   font-weight: 600;
 }
 
 .status-info {
-  color: var(--info);
+  color: var(--status-info);
   font-weight: 500;
 }
 
-/* Высокий контраст для критически важных элементов */
+/* Alert blocks */
 .alert-critical {
-  background: var(--critical);
-  color: white;
+  background: var(--status-critical-dim);
+  color: var(--status-critical);
   font-weight: 700;
-  border: 2px solid var(--critical);
+  border: 1px solid var(--status-critical);
 }
 
 .alert-warning {
-  background: #fef3c7;
-  color: var(--warning);
+  background: var(--status-warn-dim);
+  color: var(--status-warn);
   font-weight: 600;
-  border: 1px solid var(--warning);
+  border: 1px solid var(--status-warn);
 }
 
 .alert-success {
-  background: #d1fae5;
-  color: var(--success);
+  background: var(--status-ok-dim);
+  color: var(--status-ok);
   font-weight: 600;
-  border: 1px solid var(--success);
+  border: 1px solid var(--status-ok);
 }

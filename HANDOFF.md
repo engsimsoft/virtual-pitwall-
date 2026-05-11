@@ -1,5 +1,43 @@
 # TMS Telos UI Prototype — Handoff
 
+**Последнее обновление:** 2026-05-11 (overhaul kickoff)
+
+> Канонический документ состояния. Журнал сессий, newest-first. Стабильный план — в [ROADMAP.md](ROADMAP.md). **Дорожная карта overhaul — в [OVERHAUL-PLAN.md](OVERHAUL-PLAN.md).**
+
+---
+
+## Текущая сессия: Overhaul kickoff
+
+**Дата:** 2026-05-11  
+**Агент:** Kimi Code CLI  
+**Волна:** планирование (волна 1 не начата)  
+**Статус:** ожидание подтверждения пользователя  
+**Последний коммит:** dd9d3a1
+
+### Что сделано в этой сессии
+- [x] Полный аудит кодовой базы: 8 dashboards, 40+ компонентов, mock-data система, role-access, build, deploy.
+- [x] Выявлены 7 кластеров проблем: visual language (generic gray), dead navigation, missing device context, single-session lock, animation/polish gap, mobile/responsive gaps, component duplication.
+- [x] Составлен план из 4 волн: Визуальная система + навигация → Железный контекст → Polish + forensic feel → Интеграция + QA.
+- [x] Создан `OVERHAUL-PLAN.md` с детальным breakdown по каждой волне, критериями готовности, протоколом handoff.
+- [x] Обновлён `HANDOFF.md` — новая секция overhaul сверху, старые записи сохранены как журнал.
+
+### Следующий шаг (после подтверждения пользователя)
+**Волна 1: Визуальная система + навигация.**
+- Тёмная тема через `.dark` класс + CSS-переменные + переключатель.
+- Shared UI-kit: Card, HeaderCell, StatusBadge, DataRow, IconButton.
+- Sidebar-навигация (8 экранов, active state, mobile overlay).
+- AppShell layout (sidebar + main content).
+- Редизайн главной страницы под overview-dashboard.
+- Удаление DashboardTopBar, интеграция навигации в sidebar.
+- `h-screen` → `h-dvh` для mobile viewport fix.
+
+### Известные проблемы / блокеры
+- Нет блокеров. Единственное ограничение: overhaul требует 3.5–4.5 рабочих дня. Если время ограничено — приоритеты в разделе 8 `OVERHAUL-PLAN.md`.
+
+---
+
+## Исторические сессии (пред-overhaul)
+
 **Последнее обновление:** 2026-05-11 (третья сессия дня)
 
 > Канонический документ состояния. Журнал сессий, newest-first. Каждая сессия добавляет одну компактную запись через `/handoff` в конце. Стабильный план — в [ROADMAP.md](ROADMAP.md).

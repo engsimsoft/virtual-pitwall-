@@ -50,7 +50,7 @@ export function ReplayBoostChart({ samples, violations, currentMs }: Props) {
           <XAxis
             dataKey="tMs"
             tickFormatter={(v: number) => `${Math.floor(v / 1000)}с`}
-            stroke="#9ca3af"
+            stroke="var(--text-muted)"
             tick={{ fontSize: 10, fill: '#6b7280' }}
             minTickGap={36}
             type="number"
@@ -58,7 +58,7 @@ export function ReplayBoostChart({ samples, violations, currentMs }: Props) {
           />
           <YAxis
             domain={[0, 2.2]}
-            stroke="#9ca3af"
+            stroke="var(--text-muted)"
             tick={{ fontSize: 10, fill: '#6b7280' }}
             width={36}
             tickFormatter={(v: number) => v.toFixed(1)}
@@ -70,12 +70,12 @@ export function ReplayBoostChart({ samples, violations, currentMs }: Props) {
                 key={`b-${idx}`}
                 x1={v.startMs}
                 x2={v.endMs}
-                fill="#fecaca"
-                fillOpacity={0.5}
+                fill="var(--status-critical)"
+                fillOpacity={0.15}
                 stroke="none"
               />
             ))}
-          <ReferenceLine x={currentMs} stroke="#111827" strokeWidth={1} ifOverflow="extendDomain" />
+          <ReferenceLine x={currentMs} stroke="var(--text-primary)" strokeWidth={1} ifOverflow="extendDomain" />
           <Tooltip
             contentStyle={{
               fontSize: 11,
@@ -88,7 +88,7 @@ export function ReplayBoostChart({ samples, violations, currentMs }: Props) {
           <Line
             type="monotone"
             dataKey="declared"
-            stroke="#2563eb"
+            stroke="var(--data-can)"
             strokeWidth={1.2}
             dot={false}
             isAnimationActive={false}
@@ -97,7 +97,7 @@ export function ReplayBoostChart({ samples, violations, currentMs }: Props) {
           <Line
             type="monotone"
             dataKey="estimate"
-            stroke="#dc2626"
+            stroke="var(--status-critical)"
             strokeWidth={1.2}
             strokeDasharray="4 3"
             dot={false}

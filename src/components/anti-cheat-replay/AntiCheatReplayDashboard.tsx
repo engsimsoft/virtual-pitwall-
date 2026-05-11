@@ -8,8 +8,8 @@ import {
   dashboardVisibleToRole,
   sessionVisibleToRole,
 } from '@/lib/role/access'
+import { Card } from '@/components/ui/Card'
 import { MonoNumber } from '@/components/MonoNumber'
-import { DashboardTopBar } from '@/components/ui/DashboardTopBar'
 import { EmptyForRole } from '@/components/role/EmptyForRole'
 import { formatLapTime } from '@/lib/format'
 import { SessionSelector, type SessionBundle } from './SessionSelector'
@@ -71,8 +71,7 @@ export function AntiCheatReplayDashboard({ bundles, defaultSessionId, initialSee
 
   if (!hasAccess) {
     return (
-      <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
-        <DashboardTopBar />
+      <div className="flex h-full flex-col">
         <EmptyForRole entity="доступа к anti-cheat replay" />
       </div>
     )
@@ -80,8 +79,7 @@ export function AntiCheatReplayDashboard({ bundles, defaultSessionId, initialSee
 
   if (filteredBundles.length === 0) {
     return (
-      <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
-        <DashboardTopBar />
+      <div className="flex h-full flex-col">
         <EmptyForRole entity="сессий-нарушений в её скоупе" />
       </div>
     )
@@ -132,16 +130,15 @@ export function AntiCheatReplayDashboard({ bundles, defaultSessionId, initialSee
   }
 
   return (
-    <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
-      <DashboardTopBar />
-      <header className="flex flex-col gap-2 border-b border-gray-200 bg-white px-3 py-2">
+    <div className="flex h-full flex-col">
+      <header className="flex flex-col gap-2 border-b border-border bg-surface px-3 py-2">
         <div className="grid grid-cols-[1fr_1fr_1fr_auto] items-center gap-4 text-sm">
           <HeaderCell label="Мотор" primary={bundle.engine.model} secondary={bundle.engine.serialNumber} />
           <HeaderCell label="Гонщик" primary={bundle.driver.name} secondary={bundle.client.name} />
           <HeaderCell label="Трасса" primary={bundle.track.name} secondary={bundle.track.city} />
           <div className="text-right">
-            <div className="text-[10px] uppercase tracking-wider text-gray-500">Позиция</div>
-            <MonoNumber className="text-lg font-semibold text-gray-900">
+            <div className="text-[10px] uppercase tracking-wider text-text-muted">Позиция</div>
+            <MonoNumber className="text-lg font-semibold text-text-primary">
               {formatLapTime(current.tMs)}
             </MonoNumber>
           </div>
@@ -153,21 +150,21 @@ export function AntiCheatReplayDashboard({ bundles, defaultSessionId, initialSee
         />
       </header>
 
-      <main className="grid flex-1 min-h-0 grid-cols-[3fr_2fr] gap-2 p-2">
+      <main className="grid flex-1 min-h-0 grid-cols-1 gap-2 p-2 lg:grid-cols-[3fr_2fr]">
         <section className="flex min-h-0 flex-col gap-2">
-          <ChartCard
+          <Card
             title="Обороты"
             subtitle="CAN vs Gen. Красные полосы — окна нарушений из VIOLATION_WINDOWS."
           >
             <ReplayRpmChart samples={samples} violations={bundle.violations} currentMs={current.tMs} />
-          </ChartCard>
-          <ChartCard
+          </Card>
+          <Card
             title="Наддув"
             subtitle="Declared CAN vs оценка по rpm×газ. Подсвечивается boost/launch."
           >
             <ReplayBoostChart samples={samples} violations={bundle.violations} currentMs={current.tMs} />
-          </ChartCard>
-          <ChartCard
+          </Card>
+          <Card
             title="Скорость и газ"
             subtitle="V_GPS vs throttle. Launch-control: газ 100% при V_GPS<30."
           >
@@ -176,17 +173,17 @@ export function AntiCheatReplayDashboard({ bundles, defaultSessionId, initialSee
               violations={bundle.violations}
               currentMs={current.tMs}
             />
-          </ChartCard>
+          </Card>
         </section>
         <aside className="flex min-h-0 flex-col gap-2">
-          <ChartCard title="Сводка инцидентов" subtitle="Клик по карточке — переход к моменту">
+          <Card title="Сводка инцидентов" subtitle="Клик по карточке — переход к моменту">
             <IncidentSummary
               incidents={bundle.incidents}
               currentMs={current.tMs}
               onSeek={seek}
             />
-          </ChartCard>
-          <ChartCard
+          </Card>
+          <Card
             title="Цепочка подписанных блоков"
             subtitle={`${bundle.session.signedBlocks.length} блоков, ${bundle.violations.length > 0 ? 'часть содержит нарушения' : 'без нарушений'}`}
           >
@@ -195,11 +192,11 @@ export function AntiCheatReplayDashboard({ bundles, defaultSessionId, initialSee
               violations={bundle.violations}
               currentMs={current.tMs}
             />
-          </ChartCard>
+          </Card>
         </aside>
       </main>
 
-      <footer className="flex shrink-0 flex-col gap-1.5 border-t border-gray-200 bg-white px-3 py-2">
+      <footer className="flex shrink-0 flex-col gap-1.5 border-t border-border bg-surface px-3 py-2">
         <ScrubTimeline
           durationMs={durationMs}
           currentMs={current.tMs}
@@ -215,7 +212,7 @@ export function AntiCheatReplayDashboard({ bundles, defaultSessionId, initialSee
             onPlayToggle={() => setPlaying((p) => !p)}
             onSeek={seek}
           />
-          <span className="text-[11px] text-gray-500">
+          <span className="text-[11px] text-text-muted">
             ▶▶/◀◀ — перейти к следующему/предыдущему окну нарушения. Клик по полосе — скраб.
           </span>
         </div>
@@ -235,9 +232,9 @@ function nearestSampleIndex(samples: { tMs: number }[], ms: number): number {
 function HeaderCell({ label, primary, secondary }: { label: string; primary: string; secondary: string }) {
   return (
     <div className="min-w-0">
-      <div className="text-[10px] uppercase tracking-wider text-gray-500">{label}</div>
-      <div className="truncate font-semibold text-gray-900">{primary}</div>
-      <div className="truncate text-[11px] text-gray-500">{secondary}</div>
+      <div className="text-[10px] uppercase tracking-wider text-text-muted">{label}</div>
+      <div className="truncate font-semibold text-text-primary">{primary}</div>
+      <div className="truncate text-[11px] text-text-secondary">{secondary}</div>
     </div>
   )
 }
@@ -252,10 +249,10 @@ function ChartCard({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex min-h-0 flex-1 flex-col rounded-md border border-gray-200 bg-white">
-      <div className="border-b border-gray-100 px-3 py-1.5">
-        <div className="text-xs font-semibold uppercase tracking-wide text-gray-700">{title}</div>
-        {subtitle && <div className="truncate text-[11px] text-gray-500">{subtitle}</div>}
+    <div className="flex min-h-0 flex-1 flex-col rounded-md border border-border bg-surface">
+      <div className="border-b border-border-subtle px-3 py-1.5">
+        <div className="text-xs font-semibold uppercase tracking-wide text-text-secondary">{title}</div>
+        {subtitle && <div className="truncate text-[11px] text-text-muted">{subtitle}</div>}
       </div>
       <div className="min-h-0 flex-1 p-2">{children}</div>
     </div>

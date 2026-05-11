@@ -45,11 +45,11 @@ export function ScrubTimeline({ durationMs, currentMs, violations, onSeek }: Pro
 
   return (
     <div className="flex w-full items-center gap-3">
-      <MonoNumber className="shrink-0 text-[11px] text-gray-500">{formatLapTime(currentMs)}</MonoNumber>
+      <MonoNumber className="shrink-0 text-[11px] text-text-muted">{formatLapTime(currentMs)}</MonoNumber>
       <div
         ref={trackRef}
         onMouseDown={handleMouseDown}
-        className="relative h-6 flex-1 cursor-pointer rounded-sm border border-gray-200 bg-gray-50"
+        className="relative h-6 flex-1 cursor-pointer rounded-sm border border-border bg-background"
       >
         {violations.map((v, idx) => {
           const left = (v.startMs / durationMs) * 100
@@ -64,15 +64,15 @@ export function ScrubTimeline({ durationMs, currentMs, violations, onSeek }: Pro
           )
         })}
         <div
-          className="absolute top-0 h-full w-px bg-gray-900"
+          className="absolute top-0 h-full w-px bg-text-primary"
           style={{ left: `${cursorPct}%` }}
         />
         <div
-          className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-gray-900 bg-white shadow-sm"
+          className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-text-primary bg-surface shadow-sm"
           style={{ left: `${cursorPct}%`, width: 10, height: 10 }}
         />
       </div>
-      <MonoNumber className="shrink-0 text-[11px] text-gray-500">{formatLapTime(durationMs)}</MonoNumber>
+      <MonoNumber className="shrink-0 text-[11px] text-text-muted">{formatLapTime(durationMs)}</MonoNumber>
     </div>
   )
 }

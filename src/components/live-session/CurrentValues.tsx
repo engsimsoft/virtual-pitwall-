@@ -32,11 +32,11 @@ export function CurrentValues({ sample }: Props) {
 
 function Row({ label, value, unit }: { label: string; value: string; unit: string }) {
   return (
-    <div className="flex items-baseline justify-between gap-2 border-b border-gray-100 pb-1 last:border-0">
-      <span className="text-[11px] text-gray-500">{label}</span>
+    <div className="flex items-baseline justify-between gap-2 border-b border-border-subtle pb-1 last:border-0">
+      <span className="text-[11px] text-text-muted">{label}</span>
       <span className="flex items-baseline gap-1">
-        <MonoNumber className="font-semibold text-gray-900">{value}</MonoNumber>
-        {unit && <span className="text-[10px] text-gray-400">{unit}</span>}
+        <MonoNumber className="font-semibold text-text-primary">{value}</MonoNumber>
+        {unit && <span className="text-[10px] text-text-muted">{unit}</span>}
       </span>
     </div>
   )

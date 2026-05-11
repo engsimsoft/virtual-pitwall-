@@ -19,8 +19,8 @@ interface Props {
 export function HashChainViz({ blocks, violations, currentMs }: Props) {
   return (
     <div className="flex h-full flex-col p-2 text-[11px]">
-      <div className="mb-2 flex items-center gap-2 text-[10px] text-gray-500">
-        <span className="inline-block h-2 w-2 rounded-sm bg-emerald-100 ring-1 ring-emerald-300" />
+      <div className="mb-2 flex items-center gap-2 text-[10px] text-text-muted">
+        <span className="inline-block h-2 w-2 rounded-sm bg-status-ok-dim ring-1 ring-emerald-300" />
         активный блок
         <span className="ml-2 inline-block h-2 w-2 rounded-sm bg-red-100 ring-1 ring-red-300" />
         содержит нарушение
@@ -30,34 +30,34 @@ export function HashChainViz({ blocks, violations, currentMs }: Props) {
           const active = currentMs >= b.startMs && currentMs < b.endMs
           const hasViolation = violations.some((v) => v.startMs < b.endMs && v.endMs > b.startMs)
           const bgColor = active
-            ? 'bg-emerald-50 border-emerald-300'
+            ? 'bg-status-ok-dim border-emerald-300'
             : hasViolation
-              ? 'bg-red-50 border-red-300'
-              : 'bg-white border-gray-200'
+              ? 'bg-status-critical-dim border-red-300'
+              : 'bg-surface border-border'
           return (
             <div key={b.index} className={`rounded-sm border px-2 py-1.5 ${bgColor}`}>
               <div className="flex items-baseline justify-between gap-2">
-                <MonoNumber className="font-semibold text-gray-900">#{b.index}</MonoNumber>
-                <MonoNumber className="text-[10px] text-gray-500">
+                <MonoNumber className="font-semibold text-text-primary">#{b.index}</MonoNumber>
+                <MonoNumber className="text-[10px] text-text-muted">
                   {formatLapTime(b.startMs)}–{formatLapTime(b.endMs)}
                 </MonoNumber>
               </div>
-              <div className="mt-0.5 flex items-baseline gap-1.5 text-[10px] text-gray-600">
-                <span className="text-gray-400">hash</span>
-                <MonoNumber className="text-gray-800">{b.hash.slice(0, 12)}…</MonoNumber>
+              <div className="mt-0.5 flex items-baseline gap-1.5 text-[10px] text-text-secondary">
+                <span className="text-text-muted">hash</span>
+                <MonoNumber className="text-text-primary">{b.hash.slice(0, 12)}…</MonoNumber>
               </div>
-              <div className="flex items-baseline gap-1.5 text-[10px] text-gray-500">
-                <span className="text-gray-400">prev</span>
+              <div className="flex items-baseline gap-1.5 text-[10px] text-text-muted">
+                <span className="text-text-muted">prev</span>
                 <MonoNumber>{b.prevHash.slice(0, 12)}…</MonoNumber>
               </div>
               {idx < blocks.length - 1 && (
-                <div className="mt-0.5 text-center text-[10px] text-gray-400">↓</div>
+                <div className="mt-0.5 text-center text-[10px] text-text-muted">↓</div>
               )}
             </div>
           )
         })}
       </div>
-      <div className="mt-1.5 text-[10px] text-gray-500">
+      <div className="mt-1.5 text-[10px] text-text-muted">
         Цепочка целостна: {blocks.length} блоков, prev-hash каждого совпадает с hash предыдущего.
       </div>
     </div>

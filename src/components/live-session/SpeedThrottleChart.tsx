@@ -17,14 +17,14 @@ export function SpeedThrottleChart({ samples }: Props) {
           <XAxis
             dataKey="tMs"
             tickFormatter={(v: number) => `${Math.floor(v / 1000)}с`}
-            stroke="#9ca3af"
+            stroke="var(--text-muted)"
             tick={{ fontSize: 10, fill: '#6b7280' }}
             minTickGap={32}
           />
           <YAxis
             yAxisId="speed"
             domain={[0, 260]}
-            stroke="#9ca3af"
+            stroke="var(--text-muted)"
             tick={{ fontSize: 10, fill: '#6b7280' }}
             width={36}
           />
@@ -32,7 +32,7 @@ export function SpeedThrottleChart({ samples }: Props) {
             yAxisId="throttle"
             orientation="right"
             domain={[0, 100]}
-            stroke="#9ca3af"
+            stroke="var(--text-muted)"
             tick={{ fontSize: 10, fill: '#6b7280' }}
             width={32}
             tickFormatter={(v: number) => `${v}%`}

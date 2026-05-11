@@ -9,7 +9,6 @@ import {
 } from '@/lib/role/RoleContext'
 import { dashboardVisibleToRole } from '@/lib/role/access'
 import { MonoNumber } from '@/components/MonoNumber'
-import { DashboardTopBar } from '@/components/ui/DashboardTopBar'
 import { EmptyForRole } from '@/components/role/EmptyForRole'
 import { IncidentsTable } from './IncidentsTable'
 import { FilterBar } from './FilterBar'
@@ -69,21 +68,19 @@ export function IncidentsDashboard({ rows }: Props) {
 
   if (!hasAccess) {
     return (
-      <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
-        <DashboardTopBar />
-        <EmptyForRole entity="доступа к журналу инцидентов" />
+      <div className="flex h-full flex-col bg-background text-text-primary">
+                <EmptyForRole entity="доступа к журналу инцидентов" />
       </div>
     )
   }
 
   return (
-    <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
-      <DashboardTopBar />
-      <header className="flex items-baseline justify-between gap-4 border-b border-gray-200 bg-white px-3 py-2">
-        <div className="text-base font-semibold text-gray-900">Журнал инцидентов</div>
-        <div className="flex items-baseline gap-3 text-[11px] text-gray-500">
-          <Counter label="Всего" value={counts.all} tone="text-gray-900" />
-          <Counter label="Violation" value={counts.violation} tone="text-red-600" />
+    <div className="flex h-full flex-col bg-background text-text-primary">
+            <header className="flex items-baseline justify-between gap-4 border-b border-border bg-surface px-3 py-2">
+        <div className="text-base font-semibold text-text-primary">Журнал инцидентов</div>
+        <div className="flex items-baseline gap-3 text-[11px] text-text-muted">
+          <Counter label="Всего" value={counts.all} tone="text-text-primary" />
+          <Counter label="Violation" value={counts.violation} tone="text-status-critical" />
           <Counter label="Warn" value={counts.warn} tone="text-amber-600" />
           <Counter label="Info" value={counts.info} tone="text-blue-600" />
         </div>
@@ -99,9 +96,9 @@ export function IncidentsDashboard({ rows }: Props) {
       />
 
       <main className="min-h-0 flex-1 p-2">
-        <div className="flex h-full min-h-0 flex-col rounded-md border border-gray-200 bg-white">
+        <div className="flex h-full min-h-0 flex-col rounded-md border border-border bg-surface">
           {filtered.length === 0 ? (
-            <div className="flex h-full items-center justify-center text-[11px] text-gray-400">
+            <div className="flex h-full items-center justify-center text-[11px] text-text-muted">
               Под фильтр не подошло ни одного инцидента.
             </div>
           ) : (
@@ -124,7 +121,7 @@ function Counter({
 }) {
   return (
     <div className="flex items-baseline gap-1">
-      <span className="text-[10px] uppercase tracking-wider text-gray-500">{label}</span>
+      <span className="text-[10px] uppercase tracking-wider text-text-muted">{label}</span>
       <MonoNumber className={`text-sm font-semibold ${tone}`}>{value}</MonoNumber>
     </div>
   )

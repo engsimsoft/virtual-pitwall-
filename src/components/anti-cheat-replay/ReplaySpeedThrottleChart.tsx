@@ -30,7 +30,7 @@ export function ReplaySpeedThrottleChart({ samples, violations, currentMs }: Pro
           <XAxis
             dataKey="tMs"
             tickFormatter={(v: number) => `${Math.floor(v / 1000)}с`}
-            stroke="#9ca3af"
+            stroke="var(--text-muted)"
             tick={{ fontSize: 10, fill: '#6b7280' }}
             minTickGap={36}
             type="number"
@@ -39,7 +39,7 @@ export function ReplaySpeedThrottleChart({ samples, violations, currentMs }: Pro
           <YAxis
             yAxisId="speed"
             domain={[0, 260]}
-            stroke="#9ca3af"
+            stroke="var(--text-muted)"
             tick={{ fontSize: 10, fill: '#6b7280' }}
             width={36}
           />
@@ -47,7 +47,7 @@ export function ReplaySpeedThrottleChart({ samples, violations, currentMs }: Pro
             yAxisId="throttle"
             orientation="right"
             domain={[0, 100]}
-            stroke="#9ca3af"
+            stroke="var(--text-muted)"
             tick={{ fontSize: 10, fill: '#6b7280' }}
             width={32}
             tickFormatter={(v: number) => `${v}%`}
@@ -58,15 +58,15 @@ export function ReplaySpeedThrottleChart({ samples, violations, currentMs }: Pro
               yAxisId="speed"
               x1={v.startMs}
               x2={v.endMs}
-              fill="#fecaca"
-              fillOpacity={0.5}
+              fill="var(--status-critical)"
+              fillOpacity={0.15}
               stroke="none"
             />
           ))}
           <ReferenceLine
             yAxisId="speed"
             x={currentMs}
-            stroke="#111827"
+            stroke="var(--text-primary)"
             strokeWidth={1}
             ifOverflow="extendDomain"
           />

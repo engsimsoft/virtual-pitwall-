@@ -18,7 +18,7 @@ export function RoleSwitcher() {
   const { role, setRole } = useRole()
 
   return (
-    <div className="flex items-center gap-0.5 rounded-md border border-gray-200 bg-gray-50 p-0.5 text-[11px]">
+    <div className="flex items-center gap-0.5 rounded-md border border-border bg-elevated p-0.5 text-[11px]">
       {ROLES.map((r) => {
         const active = r.value === role
         return (
@@ -29,8 +29,8 @@ export function RoleSwitcher() {
             title={r.hint}
             className={
               active
-                ? 'rounded-sm bg-white px-2 py-0.5 font-semibold text-tms-orange shadow-sm'
-                : 'rounded-sm px-2 py-0.5 text-gray-500 transition-colors hover:text-gray-900'
+                ? 'rounded-sm bg-surface px-2 py-0.5 font-semibold text-accent shadow-sm'
+                : 'rounded-sm px-2 py-0.5 text-text-muted transition-colors hover:text-text-primary'
             }
           >
             {r.label}

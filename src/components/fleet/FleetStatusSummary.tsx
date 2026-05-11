@@ -15,10 +15,10 @@ const STATUS_LABEL: Record<EngineStatus, string> = {
 }
 
 const STATUS_TONE: Record<EngineStatus, string> = {
-  live: 'text-emerald-700',
-  idle: 'text-gray-700',
-  maintenance: 'text-amber-700',
-  decommissioned: 'text-gray-400',
+  live: 'text-status-ok',
+  idle: 'text-text-secondary',
+  maintenance: 'text-status-warn',
+  decommissioned: 'text-text-muted',
 }
 
 export function FleetStatusSummary({ rows, clients }: Props) {
@@ -37,9 +37,9 @@ export function FleetStatusSummary({ rows, clients }: Props) {
   }))
 
   return (
-    <div className="grid shrink-0 grid-cols-[auto_1fr] gap-3 rounded-md border border-gray-200 bg-white px-3 py-2">
+    <div className="grid shrink-0 grid-cols-[auto_1fr] gap-3 rounded-md border border-border bg-surface px-3 py-2">
       <div className="flex items-center gap-3">
-        <StatChip label="Всего" value={rows.length} tone="text-gray-900" />
+        <StatChip label="Всего" value={rows.length} tone="text-text-primary" />
         {(Object.keys(totals) as EngineStatus[]).map((s) => (
           <StatChip key={s} label={STATUS_LABEL[s]} value={totals[s]} tone={STATUS_TONE[s]} />
         ))}
@@ -57,7 +57,7 @@ export function FleetStatusSummary({ rows, clients }: Props) {
 function StatChip({ label, value, tone }: { label: string; value: number; tone: string }) {
   return (
     <div className="flex items-baseline gap-1.5">
-      <span className="text-[10px] uppercase tracking-wider text-gray-500">{label}</span>
+      <span className="text-[10px] uppercase tracking-wider text-text-muted">{label}</span>
       <MonoNumber className={`text-sm font-semibold ${tone}`}>{value}</MonoNumber>
     </div>
   )
@@ -65,8 +65,8 @@ function StatChip({ label, value, tone }: { label: string; value: number; tone: 
 
 function ClientChip({ name, count, muted = false }: { name: string; count: number; muted?: boolean }) {
   const tone = muted
-    ? 'border-gray-200 bg-gray-50 text-gray-500'
-    : 'border-gray-200 bg-white text-gray-700'
+    ? 'border-border bg-background text-text-muted'
+    : 'border-border bg-surface text-text-secondary'
   return (
     <div className={`flex items-center gap-1.5 rounded-sm border px-2 py-0.5 text-[11px] ${tone}`}>
       <span className="truncate">{name}</span>

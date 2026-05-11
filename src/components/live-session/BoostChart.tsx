@@ -33,13 +33,13 @@ export function BoostChart({ samples }: Props) {
           <XAxis
             dataKey="tMs"
             tickFormatter={(v: number) => `${Math.floor(v / 1000)}с`}
-            stroke="#9ca3af"
+            stroke="var(--text-muted)"
             tick={{ fontSize: 10, fill: '#6b7280' }}
             minTickGap={32}
           />
           <YAxis
             domain={[0, 2.2]}
-            stroke="#9ca3af"
+            stroke="var(--text-muted)"
             tick={{ fontSize: 10, fill: '#6b7280' }}
             width={36}
             tickFormatter={(v: number) => v.toFixed(1)}
@@ -56,7 +56,7 @@ export function BoostChart({ samples }: Props) {
           <Line
             type="monotone"
             dataKey="declared"
-            stroke="#2563eb"
+            stroke="var(--data-can)"
             strokeWidth={1.5}
             dot={false}
             isAnimationActive={false}
@@ -65,7 +65,7 @@ export function BoostChart({ samples }: Props) {
           <Line
             type="monotone"
             dataKey="estimate"
-            stroke="#dc2626"
+            stroke="var(--status-critical)"
             strokeWidth={1.5}
             strokeDasharray="4 3"
             dot={false}

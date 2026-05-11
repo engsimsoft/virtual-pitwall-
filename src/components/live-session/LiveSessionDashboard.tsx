@@ -4,8 +4,8 @@ import { useEffect, useMemo, useState } from 'react'
 import type { Client, Driver, Engine, Incident, Session, Track } from '@/lib/mockData/types'
 import { useRole } from '@/lib/role/RoleContext'
 import { sessionVisibleToRole } from '@/lib/role/access'
+import { Card } from '@/components/ui/Card'
 import { MonoNumber } from '@/components/MonoNumber'
-import { DashboardTopBar } from '@/components/ui/DashboardTopBar'
 import { EmptyForRole } from '@/components/role/EmptyForRole'
 import { formatLapTime, formatRpm } from '@/lib/format'
 import { rpmDelta, rpmDeltaSeverity } from '@/lib/antiCheat'
@@ -63,8 +63,7 @@ export function LiveSessionDashboard({
 
   if (!hasAccess) {
     return (
-      <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
-        <DashboardTopBar />
+      <div className="flex h-full flex-col">
         <EmptyForRole entity="активной live-сессии" />
       </div>
     )
@@ -76,8 +75,7 @@ export function LiveSessionDashboard({
   const severity = rpmDeltaSeverity(delta)
 
   return (
-    <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
-      <DashboardTopBar />
+    <div className="flex h-full flex-col">
       <HeaderStrip
         engine={engine}
         driver={driver}
@@ -87,50 +85,50 @@ export function LiveSessionDashboard({
         currentTms={current.tMs}
       />
 
-      <main className="grid flex-1 min-h-0 grid-cols-3 gap-2 p-2">
-        <section className="col-span-2 flex min-h-0 flex-col gap-2">
-          <ChartCard
+      <main className="grid flex-1 min-h-0 grid-cols-1 gap-2 p-2 lg:grid-cols-3">
+        <section className="flex min-h-0 flex-col gap-2 lg:col-span-2">
+          <Card
             title="Обороты"
             subtitle="CAN vs Gen (независимый импульсный канал)"
             badge={<DeltaBadge delta={delta} severity={severity} />}
           >
             <RpmChart samples={windowed} />
-          </ChartCard>
+          </Card>
 
-          <div className="grid flex-1 min-h-0 grid-cols-2 gap-2">
-            <ChartCard title="Наддув" subtitle="декларация CAN vs оценка по rpm×газ">
+          <div className="grid flex-1 min-h-0 grid-cols-1 gap-2 md:grid-cols-2">
+            <Card title="Наддув" subtitle="декларация CAN vs оценка по rpm×газ">
               <BoostChart samples={windowed} />
-            </ChartCard>
-            <ChartCard title="Скорость и газ" subtitle="GPS км/ч, throttle %">
+            </Card>
+            <Card title="Скорость и газ" subtitle="GPS км/ч, throttle %">
               <SpeedThrottleChart samples={windowed} />
-            </ChartCard>
+            </Card>
           </div>
         </section>
 
         <aside className="flex min-h-0 flex-col gap-2">
-          <ChartCard title="Текущие значения">
+          <Card title="Текущие значения">
             <CurrentValues sample={current} />
-          </ChartCard>
+          </Card>
           <div className="grid flex-1 min-h-0 grid-cols-2 gap-2">
-            <ChartCard title="IMU">
+            <Card title="IMU">
               <ImuWidget sample={current} />
-            </ChartCard>
-            <ChartCard title="GPS-трек" subtitle={`${samples.length} GPS-точек`}>
+            </Card>
+            <Card title="GPS-трек" subtitle={`${samples.length} GPS-точек`}>
               <GpsTrack samples={samples} currentIndex={pointer} />
-            </ChartCard>
+            </Card>
           </div>
         </aside>
       </main>
 
-      <footer className="grid h-[150px] shrink-0 grid-cols-[3fr_2fr] gap-2 border-t border-gray-200 bg-white p-2">
-        <div className="min-h-0 rounded-md border border-gray-200">
+      <footer className="grid h-[150px] shrink-0 grid-cols-1 gap-2 border-t border-border bg-surface p-2 lg:grid-cols-[3fr_2fr]">
+        <div className="min-h-0 rounded-md border border-border">
           <IncidentTicker
             session={session}
             sessionIncidents={sessionIncidents}
             fleetFeed={fleetFeed}
           />
         </div>
-        <div className="min-h-0 rounded-md border border-gray-200">
+        <div className="min-h-0 rounded-md border border-border">
           <SignedBlockBar
             blocks={session.signedBlocks}
             currentTms={current.tMs}
@@ -154,22 +152,22 @@ interface HeaderProps {
 function HeaderStrip({ engine, driver, track, client, session, currentTms }: HeaderProps) {
   const status = session.status === 'live' ? 'LIVE' : session.status.toUpperCase()
   const statusColor =
-    session.status === 'live' ? 'bg-emerald-100 text-emerald-700 border-emerald-200' : 'bg-gray-100 text-gray-700 border-gray-200'
+    session.status === 'live' ? 'bg-status-ok-dim text-status-ok border-status-ok' : 'bg-elevated text-text-secondary border-border'
 
   return (
-    <header className="grid grid-cols-[1fr_1fr_1fr_auto_auto] items-center gap-4 border-b border-gray-200 bg-white px-3 py-2 text-sm">
+    <header className="grid grid-cols-[1fr_1fr_1fr_auto_auto] items-center gap-4 border-b border-border bg-surface px-3 py-2 text-sm">
       <HeaderCell label="Мотор" primary={engine.model} secondary={engine.serialNumber} />
       <HeaderCell label="Гонщик" primary={driver.name} secondary={client.name} />
       <HeaderCell label="Трасса" primary={track.name} secondary={track.city} />
       <div className="text-right">
-        <div className="text-[10px] uppercase tracking-wider text-gray-500">Время сессии</div>
-        <MonoNumber className="text-lg font-semibold text-gray-900">
+        <div className="text-[10px] uppercase tracking-wider text-text-muted">Время сессии</div>
+        <MonoNumber className="text-lg font-semibold text-text-primary">
           {formatLapTime(currentTms)}
         </MonoNumber>
       </div>
       <div className={`flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs font-semibold ${statusColor}`}>
         {session.status === 'live' && (
-          <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-status-ok animate-pulse-live" />
         )}
         {status}
       </div>
@@ -180,9 +178,9 @@ function HeaderStrip({ engine, driver, track, client, session, currentTms }: Hea
 function HeaderCell({ label, primary, secondary }: { label: string; primary: string; secondary: string }) {
   return (
     <div className="min-w-0">
-      <div className="text-[10px] uppercase tracking-wider text-gray-500">{label}</div>
-      <div className="truncate font-semibold text-gray-900">{primary}</div>
-      <div className="truncate text-[11px] text-gray-500">{secondary}</div>
+      <div className="text-[10px] uppercase tracking-wider text-text-muted">{label}</div>
+      <div className="truncate font-semibold text-text-primary">{primary}</div>
+      <div className="truncate text-[11px] text-text-secondary">{secondary}</div>
     </div>
   )
 }
@@ -199,11 +197,11 @@ function ChartCard({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex min-h-0 flex-1 flex-col rounded-md border border-gray-200 bg-white">
-      <div className="flex items-baseline justify-between gap-2 border-b border-gray-100 px-3 py-1.5">
+    <div className="flex min-h-0 flex-1 flex-col rounded-md border border-border bg-surface">
+      <div className="flex items-baseline justify-between gap-2 border-b border-border-subtle px-3 py-1.5">
         <div className="min-w-0">
-          <div className="text-xs font-semibold uppercase tracking-wide text-gray-700">{title}</div>
-          {subtitle && <div className="truncate text-[11px] text-gray-500">{subtitle}</div>}
+          <div className="text-xs font-semibold uppercase tracking-wide text-text-secondary">{title}</div>
+          {subtitle && <div className="truncate text-[11px] text-text-muted">{subtitle}</div>}
         </div>
         {badge}
       </div>
@@ -215,14 +213,14 @@ function ChartCard({
 function DeltaBadge({ delta, severity }: { delta: number; severity: ReturnType<typeof rpmDeltaSeverity> }) {
   const tone =
     severity === 'ok'
-      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+      ? 'bg-status-ok-dim text-status-ok border-status-ok'
       : severity === 'warn'
-        ? 'bg-amber-50 text-amber-700 border-amber-200'
-        : 'bg-red-50 text-red-700 border-red-200'
+        ? 'bg-status-warn-dim text-status-warn border-status-warn'
+        : 'bg-status-critical-dim text-status-critical border-status-critical'
   const sign = delta > 0 ? '+' : ''
   return (
     <div className={`flex items-center gap-1.5 rounded border px-2 py-0.5 text-[11px] font-semibold ${tone}`}>
-      <span className="text-gray-500">Δ</span>
+      <span className="text-text-muted">Δ</span>
       <MonoNumber>
         {sign}
         {formatRpm(delta)}

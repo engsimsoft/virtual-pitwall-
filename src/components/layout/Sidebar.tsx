@@ -1,0 +1,125 @@
+'use client'
+
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import Image from 'next/image'
+import {
+  Activity,
+  AlertTriangle,
+  Archive,
+  FileText,
+  LayoutDashboard,
+  Server,
+  ShieldCheck,
+  SlidersHorizontal,
+  Wifi,
+  Sun,
+  Moon,
+} from 'lucide-react'
+import { RoleSwitcher } from '@/components/role/RoleSwitcher'
+import { useTheme } from '@/lib/theme/ThemeContext'
+import { cn } from '@/lib/utils'
+
+interface NavItem {
+  href: string
+  label: string
+  icon: React.ElementType
+  badge?: number
+}
+
+const NAV_ITEMS: NavItem[] = [
+  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/demos/live-session', label: 'Live Session', icon: Activity },
+  { href: '/demos/anti-cheat-replay', label: 'Anti-Cheat', icon: ShieldCheck },
+  { href: '/demos/fleet', label: 'Fleet', icon: Server },
+  { href: '/demos/engine-passport', label: 'Passport', icon: FileText },
+  { href: '/demos/incidents', label: 'Incidents', icon: AlertTriangle },
+  { href: '/demos/black-box', label: 'Black Box', icon: Archive },
+  { href: '/demos/drop-zone', label: 'Drop Zone', icon: Wifi },
+  { href: '/demos/settings', label: 'Regulations', icon: SlidersHorizontal },
+]
+
+interface SidebarProps {
+  onNavigate?: () => void
+}
+
+export function Sidebar({ onNavigate }: SidebarProps) {
+  const pathname = usePathname()
+  const { theme, toggleTheme } = useTheme()
+
+  return (
+    <aside className="flex h-dvh w-56 flex-col border-r border-border bg-surface">
+      {/* Logo */}
+      <div className="flex h-14 items-center gap-2 border-b border-border px-4">
+        <Image
+          src="/tms-logo-graphite.svg"
+          alt="TMS"
+          width={80}
+          height={20}
+          priority
+          className="h-5 w-auto invert"
+        />
+        <span className="text-sm font-bold text-text-primary">Telos</span>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 overflow-auto px-2 py-3">
+        <div className="mb-2 px-2 text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+          Экраны
+        </div>
+        <div className="space-y-0.5">
+          {NAV_ITEMS.map((item) => {
+            const active =
+              item.href === '/'
+                ? pathname === '/'
+                : pathname.startsWith(item.href)
+            const Icon = item.icon
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={onNavigate}
+                className={cn(
+                  'flex items-center gap-2.5 rounded-md px-2 py-1.5 text-sm font-medium transition-colors',
+                  active
+                    ? 'bg-elevated text-accent'
+                    : 'text-text-secondary hover:bg-elevated hover:text-text-primary'
+                )}
+              >
+                <Icon className="h-4 w-4 shrink-0" />
+                <span className="flex-1 truncate">{item.label}</span>
+                {item.badge !== undefined && item.badge > 0 && (
+                  <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-text-inverse">
+                    {item.badge}
+                  </span>
+                )}
+                {active && (
+                  <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                )}
+              </Link>
+            )
+          })}
+        </div>
+      </nav>
+
+      {/* Footer controls */}
+      <div className="border-t border-border px-3 py-3 space-y-2">
+        <button
+          onClick={toggleTheme}
+          className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-text-secondary transition-colors hover:bg-elevated hover:text-text-primary"
+          title={theme === 'dark' ? 'Светлая тема' : 'Тёмная тема'}
+        >
+          {theme === 'dark' ? (
+            <Sun className="h-4 w-4" />
+          ) : (
+            <Moon className="h-4 w-4" />
+          )}
+          <span className="text-xs">
+            {theme === 'dark' ? 'Тёмная' : 'Светлая'}
+          </span>
+        </button>
+        <RoleSwitcher />
+      </div>
+    </aside>
+  )
+}

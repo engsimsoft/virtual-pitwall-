@@ -28,17 +28,17 @@ const KIND_LABEL: Record<IncidentKind, string> = {
 export function IncidentsLog({ rows }: Props) {
   if (rows.length === 0) {
     return (
-      <div className="flex h-full items-center justify-center text-[11px] text-emerald-700">
+      <div className="flex h-full items-center justify-center text-[11px] text-status-ok">
         Без зарегистрированных инцидентов.
       </div>
     )
   }
   return (
-    <ul className="flex h-full flex-col divide-y divide-gray-100 overflow-auto">
+    <ul className="flex h-full flex-col divide-y divide-border-subtle overflow-auto">
       {rows.map((row) => (
         <li key={row.incident.id}>
           {row.href ? (
-            <Link href={row.href} className="block px-3 py-2 transition-colors hover:bg-gray-50">
+            <Link href={row.href} className="block px-3 py-2 transition-colors hover:bg-background">
               <RowBody row={row} interactive />
             </Link>
           ) : (
@@ -59,16 +59,16 @@ function RowBody({ row, interactive }: { row: IncidentLogRow; interactive: boole
       <SeverityDot severity={incident.severity} className="mt-1" />
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline justify-between gap-2">
-          <span className="truncate text-[11px] font-semibold text-gray-900">
+          <span className="truncate text-[11px] font-semibold text-text-primary">
             {KIND_LABEL[incident.kind] ?? incident.kind}
           </span>
-          <MonoNumber className="text-[10px] text-gray-500">
+          <MonoNumber className="text-[10px] text-text-muted">
             {incident.sessionId} · {formatLapTime(incident.tMs)}
           </MonoNumber>
         </div>
-        <div className="mt-0.5 text-[11px] leading-snug text-gray-700">{incident.summary}</div>
+        <div className="mt-0.5 text-[11px] leading-snug text-text-secondary">{incident.summary}</div>
         {!interactive && (
-          <div className="mt-0.5 text-[10px] italic text-gray-400">без deep-link отчёта</div>
+          <div className="mt-0.5 text-[10px] italic text-text-muted">без deep-link отчёта</div>
         )}
       </div>
     </div>

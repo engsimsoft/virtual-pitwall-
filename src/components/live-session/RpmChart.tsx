@@ -18,13 +18,13 @@ export function RpmChart({ samples }: Props) {
           <XAxis
             dataKey="tMs"
             tickFormatter={(v: number) => `${Math.floor(v / 1000)}с`}
-            stroke="#9ca3af"
+            stroke="var(--text-muted)"
             tick={{ fontSize: 10, fill: '#6b7280' }}
             minTickGap={32}
           />
           <YAxis
             domain={[2000, 9500]}
-            stroke="#9ca3af"
+            stroke="var(--text-muted)"
             tick={{ fontSize: 10, fill: '#6b7280' }}
             width={42}
             tickFormatter={(v: number) => String(v)}
@@ -41,7 +41,7 @@ export function RpmChart({ samples }: Props) {
           <Line
             type="monotone"
             dataKey="rpmCan"
-            stroke="#2563eb"
+            stroke="var(--data-can)"
             strokeWidth={1.5}
             dot={false}
             isAnimationActive={false}
@@ -50,7 +50,7 @@ export function RpmChart({ samples }: Props) {
           <Line
             type="monotone"
             dataKey="rpmGen"
-            stroke="#dc2626"
+            stroke="var(--status-critical)"
             strokeWidth={1.5}
             dot={false}
             isAnimationActive={false}

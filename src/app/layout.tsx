@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { RoleProvider } from "@/lib/role/RoleContext";
+import { ThemeProvider } from "@/lib/theme/ThemeContext";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TMS Telos — UI Prototype",
-  description: "UI-прототип облачной части ПО TMS Telos: парк моторов, live-сессии, anti-cheat replay.",
+  title: "TMS Telos — Control System",
+  description: "Облачная часть системы Telos: парк моторов, live-сессии, anti-cheat replay, цифровой паспорт.",
 };
 
 export default function RootLayout({
@@ -24,11 +25,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru">
+    <html lang="ru" className="dark" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <RoleProvider>{children}</RoleProvider>
+        <ThemeProvider>
+          <RoleProvider>{children}</RoleProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
