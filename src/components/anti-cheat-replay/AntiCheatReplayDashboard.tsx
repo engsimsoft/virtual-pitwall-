@@ -9,6 +9,7 @@ import {
   sessionVisibleToRole,
 } from '@/lib/role/access'
 import { Card } from '@/components/ui/Card'
+import { ReplaySkeleton } from '@/components/ui/Skeleton'
 import { DeviceStatusBar } from '@/components/ui/DeviceStatusBar'
 import { MonoNumber } from '@/components/MonoNumber'
 import { EmptyForRole } from '@/components/role/EmptyForRole'
@@ -58,6 +59,14 @@ export function AntiCheatReplayDashboard({ bundles, defaultSessionId, initialSee
     return nearestSampleIndex(initialBundle.session.samples, initialSeekMs)
   })
   const [playing, setPlaying] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 500)
+    return () => clearTimeout(t)
+  }, [])
+
+  if (loading) return <ReplaySkeleton />
 
   // При смене роли selectedId может стать недоступным — откатываемся
   // на первую доступную сессию.

@@ -6,6 +6,7 @@ import { useRole } from '@/lib/role/RoleContext'
 import { sessionVisibleToRole } from '@/lib/role/access'
 import { Card } from '@/components/ui/Card'
 import { DeviceStatusBar } from '@/components/ui/DeviceStatusBar'
+import { LiveSessionSkeleton } from '@/components/ui/Skeleton'
 import { MonoNumber } from '@/components/MonoNumber'
 import { EmptyForRole } from '@/components/role/EmptyForRole'
 import { formatLapTime, formatRpm } from '@/lib/format'
@@ -45,6 +46,14 @@ export function LiveSessionDashboard({
   const { role } = useRole()
   const [selectedId, setSelectedId] = useState(defaultSessionId)
   const [pointer, setPointer] = useState(0)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 500)
+    return () => clearTimeout(t)
+  }, [])
+
+  if (loading) return <LiveSessionSkeleton />
 
   const filteredBundles = useMemo(
     () =>

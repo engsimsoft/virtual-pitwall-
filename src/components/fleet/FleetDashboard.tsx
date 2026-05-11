@@ -1,7 +1,7 @@
 'use client'
 
-import { useMemo } from 'react'
-import type { Client, Engine, Session } from '@/lib/mockData/types'
+import { useEffect, useMemo, useState } from 'react'
+import type { Client, Engine, EngineStatus, Session } from '@/lib/mockData/types'
 import { useRole, PINNED_CLIENT_ID, PINNED_DRIVER_ID } from '@/lib/role/RoleContext'
 import { dashboardVisibleToRole, engineVisibleToRole } from '@/lib/role/access'
 import { EmptyForRole } from '@/components/role/EmptyForRole'
@@ -28,13 +28,36 @@ export function FleetDashboard({ rows, clients, incidents, driverEngineIds }: Pr
   const { role } = useRole()
   const hasAccess = dashboardVisibleToRole('fleet', role)
   const driverEngineIdSet = useMemo(() => new Set(driverEngineIds), [driverEngineIds])
+  const [animatedRows, setAnimatedRows] = useState(rows)
+
+  useEffect(() => {
+    setAnimatedRows(rows)
+  }, [rows])
+
+  // Heartbeat simulation: every 10s random engine flips status
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAnimatedRows((prev) => {
+        if (prev.length === 0) return prev
+        const idx = Math.floor(Math.random() * prev.length)
+        const statuses: EngineStatus[] = ['live', 'idle', 'maintenance']
+        const next = [...prev]
+        next[idx] = {
+          ...next[idx],
+          engine: { ...next[idx].engine, status: statuses[Math.floor(Math.random() * statuses.length)] },
+        }
+        return next
+      })
+    }, 10000)
+    return () => clearInterval(interval)
+  }, [])
 
   const filteredRows = useMemo(
     () =>
       hasAccess
-        ? rows.filter((r) => engineVisibleToRole(r.engine, role, driverEngineIdSet))
+        ? animatedRows.filter((r) => engineVisibleToRole(r.engine, role, driverEngineIdSet))
         : [],
-    [hasAccess, rows, role, driverEngineIdSet]
+    [hasAccess, animatedRows, role, driverEngineIdSet]
   )
 
   const filteredClients = useMemo(() => {
