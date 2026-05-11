@@ -8,6 +8,9 @@ import { EmptyForRole } from '@/components/role/EmptyForRole'
 import { FleetStatusSummary } from './FleetStatusSummary'
 import { EngineCard } from './EngineCard'
 import { FleetIncidentsPanel, type IncidentRow } from './FleetIncidentsPanel'
+import { IncidentDetailPanel, alarmToPanelData } from '@/components/alarm/IncidentDetailPanel'
+import type { PanelData } from '@/components/alarm/IncidentDetailPanel'
+import { ALARMS } from '@/lib/mockData'
 
 export interface FleetEngineRow {
   engine: Engine
@@ -30,6 +33,12 @@ export function FleetDashboard({ rows, clients, incidents, driverEngineIds }: Pr
   const hasAccess = dashboardVisibleToRole('fleet', role)
   const driverEngineIdSet = useMemo(() => new Set(driverEngineIds), [driverEngineIds])
   const [animatedRows, setAnimatedRows] = useState(rows)
+  const [selectedPanel, setSelectedPanel] = useState<PanelData | null>(null)
+
+  const openAlarmForEngine = (engineId: string) => {
+    const alarm = ALARMS.find((a) => a.engineId === engineId && !a.acknowledged)
+    if (alarm) setSelectedPanel(alarmToPanelData(alarm))
+  }
 
   useEffect(() => {
     setAnimatedRows(rows)
@@ -97,7 +106,7 @@ export function FleetDashboard({ rows, clients, incidents, driverEngineIds }: Pr
             <FleetStatusSummary rows={filteredRows} clients={filteredClients} />
             <div className="grid flex-1 min-h-0 grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
               {filteredRows.map((row) => (
-                <EngineCard key={row.engine.id} row={row} />
+                <EngineCard key={row.engine.id} row={row} onAlarmClick={() => openAlarmForEngine(row.engine.id)} />
               ))}
             </div>
           </section>
@@ -117,6 +126,7 @@ export function FleetDashboard({ rows, clients, incidents, driverEngineIds }: Pr
           </aside>
         </main>
       )}
+      <IncidentDetailPanel data={selectedPanel} onClose={() => setSelectedPanel(null)} />
     </div>
   )
 }

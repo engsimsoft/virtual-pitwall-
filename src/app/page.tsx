@@ -6,7 +6,6 @@ import {
   AlertTriangle,
   Archive,
   ArrowRight,
-  Bell,
   FileText,
   Flag,
   Server,
@@ -48,12 +47,6 @@ const SCREENS: ScreenCard[] = [
     description: 'Цифровой паспорт мотора: история, наработка, дайно-кривая, журналы сессий, обслуживания и инцидентов.',
     icon: FileText,
     href: '/demos/engine-passport',
-  },
-  {
-    title: 'Alarm Center',
-    description: 'Real-time защита двигателя: алармы по RPM, давлению масла, температуре ОЖ и наддуву. Контрактные штрафы.',
-    icon: Bell,
-    href: '/demos/alarms',
   },
   {
     title: 'Race Control',

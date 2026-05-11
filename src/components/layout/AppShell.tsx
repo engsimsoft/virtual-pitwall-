@@ -23,7 +23,6 @@ const PAGE_TITLES: Record<string, string> = {
   '/demos/black-box': 'Black Box',
   '/demos/drop-zone': 'Drop Zone',
   '/demos/settings': 'Regulations',
-  '/demos/alarms': 'Alarm Center',
   '/demos/race-control': 'Race Control',
 }
 

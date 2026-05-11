@@ -6,6 +6,7 @@ import type { FleetEngineRow } from './FleetDashboard'
 
 interface Props {
   row: FleetEngineRow
+  onAlarmClick?: () => void
 }
 
 const STATUS_LABEL: Record<EngineStatus, string> = {
@@ -22,7 +23,7 @@ const STATUS_BADGE: Record<EngineStatus, string> = {
   decommissioned: 'border-border bg-elevated text-text-muted',
 }
 
-export function EngineCard({ row }: Props) {
+export function EngineCard({ row, onAlarmClick }: Props) {
   const { engine, client, liveSession, sessionCount, incidentCount, alarmCount } = row
   const status = engine.status
   const revolutionsM = (engine.totalRevolutions / 1_000_000).toFixed(1)
@@ -35,8 +36,15 @@ export function EngineCard({ row }: Props) {
       <div className="flex items-baseline justify-between gap-2">
         <MonoNumber className="text-[11px] font-semibold text-text-primary">{engine.id}</MonoNumber>
         <div className="flex items-center gap-1">
-          {alarmCount > 0 && (
-            <div className="flex items-center gap-0.5 rounded-sm bg-status-critical px-1 py-0.5 text-[10px] font-bold text-text-inverse">
+          {alarmCount > 0 && onAlarmClick && (
+            <div
+              onClick={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
+                onAlarmClick()
+              }}
+              className="flex cursor-pointer items-center gap-0.5 rounded-sm bg-status-critical px-1 py-0.5 text-[10px] font-bold text-text-inverse hover:bg-red-600"
+            >
               <Bell className="h-3 w-3" />
               {alarmCount}
             </div>

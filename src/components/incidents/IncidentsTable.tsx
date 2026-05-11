@@ -1,10 +1,13 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import type { IncidentKind } from '@/lib/mockData/types'
 import { MonoNumber } from '@/components/MonoNumber'
 import { SeverityDot } from '@/components/ui/SeverityDot'
 import { formatLapTime } from '@/lib/format'
+import { IncidentDetailPanel, incidentToPanelData } from '@/components/alarm/IncidentDetailPanel'
+import type { PanelData } from '@/components/alarm/IncidentDetailPanel'
 import type { IncidentJournalRow } from './IncidentsDashboard'
 
 interface Props {
@@ -22,9 +25,12 @@ const KIND_LABEL: Record<IncidentKind, string> = {
 }
 
 export function IncidentsTable({ rows }: Props) {
+  const [selectedPanel, setSelectedPanel] = useState<PanelData | null>(null)
+
   return (
-    <div className="min-h-0 flex-1 overflow-auto">
-      <table className="w-full text-[11px]">
+    <>
+      <div className="min-h-0 flex-1 overflow-auto">
+        <table className="w-full text-[11px]">
         <thead className="sticky top-0 z-10 border-b border-border bg-background text-[10px] uppercase tracking-wider text-text-muted">
           <tr>
             <th className="w-6 px-2 py-2"></th>
@@ -40,18 +46,20 @@ export function IncidentsTable({ rows }: Props) {
         </thead>
         <tbody className="divide-y divide-border-subtle">
           {rows.map((row) => (
-            <Row key={row.incident.id} row={row} />
+            <Row key={row.incident.id} row={row} onClick={() => setSelectedPanel(incidentToPanelData(row.incident))} />
           ))}
         </tbody>
       </table>
     </div>
+    <IncidentDetailPanel data={selectedPanel} onClose={() => setSelectedPanel(null)} />
+    </>
   )
 }
 
-function Row({ row }: { row: IncidentJournalRow }) {
+function Row({ row, onClick }: { row: IncidentJournalRow; onClick: () => void }) {
   const { incident, engineModel, trackName, clientName, sessionDate, href } = row
   return (
-    <tr className="hover:bg-background">
+    <tr className="cursor-pointer hover:bg-background" onClick={onClick}>
       <td className="px-2 py-1.5 align-top">
         <SeverityDot severity={incident.severity} className="mt-1" />
       </td>

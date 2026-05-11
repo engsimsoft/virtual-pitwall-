@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { X, AlertTriangle, AlertOctagon, AlertCircle } from 'lucide-react'
 import { useAlarms } from '@/lib/alarm/AlarmContext'
+import { IncidentDetailPanel, alarmToPanelData } from './IncidentDetailPanel'
+import type { PanelData } from './IncidentDetailPanel'
 import { cn } from '@/lib/utils'
 
 const SEVERITY_CONFIG = {
@@ -26,6 +28,7 @@ const SEVERITY_CONFIG = {
 export function AlarmToast() {
   const { activeAlarms, acknowledge } = useAlarms()
   const [dismissed, setDismissed] = useState<Set<string>>(new Set())
+  const [selectedPanel, setSelectedPanel] = useState<PanelData | null>(null)
 
   // Auto-dismiss after 8 seconds, but keep critical
   useEffect(() => {
@@ -41,34 +44,40 @@ export function AlarmToast() {
 
   const visibleAlarms = activeAlarms.filter((a) => !dismissed.has(a.id))
 
-  if (visibleAlarms.length === 0) return null
-
   return (
+    <>
+    {visibleAlarms.length > 0 && (
     <div className="fixed right-3 top-3 z-[60] flex w-80 flex-col gap-2">
       {visibleAlarms.map((alarm) => (
         <ToastItem key={alarm.id} alarm={alarm} onAcknowledge={() => {
           acknowledge(alarm.id)
           setDismissed((prev) => new Set(prev).add(alarm.id))
-        }} />
+        }} onOpen={() => setSelectedPanel(alarmToPanelData(alarm))} />
       ))}
     </div>
+    )}
+    <IncidentDetailPanel data={selectedPanel} onClose={() => setSelectedPanel(null)} />
+    </>
   )
 }
 
 function ToastItem({
   alarm,
   onAcknowledge,
+  onOpen,
 }: {
   alarm: ReturnType<typeof useAlarms>['activeAlarms'][number]
   onAcknowledge: () => void
+  onOpen: () => void
 }) {
   const config = SEVERITY_CONFIG[alarm.severity]
   const Icon = config.icon
 
   return (
     <div
+      onClick={onOpen}
       className={cn(
-        'relative flex items-start gap-2.5 rounded-md border p-3 shadow-lg backdrop-blur-sm',
+        'relative flex cursor-pointer items-start gap-2.5 rounded-md border p-3 shadow-lg backdrop-blur-sm',
         config.color
       )}
     >
