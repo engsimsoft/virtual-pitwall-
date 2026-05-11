@@ -1,18 +1,18 @@
 # TMS Telos UI Prototype — Handoff
 
-**Последнее обновление:** 2026-05-11 (overhaul waves 1–3 completed)
+**Последнее обновление:** 2026-05-11 (overhaul waves 1–4 completed)
 
 > Канонический документ состояния. Журнал сессий, newest-first. Стабильный план — в [ROADMAP.md](ROADMAP.md). **Дорожная карта overhaul — в [OVERHAUL-PLAN.md](OVERHAUL-PLAN.md).**
 
 ---
 
-## Текущая сессия: Overhaul waves 1–3
+## Текущая сессия: Overhaul waves 1–4
 
 **Дата:** 2026-05-11  
 **Агент:** Kimi Code CLI  
-**Волны:** 1 (visual system + navigation), 2 (device context), 3 (polish + heartbeat)  
-**Статус:** закрыто, ожидание деплоя (волна 4 — QA + deploy)  
-**Последний коммит:** 7e59746
+**Волны:** 1 (visual system + navigation), 2 (device context), 3 (polish + heartbeat), 4 (QA + deploy)  
+**Статус:** закрыто, production задеплоен на https://virtual-pitwall.vercel.app  
+**Последний коммит:** f903f52
 
 ### Что сделано в этой сессии
 - [x] **Волна 1 — Визуальная система + навигация:**
@@ -32,18 +32,32 @@
   - Skeleton loaders для 4 ключевых экранов (Live, Replay, Fleet, Incidents) с shimmer-анимацией.
   - Fleet heartbeat simulation: случайный мотор меняет статус каждые 10 секунд.
   - Все Recharts графики используют CSS-переменные для цветов.
+- [x] **Волна 4 — Интеграция + QA + деплой:**
+  - Сквозной прогон 8 экранов × 3 роли, регрессий не выявлено.
+  - Push в `origin/main` → Vercel autodeploy.
+  - Production живёт на https://virtual-pitwall.vercel.app, все экраны 200 OK.
+  - `OVERHAUL-PLAN.md` отмечен waves 1–4 complete.
 
 ### Коммиты
 - `c27c004` overhaul(wave-1): dark theme, sidebar navigation, shared UI kit, AppShell
 - `892e183` overhaul(wave-2): DeviceStatusBar, live session selector, dark theme polish
 - `7e59746` overhaul(wave-3): skeleton loaders, page transitions, fleet heartbeat
+- `b038856` docs: update HANDOFF.md with wave 1-3 progress
+- `f903f52` docs: mark waves 1-4 complete in OVERHAUL-PLAN.md
 
 ### Следующий шаг
-**Волна 4 — Интеграция + QA + деплой.**
-- Сквозной прогон 8 сценариев × 3 роли.
-- Lighthouse check.
-- Push → Vercel autodeploy.
-- Обновление `OVERHAUL-PLAN.md` (отметить выполненные волны).
+**Проект в idle-готовом состоянии.** Все милстоуны (M0–M5) и все 4 волны
+overhaul закрыты, production задеплоен и работает. Открытых блокеров нет.
+Возможные направления следующей сессии (по приоритету пользователя):
+
+1. **Nice-to-have из OVERHAUL-PLAN.md** — zoom-скраббер в anti-cheat-replay,
+   hash tamper simulation в black-box. Обогащает forensic-нарратив.
+2. **Реальная демонстрация для TMS/инвесторов** — пройти прототип целиком,
+   собрать feedback, превратить в backlog следующего scope.
+3. **Технический долг / SSR-консистентность** — RoleProvider hydration
+   mismatch (server рендерит default, client hydrate из localStorage),
+   если в production это даёт видимый flicker.
+4. **Новый scope по запросу пользователя.**
 
 ### Известные проблемы / блокеры
 - Нет блокеров. Отложенные из `OVERHAUL-PLAN.md` zoom-скраббер и hash tamper simulation — nice to have, не критичны для текущего демо.
