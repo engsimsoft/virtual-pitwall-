@@ -1,8 +1,0 @@
-{
-  "name": "virtual-pitwall",
-  "functions": {
-    "src/app/**/*.tsx": {
-      "maxDuration": 10
-    }
-  }
-} 
