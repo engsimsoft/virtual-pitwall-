@@ -1,4 +1,4 @@
-import { CLIENTS, ENGINES, INCIDENTS, SESSIONS } from '@/lib/mockData'
+import { CLIENTS, ENGINES, INCIDENTS, SESSIONS, ALARMS } from '@/lib/mockData'
 import { PINNED_DRIVER_ID } from '@/lib/role/constants'
 import { FleetDashboard, type FleetEngineRow } from '@/components/fleet/FleetDashboard'
 import type { IncidentRow } from '@/components/fleet/FleetIncidentsPanel'
@@ -35,6 +35,12 @@ export default function FleetPage() {
   for (const i of INCIDENTS) {
     incidentCountByEngine.set(i.engineId, (incidentCountByEngine.get(i.engineId) ?? 0) + 1)
   }
+  const alarmCountByEngine = new Map<string, number>()
+  for (const a of ALARMS) {
+    if (!a.acknowledged) {
+      alarmCountByEngine.set(a.engineId, (alarmCountByEngine.get(a.engineId) ?? 0) + 1)
+    }
+  }
 
   const engineRows: FleetEngineRow[] = ENGINES.map((engine) => ({
     engine,
@@ -42,6 +48,7 @@ export default function FleetPage() {
     liveSession: liveSessionByEngine.get(engine.id) ?? null,
     sessionCount: sessionCountByEngine.get(engine.id) ?? 0,
     incidentCount: incidentCountByEngine.get(engine.id) ?? 0,
+    alarmCount: alarmCountByEngine.get(engine.id) ?? 0,
   }))
 
   const incidentRows: IncidentRow[] = INCIDENTS.slice()

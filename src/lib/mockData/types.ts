@@ -134,6 +134,25 @@ export interface Regulation {
   violationDwellMs: number
 }
 
+export type AlarmParameter = 'rpm' | 'oil-pressure' | 'coolant-temp' | 'oil-temp' | 'boost'
+
+export type AlarmSeverity = 'warn' | 'violation' | 'critical'
+
+export interface Alarm {
+  id: string
+  engineId: EngineId
+  sessionId?: SessionId
+  parameter: AlarmParameter
+  severity: AlarmSeverity
+  value: number
+  limit: number
+  unit: string
+  action: string
+  message: string
+  acknowledged: boolean
+  triggeredAt: string
+}
+
 export type MaintenanceKind = 'service' | 'overhaul' | 'inspection' | 'decommission'
 
 export interface MaintenanceEvent {

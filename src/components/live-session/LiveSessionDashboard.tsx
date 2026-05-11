@@ -6,6 +6,7 @@ import { useRole } from '@/lib/role/RoleContext'
 import { sessionVisibleToRole } from '@/lib/role/access'
 import { Card } from '@/components/ui/Card'
 import { DeviceStatusBar } from '@/components/ui/DeviceStatusBar'
+import { AlarmStrip } from '@/components/alarm/AlarmStrip'
 import { MonoNumber } from '@/components/MonoNumber'
 import { EmptyForRole } from '@/components/role/EmptyForRole'
 import { formatLapTime, formatRpm } from '@/lib/format'
@@ -158,6 +159,7 @@ export function LiveSessionDashboard({
         latencyMs={180}
         lastPacketSec={0.2}
       />
+      <AlarmStrip sessionId={session.id} engineId={engine.id} />
 
       {/* Main charts area */}
       <main className="flex-1 min-h-0 grid grid-cols-1 gap-2 overflow-y-auto p-2 lg:grid-cols-3 lg:overflow-hidden">

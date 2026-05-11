@@ -6,6 +6,7 @@ import {
   Activity,
   AlertTriangle,
   Archive,
+  Bell,
   FileText,
   LayoutDashboard,
   Server,
@@ -17,6 +18,7 @@ import {
 } from 'lucide-react'
 import { RoleSwitcher } from '@/components/role/RoleSwitcher'
 import { useTheme } from '@/lib/theme/ThemeContext'
+import { useAlarms } from '@/lib/alarm/AlarmContext'
 import { cn } from '@/lib/utils'
 
 interface NavItem {
@@ -32,6 +34,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/demos/anti-cheat-replay', label: 'Anti-Cheat', icon: ShieldCheck },
   { href: '/demos/fleet', label: 'Fleet', icon: Server },
   { href: '/demos/engine-passport', label: 'Passport', icon: FileText },
+  { href: '/demos/alarms', label: 'Alarm Center', icon: Bell },
   { href: '/demos/incidents', label: 'Incidents', icon: AlertTriangle },
   { href: '/demos/black-box', label: 'Black Box', icon: Archive },
   { href: '/demos/drop-zone', label: 'Drop Zone', icon: Wifi },
@@ -45,6 +48,7 @@ interface SidebarProps {
 export function Sidebar({ onNavigate }: SidebarProps) {
   const pathname = usePathname()
   const { theme, toggleTheme } = useTheme()
+  const { activeCount } = useAlarms()
 
   return (
     <aside className="flex h-dvh w-56 flex-col border-r border-border bg-surface">
@@ -79,9 +83,9 @@ export function Sidebar({ onNavigate }: SidebarProps) {
               >
                 <Icon className="h-4 w-4 shrink-0" />
                 <span className="flex-1 truncate">{item.label}</span>
-                {item.badge !== undefined && item.badge > 0 && (
-                  <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-text-inverse">
-                    {item.badge}
+                {item.href === '/demos/alarms' && activeCount > 0 && (
+                  <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-status-critical px-1 text-[10px] font-bold text-text-inverse">
+                    {activeCount}
                   </span>
                 )}
                 {active && (

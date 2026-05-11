@@ -14,6 +14,7 @@ export type Dashboard =
   | 'black-box'
   | 'drop-zone'
   | 'settings'
+  | 'alarms'
 
 const ACCESS: Record<Dashboard, ReadonlyArray<Role>> = {
   fleet: ['tms-engineer', 'client'],
@@ -27,6 +28,8 @@ const ACCESS: Record<Dashboard, ReadonlyArray<Role>> = {
   // Регламент: TMS редактирует, клиент видит только свой контракт (через
   // PINNED_CLIENT_ID-фильтр в самом экране), гонщик не работает с лимитами.
   settings: ['tms-engineer', 'client'],
+  // Alarm Center: TMS видит всё, клиент — свои моторы, гонщик — свои сессии.
+  alarms: ['tms-engineer', 'client', 'driver'],
 }
 
 export function dashboardVisibleToRole(dashboard: Dashboard, role: Role): boolean {

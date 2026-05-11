@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { EngineStatus } from '@/lib/mockData/types'
+import { Bell } from 'lucide-react'
 import { MonoNumber } from '@/components/MonoNumber'
 import type { FleetEngineRow } from './FleetDashboard'
 
@@ -22,7 +23,7 @@ const STATUS_BADGE: Record<EngineStatus, string> = {
 }
 
 export function EngineCard({ row }: Props) {
-  const { engine, client, liveSession, sessionCount, incidentCount } = row
+  const { engine, client, liveSession, sessionCount, incidentCount, alarmCount } = row
   const status = engine.status
   const revolutionsM = (engine.totalRevolutions / 1_000_000).toFixed(1)
 
@@ -33,7 +34,15 @@ export function EngineCard({ row }: Props) {
     >
       <div className="flex items-baseline justify-between gap-2">
         <MonoNumber className="text-[11px] font-semibold text-text-primary">{engine.id}</MonoNumber>
-        <StatusBadge status={status} liveSessionId={liveSession?.id ?? null} />
+        <div className="flex items-center gap-1">
+          {alarmCount > 0 && (
+            <div className="flex items-center gap-0.5 rounded-sm bg-status-critical px-1 py-0.5 text-[10px] font-bold text-text-inverse">
+              <Bell className="h-3 w-3" />
+              {alarmCount}
+            </div>
+          )}
+          <StatusBadge status={status} liveSessionId={liveSession?.id ?? null} />
+        </div>
       </div>
 
       <div className="min-w-0">

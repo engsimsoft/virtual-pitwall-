@@ -5,6 +5,9 @@ import { usePathname } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Sidebar } from './Sidebar'
 import { Menu } from 'lucide-react'
+import { AlarmProvider } from '@/lib/alarm/AlarmContext'
+import { AlarmToast } from '@/components/alarm/AlarmToast'
+import { ALARMS } from '@/lib/mockData'
 
 interface AppShellProps {
   children: React.ReactNode
@@ -20,11 +23,33 @@ const PAGE_TITLES: Record<string, string> = {
   '/demos/black-box': 'Black Box',
   '/demos/drop-zone': 'Drop Zone',
   '/demos/settings': 'Regulations',
+  '/demos/alarms': 'Alarm Center',
 }
 
 export function AppShell({ children }: AppShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const pathname = usePathname()
+
+  return (
+    <AlarmProvider initialAlarms={ALARMS}>
+      <AppShellInner mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} pathname={pathname}>
+        {children}
+      </AppShellInner>
+    </AlarmProvider>
+  )
+}
+
+function AppShellInner({
+  children,
+  mobileOpen,
+  setMobileOpen,
+  pathname,
+}: {
+  children: React.ReactNode
+  mobileOpen: boolean
+  setMobileOpen: (v: boolean) => void
+  pathname: string
+}) {
 
   return (
     <div className="flex h-dvh bg-background text-text-primary">
@@ -48,6 +73,7 @@ export function AppShell({ children }: AppShellProps) {
 
       {/* Main content */}
       <main className="flex flex-1 flex-col overflow-hidden">
+        <AlarmToast />
         {/* Mobile header */}
         <div className="flex items-center justify-between border-b border-border bg-surface px-3 py-2 lg:hidden">
           <button

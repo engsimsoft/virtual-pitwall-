@@ -15,6 +15,7 @@ export interface FleetEngineRow {
   liveSession: Session | null
   sessionCount: number
   incidentCount: number
+  alarmCount: number
 }
 
 interface Props {
