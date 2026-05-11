@@ -6,7 +6,6 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Sidebar } from './Sidebar'
 import { Menu } from 'lucide-react'
 import { AlarmProvider } from '@/lib/alarm/AlarmContext'
-import { AlarmToast } from '@/components/alarm/AlarmToast'
 import { ALARMS } from '@/lib/mockData'
 
 interface AppShellProps {
@@ -73,7 +72,6 @@ function AppShellInner({
 
       {/* Main content */}
       <main className="flex flex-1 flex-col overflow-hidden">
-        <AlarmToast />
         {/* Mobile header */}
         <div className="flex items-center justify-between border-b border-border bg-surface px-3 py-2 lg:hidden">
           <button
