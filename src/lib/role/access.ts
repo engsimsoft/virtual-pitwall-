@@ -31,8 +31,8 @@ const ACCESS: Record<Dashboard, ReadonlyArray<Role>> = {
   settings: ['tms-engineer', 'client'],
   // Alarm Center: TMS видит всё, клиент — свои моторы, гонщик — свои сессии.
   alarms: ['tms-engineer', 'client', 'driver'],
-  // Race Control: только организатор и TMS. Организатор видит всех гонщиков класса.
-  'race-control': ['tms-engineer', 'race-director'],
+  // Race Control: TMS-инженер = организатор гонок. Клиент видит только своих.
+  'race-control': ['tms-engineer', 'client'],
 }
 
 export function dashboardVisibleToRole(dashboard: Dashboard, role: Role): boolean {
