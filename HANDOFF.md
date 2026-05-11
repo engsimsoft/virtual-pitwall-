@@ -1,6 +1,6 @@
 # TMS Telos UI Prototype — Handoff
 
-**Последнее обновление:** 2026-05-11
+**Последнее обновление:** 2026-05-11 (вторая сессия дня)
 
 > Канонический документ состояния. Журнал сессий, newest-first. Каждая сессия добавляет одну компактную запись через `/handoff` в конце. Стабильный план — в [ROADMAP.md](ROADMAP.md).
 
@@ -8,9 +8,47 @@
 
 ## Где остановились
 
-M3 закрыт полностью одной длинной сессией 2026-05-11 — девять feat-коммитов: fleet (`f98f40b` server-shell+grid+summary, `36e19a5` incidents panel + deep-link + replay query-param parsing), branding-unlock (`0325910` TMS логотипы + tms-orange/graphite в `@theme` + снят глобальный animation ban), engine-passport (`92300ea` server-shell + dyno protocol card + drill-down с EngineCard, `bb4463b` widening dyno chart + drop redundant table, `4eeb850` sessions+maintenance logs, `f19b1af` incidents log + mis-shift overrev mocks), incidents (`a25f266` журнал с severity/kind фильтрами), black-box (`0c702c9` chain viewer + block details + JSON evidence export). Все экраны прошли tsc + curl-smoke + браузерную проверку пользователя (включая anti-cheat-replay, который в прошлой сессии оставался unverified). Дорога открыта в M4.
+M4 закрыт целиком одной сессией 2026-05-11 — четыре коммита: `ba1292d`
+landing card-grid из 6 экранов на `/` (заменил ArtLine-маркетинг) + nav
+cleanup от стейл `/features`/`/demos` + back-to-home topbar во всех 6
+dashboards; `efb8370` RoleProvider в layout + RoleSwitcher (pill-tabs)
+в Navigation/topbar с pinned CLI-03/DRV-04 (выбраны так, чтобы matchнули
+SES-008 — единственную live-сессию); `8381a5a` каскадная фильтрация в
+6 dashboards с двухуровневой авторизацией (dashboardVisibleToRole +
+entity-sub-filter) и общим `<EmptyForRole>`; `7e4735c` бонус — parametric
+GPS shapes per-track вместо круга. ADR `2026-05-11-role-context-prototype-scope.md`
+фиксирует scope, матрицу доступов, рациональ pinned IDs. Дорога открыта
+в M5 (опциональные экраны + polish) или к критичному blocker'у деплоя.
+
+`.claude/settings.json` остаётся локально modified — не часть рабочего
+стейта сессии, не коммитится.
 
 ## Сделано в последних сессиях
+
+- **2026-05-11 (вторая сессия дня, M4 целиком + GPS bonus)** — четыре
+  feat-коммита закрыли M4: landing на `/` с card-grid из 6 экранов
+  (live-session/anti-cheat-replay/fleet/passport/incidents/black-box) +
+  очистка Navigation от стейл-ссылок `/features` и `/demos` + удаление
+  стейл-страниц и осиротевшего `DemoCard`; общий `<DashboardTopBar>` с
+  ← На главную + role-switcher во всех 6 dashboards (заодно убран
+  дублирующийся eyebrow TMS Telos из Pattern A — fleet/incidents/black-box).
+  RoleProvider в root layout, persist в localStorage, type
+  `Role = 'tms-engineer' | 'client' | 'driver'`. Pinned IDs **CLI-03 /
+  DRV-04** — выбраны под SES-008 (engineId=ENG-007, clientId=CLI-03,
+  driverId=DRV-04), чтобы и client, и driver видели живую сессию.
+  Двухуровневая авторизация в `lib/role/access.ts`: сначала
+  `dashboardVisibleToRole` (driver видит только live-session, остальные
+  5 экранов — EmptyForRole), затем `engineVisibleToRole`/`sessionVisibleToRole`
+  для sub-фильтра внутри доступного экрана. Селекторы (engine-passport
+  EngineSelector, anti-cheat-replay/black-box bundle pickers) автоматом
+  fallback'ятся на первый visible bundle при смене роли через useEffect.
+  Бонус по запросу пользователя: GPS-трек был sin/cos lapPhase (буквальный
+  круг) — заменён на per-track parametric shape с шиканами/S-связками, 5
+  разных silhouettes по трассам. ADR
+  `2026-05-11-role-context-prototype-scope.md` фиксирует scope прототипа
+  (не auth, не subject picker, не SSR-консистентность), матрицу доступов
+  по ROADMAP-ролям и рациональ pinned IDs. Все 4 коммита прошли tsc +
+  curl-smoke + браузерную верификацию пользователя.
 
 - **2026-05-11 (одна большая сессия, M3 целиком)** — 9 feat-коммитов закрыли все 4 M3-экрана. Расширены моки: новый тип `MaintenanceEvent` + `MAINTENANCE` (9 событий), 2 historic sessions на ENG-009 (SES-009/010), 4 новых overrev mis-shift инцидента (severity=warn для pilot error, отдельно от cheating-violation). Брендинг разморожен: SVG-логотипы скопированы в `public/tms-logo-{graphite,white}.svg`, `--color-tms-orange: #ff4f00` и `--color-tms-graphite: #39393f` в `@theme inline`, заменён красный квадрат-плейсхолдер в Navigation на `next/image`-логотип, hover-цвет `red-600` → `tms-orange`. Снят ArtLine-наследный глобальный CSS-ban `transition/animation: none !important` — мешал heartbeat-индикатору. Извлечён `src/components/ui/SeverityDot` (третье использование triggered rule of three). Сквозная навигация: fleet → engine-passport (drill-down с EngineCard), fleet/passport/incidents → anti-cheat-replay/live-session (deep-link через whitelist+inert pattern). Anti-cheat-replay получил `?session=&seek=` parsing с graceful fallback на default. Три новых ADR: branding-unlock, overrev-severity-policy (mis-shift→warn vs cheating→violation), deep-link-whitelist+inert. Auto-memory дополнена feedback'ом «прототип = визуализация, не data pipeline» (поводом стало предложение пользователя про реальные стендовые дайно-листы из соседнего проекта `presentation.md/`, мы решили использовать как визуальный референс формата, не подменять моки). По пути закрыты два «Важных» open question'а в ROADMAP (дайно-кривые, криптоподпись), пользователь продолжает верифицировать визуально каждый закрываемый экран до движения вперёд.
 - **2026-05-11 (одна сессия, M2 целиком)** — шесть feat-коммитов в две стадии. `/demos/live-session` (три коммита): server-shell пинован на SES-008, client LiveSessionDashboard с 200 ms тикером по 600 сэмплам и 30 s rolling window, charts на Recharts (dual RPM с delta-badge green/amber/red, boost CAN vs estimate dotted, speed/throttle dual-axis), IMU SVG ±1.5G, GPS-полилиния без карт-библиотек, current-values 10-row моноширинная таблица, footer ticker (двухрежимный: сессия или фид парка) + SignedBlockBar с playhead-cursor. `/demos/anti-cheat-replay` (три коммита): server-shell бандлит 4 violation-сессии (SES-003/004/005/006, дефолт SES-004), client-dashboard с chip-селектором, ScrubTimeline drag-to-seek + violation-band, ReplayRpmChart/BoostChart/SpeedThrottleChart c ReferenceArea+ReferenceLine, IncidentSummary с click-to-seek по incident.tMs, HashChainViz вертикальная с подсветкой violation-блоков, PlayControls (play/pause + ±1s + reset + ▶▶/◀◀ jump-to-prev/next-violation). По пути: ADR `2026-05-11-session-selector-scope-by-screen.md` (per-screen селекторы ок, глобальный — M4 role-switcher); экспорт `VIOLATION_WINDOWS` из `sessions.ts` через `index.ts` как новый публичный API; пользователь визуально верифицировал только live-session, replay не подтверждался.
@@ -20,4 +58,22 @@ M3 закрыт полностью одной длинной сессией 2026
 
 ## Следующий шаг
 
-**M4 — старт с landing на `/`** (заменить ArtLine-маркетинг в `src/app/page.tsx`). Это закрывает критичный open question «Стейл-`/` и навигация» из ROADMAP и даёт зрителю demo entry point до того, как мы добавим role-switcher. Раскладка: брендинговая шапка (логотип TMS графит + текст «Telos · UI Prototype»), короткое intro 1-2 предложения, ниже card-grid 6 экранов (live-session, anti-cheat-replay, fleet, engine-passport, incidents, black-box) — каждая карточка = иконка/мини-mockup + название + однострочное описание + ссылка. Группировку по уровням доступа (TMS-инженер / клиент / гонщик) упомянуть текстом в подзаголовке секции, без интерактива — настоящий role-switcher идёт следующим коммитом M4. Параллельно правка `mainLinks` в [Navigation.tsx](src/components/Navigation.tsx): убрать стейл-`/features` и `/demos` (последний ведёт на старый ArtLine-демо-индекс, не на /demos/fleet). Возможный второй этап M4 — собственно role context (`useRole()` или React Context) + переключатель в Navigation + минимальная адаптация существующих экранов под фильтрацию (fleet — фильтр по client; engine-passport — restrict select к clientId; incidents — фильтр по client; live-session/anti-cheat-replay/black-box — для гонщика только своя сессия). Это второй коммит. Если нужны новые ADR (как фильтрация работает каскадно или как landing'у показывать role) — оформлять по pattern M2/M3.
+**Закрыть критичный блокер — деплой Vercel для Telos UI Prototype.**
+`vercel.json` всё ещё содержит конфиг ArtLine-проекта; до публичной
+демонстрации нужно или (а) создать отдельный Vercel-проект для Telos
+и переписать конфиг под него, или (б) перенастроить нынешний проект
+под новое имя/метаданные. Проверить также `package.json` name
+(`telos-ui-prototype`), что `next build` собирается без ошибок, что
+landing на `/` и все 6 dashboards рендерятся в production-режиме (SSG/SSR
+вопрос для role-зависимых dashboards — провайдер клиентский, default
+'tms-engineer' на сервере, hydrate из localStorage; в production
+hydration mismatch не должен быть error'ом, но проверить визуально).
+После деплоя поделиться preview URL и снять блокер из ROADMAP открытых
+вопросов.
+
+Альтернативный путь, если деплой откладывается: M5 — опциональные
+экраны (`/demos/drop-zone` статус WiFi-инфраструктуры на Казань-Ринге +
+`/demos/settings` регламент лимитов RPM/boost/temp на контракт/мотор)
+и polish (motion-переходы между экранами, loading skeletons). M5
+помечен как опциональный в ROADMAP — обогащает демо, но не блокирует
+показ.
