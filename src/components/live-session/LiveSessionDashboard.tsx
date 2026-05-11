@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { Client, Driver, Engine, Incident, Session, Track } from '@/lib/mockData/types'
 import { MonoNumber } from '@/components/MonoNumber'
+import { DashboardTopBar } from '@/components/ui/DashboardTopBar'
 import { formatLapTime, formatRpm } from '@/lib/format'
 import { rpmDelta, rpmDeltaSeverity } from '@/lib/antiCheat'
 import { RpmChart } from './RpmChart'
@@ -61,6 +62,7 @@ export function LiveSessionDashboard({
 
   return (
     <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
+      <DashboardTopBar />
       <HeaderStrip
         engine={engine}
         driver={driver}

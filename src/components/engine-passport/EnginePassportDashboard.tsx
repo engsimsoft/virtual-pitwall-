@@ -8,6 +8,7 @@ import type {
   EngineStatus,
   MaintenanceEvent,
 } from '@/lib/mockData/types'
+import { DashboardTopBar } from '@/components/ui/DashboardTopBar'
 import { DynoCard } from './DynoCard'
 import { EngineSelector } from './EngineSelector'
 import { SessionsLog, type SessionLogRow } from './SessionsLog'
@@ -49,6 +50,7 @@ export function EnginePassportDashboard({ bundles, defaultEngineId }: Props) {
 
   return (
     <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
+      <DashboardTopBar />
       <header className="flex flex-col gap-2 border-b border-gray-200 bg-white px-3 py-2">
         <div className="grid grid-cols-[1fr_1fr_1fr_1fr_auto] items-center gap-4 text-sm">
           <HeaderCell label="Мотор" primary={engine.model} secondary={engine.serialNumber} />

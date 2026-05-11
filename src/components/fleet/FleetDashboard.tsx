@@ -1,4 +1,5 @@
 import type { Client, Engine, Session } from '@/lib/mockData/types'
+import { DashboardTopBar } from '@/components/ui/DashboardTopBar'
 import { FleetStatusSummary } from './FleetStatusSummary'
 import { EngineCard } from './EngineCard'
 import { FleetIncidentsPanel, type IncidentRow } from './FleetIncidentsPanel'
@@ -20,11 +21,9 @@ interface Props {
 export function FleetDashboard({ rows, clients, incidents }: Props) {
   return (
     <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
+      <DashboardTopBar />
       <header className="flex items-baseline justify-between gap-4 border-b border-gray-200 bg-white px-3 py-2">
-        <div>
-          <div className="text-[10px] uppercase tracking-wider text-gray-500">TMS Telos</div>
-          <div className="text-base font-semibold text-gray-900">Парк моторов</div>
-        </div>
+        <div className="text-base font-semibold text-gray-900">Парк моторов</div>
         <div className="text-[11px] text-gray-500">
           {rows.length} моторов · {clients.length} клиентов
         </div>

@@ -11,6 +11,7 @@ import type {
 } from '@/lib/mockData/types'
 import type { ViolationWindow } from '@/lib/mockData'
 import { MonoNumber } from '@/components/MonoNumber'
+import { DashboardTopBar } from '@/components/ui/DashboardTopBar'
 import { formatLapTime } from '@/lib/format'
 import { SessionPicker } from './SessionPicker'
 import { HashChainList } from './HashChainList'
@@ -75,13 +76,11 @@ export function BlackBoxDashboard({ bundles, defaultSessionId }: Props) {
 
   return (
     <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
+      <DashboardTopBar />
       <header className="flex flex-col gap-2 border-b border-gray-200 bg-white px-3 py-2">
         <div className="flex items-baseline justify-between gap-4">
-          <div>
-            <div className="text-[10px] uppercase tracking-wider text-gray-500">TMS Telos</div>
-            <div className="text-base font-semibold text-gray-900">
-              Чёрный ящик · viewer записи
-            </div>
+          <div className="text-base font-semibold text-gray-900">
+            Чёрный ящик · viewer записи
           </div>
           <ExportButton bundle={bundle} />
         </div>

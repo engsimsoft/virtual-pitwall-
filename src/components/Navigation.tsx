@@ -15,10 +15,8 @@ export default function Navigation({ title = "Telos" }: NavigationProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const pathname = usePathname()
 
-  const mainLinks = [
+  const mainLinks: { href: string; label: string; highlight?: boolean }[] = [
     { href: '/', label: 'Главная' },
-    { href: '/demos', label: '🎮 Демо', highlight: true },
-    { href: '/features', label: 'Возможности' },
   ]
 
   const dropdownSections: { title: string; links: { href: string; label: string }[] }[] = []

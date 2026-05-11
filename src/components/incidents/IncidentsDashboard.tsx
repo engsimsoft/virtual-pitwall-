@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 import type { Incident, IncidentKind, IncidentSeverity } from '@/lib/mockData/types'
 import { MonoNumber } from '@/components/MonoNumber'
+import { DashboardTopBar } from '@/components/ui/DashboardTopBar'
 import { IncidentsTable } from './IncidentsTable'
 import { FilterBar } from './FilterBar'
 
@@ -49,11 +50,9 @@ export function IncidentsDashboard({ rows }: Props) {
 
   return (
     <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
+      <DashboardTopBar />
       <header className="flex items-baseline justify-between gap-4 border-b border-gray-200 bg-white px-3 py-2">
-        <div>
-          <div className="text-[10px] uppercase tracking-wider text-gray-500">TMS Telos</div>
-          <div className="text-base font-semibold text-gray-900">Журнал инцидентов</div>
-        </div>
+        <div className="text-base font-semibold text-gray-900">Журнал инцидентов</div>
         <div className="flex items-baseline gap-3 text-[11px] text-gray-500">
           <Counter label="Всего" value={counts.all} tone="text-gray-900" />
           <Counter label="Violation" value={counts.violation} tone="text-red-600" />
