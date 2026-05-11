@@ -1,38 +1,68 @@
 # TMS Telos UI Prototype — Handoff
 
-**Последнее обновление:** 2026-05-11 (overhaul kickoff)
+**Последнее обновление:** 2026-05-11 (overhaul waves 1–3 completed)
 
 > Канонический документ состояния. Журнал сессий, newest-first. Стабильный план — в [ROADMAP.md](ROADMAP.md). **Дорожная карта overhaul — в [OVERHAUL-PLAN.md](OVERHAUL-PLAN.md).**
 
 ---
 
-## Текущая сессия: Overhaul kickoff
+## Текущая сессия: Overhaul waves 1–3
 
 **Дата:** 2026-05-11  
 **Агент:** Kimi Code CLI  
-**Волна:** планирование (волна 1 не начата)  
-**Статус:** ожидание подтверждения пользователя  
-**Последний коммит:** dd9d3a1
+**Волны:** 1 (visual system + navigation), 2 (device context), 3 (polish + heartbeat)  
+**Статус:** закрыто, ожидание деплоя (волна 4 — QA + deploy)  
+**Последний коммит:** 7e59746
 
 ### Что сделано в этой сессии
-- [x] Полный аудит кодовой базы: 8 dashboards, 40+ компонентов, mock-data система, role-access, build, deploy.
-- [x] Выявлены 7 кластеров проблем: visual language (generic gray), dead navigation, missing device context, single-session lock, animation/polish gap, mobile/responsive gaps, component duplication.
-- [x] Составлен план из 4 волн: Визуальная система + навигация → Железный контекст → Polish + forensic feel → Интеграция + QA.
-- [x] Создан `OVERHAUL-PLAN.md` с детальным breakdown по каждой волне, критериями готовности, протоколом handoff.
-- [x] Обновлён `HANDOFF.md` — новая секция overhaul сверху, старые записи сохранены как журнал.
+- [x] **Волна 1 — Визуальная система + навигация:**
+  - Полная тёмная automotive тема (`#0b0d12` background, CSS-переменные, переключатель светлая/тёмная).
+  - Shared UI-kit: `Card`, `HeaderCell`, `StatusBadge`, `DataRow`, `IconButton`, `DeviceStatusBar`.
+  - Sidebar-навигация (8 экранов, active state, mobile overlay, ThemeToggle + RoleSwitcher).
+  - `AppShell` layout с `framer-motion` page transitions (`AnimatePresence`).
+  - Редизайн главной страницы (`/`) под overview-dashboard.
+  - Удалён мёртвый код: `Navigation.tsx`, `DashboardTopBar.tsx`.
+  - `h-screen` → `h-dvh`, responsive grids (mobile-first).
+  - Все 8 дашбордов перекрашены под тёмную тему, Recharts оси/tooltip адаптированы.
+- [x] **Волна 2 — Железный контекст + живые данные:**
+  - `DeviceStatusBar` на Live Session и Anti-Cheat Replay (serial, firmware, LTE bars, GPS sats, latency, last packet pulse).
+  - Селектор сессий в Live Session (все сессии, chip-style, role-filtered).
+  - Connection pulse (`animate-pulse-live`) на LIVE-индикаторе.
+- [x] **Волна 3 — Polish + forensic feel:**
+  - Skeleton loaders для 4 ключевых экранов (Live, Replay, Fleet, Incidents) с shimmer-анимацией.
+  - Fleet heartbeat simulation: случайный мотор меняет статус каждые 10 секунд.
+  - Все Recharts графики используют CSS-переменные для цветов.
 
-### Следующий шаг (после подтверждения пользователя)
-**Волна 1: Визуальная система + навигация.**
-- Тёмная тема через `.dark` класс + CSS-переменные + переключатель.
-- Shared UI-kit: Card, HeaderCell, StatusBadge, DataRow, IconButton.
-- Sidebar-навигация (8 экранов, active state, mobile overlay).
-- AppShell layout (sidebar + main content).
-- Редизайн главной страницы под overview-dashboard.
-- Удаление DashboardTopBar, интеграция навигации в sidebar.
-- `h-screen` → `h-dvh` для mobile viewport fix.
+### Коммиты
+- `c27c004` overhaul(wave-1): dark theme, sidebar navigation, shared UI kit, AppShell
+- `892e183` overhaul(wave-2): DeviceStatusBar, live session selector, dark theme polish
+- `7e59746` overhaul(wave-3): skeleton loaders, page transitions, fleet heartbeat
+
+### Следующий шаг
+**Волна 4 — Интеграция + QA + деплой.**
+- Сквозной прогон 8 сценариев × 3 роли.
+- Lighthouse check.
+- Push → Vercel autodeploy.
+- Обновление `OVERHAUL-PLAN.md` (отметить выполненные волны).
 
 ### Известные проблемы / блокеры
-- Нет блокеров. Единственное ограничение: overhaul требует 3.5–4.5 рабочих дня. Если время ограничено — приоритеты в разделе 8 `OVERHAUL-PLAN.md`.
+- Нет блокеров. Отложенные из `OVERHAUL-PLAN.md` zoom-скраббер и hash tamper simulation — nice to have, не критичны для текущего демо.
+
+---
+
+## Исторические сессии
+
+### Overhaul kickoff
+
+**Дата:** 2026-05-11  
+**Волна:** планирование  
+**Последний коммит:** dd9d3a1  
+
+- [x] Полный аудит кодовой базы: 8 dashboards, 40+ компонентов, mock-data система, role-access, build, deploy.
+- [x] Выявлены 7 кластеров проблем.
+- [x] Составлен план из 4 волн.
+- [x] Создан `OVERHAUL-PLAN.md`.
+- [x] Обновлён `HANDOFF.md`.
 
 ---
 
