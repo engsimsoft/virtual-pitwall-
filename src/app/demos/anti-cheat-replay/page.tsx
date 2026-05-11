@@ -18,7 +18,12 @@ import {
 const VIOLATION_SESSION_IDS = ['SES-003', 'SES-004', 'SES-005', 'SES-006'] as const
 const DEFAULT_SESSION_ID = 'SES-004'
 
-export default function AntiCheatReplayPage() {
+export default async function AntiCheatReplayPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ session?: string; seek?: string }>
+}) {
+  const params = await searchParams
   const bundles: ReplayBundle[] = []
 
   for (const id of VIOLATION_SESSION_IDS) {
@@ -42,5 +47,22 @@ export default function AntiCheatReplayPage() {
 
   if (bundles.length === 0) notFound()
 
-  return <AntiCheatReplayDashboard bundles={bundles} defaultSessionId={DEFAULT_SESSION_ID} />
+  // Deep-link из fleet/incidents: ?session=SES-XXX&seek=tMs. Неизвестные
+  // session-id и невалидный seek молча игнорируются — экран открывается
+  // на дефолтной сессии без seek, не показывая ошибку зрителю демо.
+  const requestedSession = params.session
+  const validSession =
+    requestedSession && bundles.some((b) => b.session.id === requestedSession)
+      ? requestedSession
+      : DEFAULT_SESSION_ID
+  const seekRaw = params.seek ? Number.parseInt(params.seek, 10) : NaN
+  const initialSeekMs = Number.isFinite(seekRaw) && seekRaw >= 0 ? seekRaw : undefined
+
+  return (
+    <AntiCheatReplayDashboard
+      bundles={bundles}
+      defaultSessionId={validSession}
+      initialSeekMs={initialSeekMs}
+    />
+  )
 }

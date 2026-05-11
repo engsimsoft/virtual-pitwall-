@@ -1,6 +1,7 @@
 import type { Client, Engine, Session } from '@/lib/mockData/types'
 import { FleetStatusSummary } from './FleetStatusSummary'
 import { EngineCard } from './EngineCard'
+import { FleetIncidentsPanel, type IncidentRow } from './FleetIncidentsPanel'
 
 export interface FleetEngineRow {
   engine: Engine
@@ -13,9 +14,10 @@ export interface FleetEngineRow {
 interface Props {
   rows: FleetEngineRow[]
   clients: Client[]
+  incidents: IncidentRow[]
 }
 
-export function FleetDashboard({ rows, clients }: Props) {
+export function FleetDashboard({ rows, clients, incidents }: Props) {
   return (
     <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
       <header className="flex items-baseline justify-between gap-4 border-b border-gray-200 bg-white px-3 py-2">
@@ -44,11 +46,11 @@ export function FleetDashboard({ rows, clients }: Props) {
               Недавние алерты по парку
             </div>
             <div className="truncate text-[11px] text-gray-500">
-              Топ инцидентов с deep-link в сессию
+              Топ инцидентов · клик ведёт в сессию-отчёт
             </div>
           </div>
-          <div className="flex flex-1 items-center justify-center px-3 text-[11px] text-gray-400">
-            Панель алертов — следующая стадия
+          <div className="min-h-0 flex-1">
+            <FleetIncidentsPanel rows={incidents} />
           </div>
         </aside>
       </main>

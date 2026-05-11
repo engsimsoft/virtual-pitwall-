@@ -1,7 +1,8 @@
 'use client'
 
-import type { Incident, IncidentSeverity, Session } from '@/lib/mockData/types'
+import type { Incident, Session } from '@/lib/mockData/types'
 import { MonoNumber } from '@/components/MonoNumber'
+import { SeverityDot } from '@/components/ui/SeverityDot'
 import { formatLapTime } from '@/lib/format'
 
 interface Props {
@@ -66,11 +67,3 @@ function Tile({ title, children }: { title: string; children: React.ReactNode })
   )
 }
 
-function SeverityDot({ severity }: { severity: IncidentSeverity }) {
-  const colors: Record<IncidentSeverity, string> = {
-    info: 'bg-blue-500',
-    warn: 'bg-amber-500',
-    violation: 'bg-red-500',
-  }
-  return <span className={`inline-block h-1.5 w-1.5 shrink-0 rounded-full ${colors[severity]}`} />
-}

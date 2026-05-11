@@ -1,7 +1,8 @@
 'use client'
 
-import type { Incident, IncidentSeverity } from '@/lib/mockData/types'
+import type { Incident } from '@/lib/mockData/types'
 import { MonoNumber } from '@/components/MonoNumber'
+import { SeverityDot } from '@/components/ui/SeverityDot'
 import { formatLapTime } from '@/lib/format'
 
 interface Props {
@@ -41,7 +42,7 @@ export function IncidentSummary({ incidents, currentMs, onSeek }: Props) {
                 active ? 'bg-amber-50' : 'hover:bg-gray-50'
               }`}
             >
-              <SeverityDot severity={i.severity} />
+              <SeverityDot severity={i.severity} className="mt-1" />
               <div className="min-w-0 flex-1">
                 <div className="flex items-baseline justify-between gap-2">
                   <span className="text-[11px] font-semibold text-gray-900">
@@ -85,11 +86,3 @@ function Evidence({ label, value, unit }: { label: string; value: number; unit?:
   )
 }
 
-function SeverityDot({ severity }: { severity: IncidentSeverity }) {
-  const colors: Record<IncidentSeverity, string> = {
-    info: 'bg-blue-500',
-    warn: 'bg-amber-500',
-    violation: 'bg-red-500',
-  }
-  return <span className={`mt-1 inline-block h-1.5 w-1.5 shrink-0 rounded-full ${colors[severity]}`} />
-}

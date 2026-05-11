@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Client, Driver, Engine, Incident, Session, Track } from '@/lib/mockData/types'
 import type { ViolationWindow } from '@/lib/mockData'
 import { MonoNumber } from '@/components/MonoNumber'
@@ -27,13 +27,18 @@ export interface ReplayBundle {
 interface Props {
   bundles: ReplayBundle[]
   defaultSessionId: string
+  initialSeekMs?: number
 }
 
 const TICK_MS = 200
 
-export function AntiCheatReplayDashboard({ bundles, defaultSessionId }: Props) {
+export function AntiCheatReplayDashboard({ bundles, defaultSessionId, initialSeekMs }: Props) {
   const [selectedId, setSelectedId] = useState(defaultSessionId)
-  const [pointer, setPointer] = useState(0)
+  const [pointer, setPointer] = useState(() => {
+    if (initialSeekMs === undefined) return 0
+    const initialBundle = bundles.find((b) => b.session.id === defaultSessionId) ?? bundles[0]
+    return nearestSampleIndex(initialBundle.session.samples, initialSeekMs)
+  })
   const [playing, setPlaying] = useState(false)
 
   const bundle = bundles.find((b) => b.session.id === selectedId) ?? bundles[0]
@@ -41,7 +46,12 @@ export function AntiCheatReplayDashboard({ bundles, defaultSessionId }: Props) {
   const durationMs = samples[samples.length - 1]?.tMs ?? 0
   const current = samples[Math.min(pointer, samples.length - 1)] ?? samples[0]
 
+  // Сброс позиции при смене сессии — но не при первом mount, там pointer уже
+  // выставлен из initialSeekMs (deep-link). Используем флаг прошлого id.
+  const prevSelectedRef = useRef(selectedId)
   useEffect(() => {
+    if (prevSelectedRef.current === selectedId) return
+    prevSelectedRef.current = selectedId
     setPointer(0)
     setPlaying(false)
   }, [selectedId])
