@@ -121,12 +121,8 @@ export function IncidentDetailPanel({ data, onClose }: Props) {
     return TRACKS.find((t) => t.id === session.trackId) ?? null
   }, [session])
 
-  if (!data) return null
-
-  const Icon = SEVERITY_ICON[data.severity]
-
   const chartData = useMemo(() => {
-    if (!session) return []
+    if (!session || !data) return []
     const centerMs = session.samples.length > 0
       ? session.samples[Math.floor(session.samples.length / 2)].tMs
       : 0
@@ -156,6 +152,10 @@ export function IncidentDetailPanel({ data, onClose }: Props) {
       : 0
     return session.samples.find((s) => Math.abs(s.tMs - centerMs) < 500) ?? null
   }, [session])
+
+  if (!data) return null
+
+  const Icon = SEVERITY_ICON[data.severity]
 
   return (
     <div className="fixed inset-0 z-[70] flex justify-end">
