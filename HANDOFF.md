@@ -1,6 +1,6 @@
 # TMS Telos UI Prototype — Handoff
 
-**Последнее обновление:** 2026-05-11 (вторая сессия дня)
+**Последнее обновление:** 2026-05-11 (третья сессия дня)
 
 > Канонический документ состояния. Журнал сессий, newest-first. Каждая сессия добавляет одну компактную запись через `/handoff` в конце. Стабильный план — в [ROADMAP.md](ROADMAP.md).
 
@@ -8,22 +8,57 @@
 
 ## Где остановились
 
-M4 закрыт целиком одной сессией 2026-05-11 — четыре коммита: `ba1292d`
-landing card-grid из 6 экранов на `/` (заменил ArtLine-маркетинг) + nav
-cleanup от стейл `/features`/`/demos` + back-to-home topbar во всех 6
-dashboards; `efb8370` RoleProvider в layout + RoleSwitcher (pill-tabs)
-в Navigation/topbar с pinned CLI-03/DRV-04 (выбраны так, чтобы matchнули
-SES-008 — единственную live-сессию); `8381a5a` каскадная фильтрация в
-6 dashboards с двухуровневой авторизацией (dashboardVisibleToRole +
-entity-sub-filter) и общим `<EmptyForRole>`; `7e4735c` бонус — parametric
-GPS shapes per-track вместо круга. ADR `2026-05-11-role-context-prototype-scope.md`
-фиксирует scope, матрицу доступов, рациональ pinned IDs. Дорога открыта
-в M5 (опциональные экраны + polish) или к критичному blocker'у деплоя.
+Третья сессия 2026-05-11 закрыла критичный блокер деплоя и большую часть
+M5. Production живёт на https://virtual-pitwall.vercel.app (autodeploy
+из `main` через GitHub Integration на существующий Vercel-проект
+`virtual-pitwall` в team `engsimsoft-gmailcoms-projects`); ADR
+`2026-05-11-deploy-vercel-keep-single-project.md` фиксирует
+single-project подход и почему переименование в `telos-ui-prototype`
+отложено как косметика. Репозиторий очищен от ArtLine-наследия одним
+`chore`-коммитом — 15 файлов (`vercel.json`, 7 редиректов из
+`next.config.ts`, `ignoreBuildErrors: true`, 5 корневых `.md`,
+`.eslintrc.json`/`mcp-config.json`, `scripts/backup/`, Next.js-template
+SVG в `public/`, локально `backups/`). M5 закрыт по двум экранам:
+`/demos/drop-zone` (TMS-only) и `/demos/settings` (TMS+client) —
+остался только polish (motion-переходы + loading skeletons), отложен
+как объединённый visual overhaul с тёмной палитрой под брендинг TMS.
+Цепочка коммитов: docs handoff `f69466c` → cleanup `2d492fd` → push
+30 коммитов в origin (первый деплой 42s) → M5 пять коммитов (`8db6881`
+моки, `cb1ff69` access, `4efb1cd` settings, `f532909` drop-zone,
+`dd9d3a1` landing 6→8) → push (второй деплой 30s).
 
 `.claude/settings.json` остаётся локально modified — не часть рабочего
 стейта сессии, не коммитится.
 
 ## Сделано в последних сессиях
+
+- **2026-05-11 (третья сессия дня, deploy unblock + M5 без polish)** — два
+  раздельных шага одной сессией. Деплой: cleanup ArtLine-наследия одним
+  `chore`-коммитом `2d492fd` (`vercel.json` удалён; `next.config.ts`
+  сжат до пустого `NextConfig` без 7 редиректов и `ignoreBuildErrors`;
+  5 корневых `.md` ArtLine-эпохи, legacy `.eslintrc.json`,
+  `mcp-config.json`, `scripts/backup/`, Next.js-template SVG в `public/`,
+  локально `backups/`); 32 коммита push в `origin/main`; autodeploy
+  через GitHub Integration на существующий `virtual-pitwall` за 42s,
+  production https://virtual-pitwall.vercel.app, 6 dashboards 200 OK.
+  ADR `2026-05-11-deploy-vercel-keep-single-project.md` объясняет выбор
+  one-project vs two и причины не переименовывать. M5: пять коммитов —
+  `8db6881` моки (REGULATIONS три регламента per-client + DROP_ZONES
+  Казань-Ринг WiFi/edge/LTE-backup, новые типы в `types.ts`); `cb1ff69`
+  access matrix расширена двумя экранами (drop-zone TMS-only, settings
+  TMS+client); `4efb1cd` `/demos/settings` (селектор клиента, 4
+  параметра лимитов + dwell, aside «Связанные нарушения» с
+  `kind→limit` mapping и сравнением лимит vs наблюдалось из evidence);
+  `f532909` `/demos/drop-zone` (aggregate-status worst-wins, 3
+  component-карточки с metrics/uptime/note, aside «Очередь в облако»
+  с buffer + last sync + cost); `dd9d3a1` landing 6→8 карточек.
+  Второй autodeploy 30s, все 8 экранов 200 OK, landing рендерит «8
+  экранов». Polish (motion-переходы + loading skeletons) отложен как
+  отдельный visual проход — связали с отложенной тёмной палитрой,
+  имеет смысл объединять под фиксацию брендинга. По пути: проектное
+  решение **не расширять SESSIONS** под drop-zone (изоляция M1-моков
+  важнее богатства буфера), buffer показывается как «0» и
+  объясняется текстом «всё уже доставлено» — валидный visual state.
 
 - **2026-05-11 (вторая сессия дня, M4 целиком + GPS bonus)** — четыре
   feat-коммита закрыли M4: landing на `/` с card-grid из 6 экранов
@@ -58,22 +93,14 @@ GPS shapes per-track вместо круга. ADR `2026-05-11-role-context-proto
 
 ## Следующий шаг
 
-**Закрыть критичный блокер — деплой Vercel для Telos UI Prototype.**
-`vercel.json` всё ещё содержит конфиг ArtLine-проекта; до публичной
-демонстрации нужно или (а) создать отдельный Vercel-проект для Telos
-и переписать конфиг под него, или (б) перенастроить нынешний проект
-под новое имя/метаданные. Проверить также `package.json` name
-(`telos-ui-prototype`), что `next build` собирается без ошибок, что
-landing на `/` и все 6 dashboards рендерятся в production-режиме (SSG/SSR
-вопрос для role-зависимых dashboards — провайдер клиентский, default
-'tms-engineer' на сервере, hydrate из localStorage; в production
-hydration mismatch не должен быть error'ом, но проверить визуально).
-После деплоя поделиться preview URL и снять блокер из ROADMAP открытых
-вопросов.
-
-Альтернативный путь, если деплой откладывается: M5 — опциональные
-экраны (`/demos/drop-zone` статус WiFi-инфраструктуры на Казань-Ринге +
-`/demos/settings` регламент лимитов RPM/boost/temp на контракт/мотор)
-и polish (motion-переходы между экранами, loading skeletons). M5
-помечен как опциональный в ROADMAP — обогащает демо, но не блокирует
-показ.
+**M5 polish: motion-переходы между экранами + loading skeletons.**
+Единственный оставшийся пункт ROADMAP — самостоятельный visual проход.
+Рассмотреть объединение с отложенной тёмной automotive-палитрой
+(`decisions/2026-05-10-defer-dark-theme-until-branding.md`) и
+branding-unlock (`decisions/2026-05-11-branding-unlock-tms-logos.md`)
+под цельный visual overhaul, чтобы не дробить визуальную работу на
+мелкие проходы. Если приоритет сместится — альтернативы: ручное
+переименование Vercel-проекта `virtual-pitwall` → `telos-ui-prototype`
+через dashboard (один клик в Settings, не требует коммитов; canonical
+URL станет `telos-ui-prototype.vercel.app`); или какие-то новые
+функциональные расширения, которые могут возникнуть после демонстрации.

@@ -64,8 +64,8 @@
 | engine-passport | `/demos/engine-passport` | Цифровой паспорт мотора: история, наработка, нарушения, контракт, ремонты | M3 | not started |
 | incidents | `/demos/incidents` | Журнал push-алертов, deep-link в момент сессии, статусы | M3 | not started |
 | black-box | `/demos/black-box` | Viewer записи с криптоцепочкой, экспорт в юр-формате | M3 | not started |
-| drop-zone | `/demos/drop-zone` | Статус WiFi-инфраструктуры на Казань-Ринге, edge-сервер | M5 | not started |
-| settings | `/demos/settings` | Регламент: лимиты RPM/boost/temp на контракт/мотор/клиента | M5 | not started |
+| drop-zone | `/demos/drop-zone` | Статус WiFi-инфраструктуры на Казань-Ринге, edge-сервер | M5 | done |
+| settings | `/demos/settings` | Регламент: лимиты RPM/boost/temp на контракт/мотор/клиента | M5 | done |
 
 ## Mock-data design rules
 
@@ -146,9 +146,20 @@ parametric GPS shapes per-track вместо круга). По пути: ADR
 
 ### M5 — Опциональные экраны
 
-- [ ] `/demos/drop-zone`
-- [ ] `/demos/settings`
+- [x] `/demos/drop-zone`
+- [x] `/demos/settings`
 - [ ] Polish: motion-переходы между экранами, loading skeletons
+
+M5 закрыт частично 2026-05-11 (третья сессия дня). Пять коммитов:
+`8db6881` моки REGULATIONS (3 регламента per-client) + DROP_ZONES
+(Казань-Ринг WiFi/edge/LTE-backup); `cb1ff69` access matrix +2 экрана
+(drop-zone TMS-only, settings TMS+client); `4efb1cd` settings —
+селектор клиента + 4 параметра лимитов + dwell + aside «Связанные
+нарушения» с kind→limit mapping; `f532909` drop-zone — aggregate
+status worst-wins + 3 component-карточки + aside «Очередь в облако»;
+`dd9d3a1` landing 6→8 карточек. Polish (motion-переходы, loading
+skeletons) откладывается как самостоятельный visual overhaul — имеет
+смысл объединять с отложенной тёмной палитрой при фиксации брендинга.
 
 ## Принятые решения
 
@@ -162,12 +173,13 @@ parametric GPS shapes per-track вместо круга). По пути: ADR
 - 2026-05-11 — Severity для overrev: pilot error (mis-shift) → warn, cheating → violation; один kind, разделение через severity+summary — `decisions/2026-05-11-overrev-severity-pilot-error-vs-cheating.md`
 - 2026-05-11 — Deep-link policy: whitelist `LIVE_SESSION_IDS`/`REPLAY_SESSION_IDS` в каждом page.tsx + inert fallback в компоненте — `decisions/2026-05-11-deep-link-whitelist-and-inert-fallback.md`
 - 2026-05-11 — Role context — scope for the prototype: pinned CLI-03/DRV-04, двухуровневая авторизация dashboard-access + entity-sub-filter, без UX-выбора конкретного субъекта — `decisions/2026-05-11-role-context-prototype-scope.md`
+- 2026-05-11 — Деплой Vercel: один проект `virtual-pitwall`, переименование отложено, autodeploy через GitHub Integration — `decisions/2026-05-11-deploy-vercel-keep-single-project.md`
 
 ## Открытые вопросы
 
 ### Критичные
 
-- **Деплой.** В `vercel.json` — конфиг ArtLine-проекта. Проверить, не будет ли коллизий, сделать ли отдельный Vercel-проект для Telos. Стало блокером для публичной демонстрации после закрытия M4.
+_Все ранее критичные вопросы закрыты._ Деплой Vercel снят 2026-05-11: production на https://virtual-pitwall.vercel.app, autodeploy из `main` через GitHub Integration. Имя Vercel-проекта осталось `virtual-pitwall` (косметика, не блокер) — переименование в `telos-ui-prototype` требует ручного действия в Vercel dashboard.
 
 ### Важные
 
@@ -185,4 +197,4 @@ _Все ранее открытые «Важные» вопросы закрыт
 
 ## Резюме одной фразой
 
-UI-прототип облачной части TMS Telos с фирменным flagship-экраном античита и role-switcher TMS/клиент/гонщик; M0-M4 закрыты (инфраструктура, mock data, anti-cheat showcase, парк/паспорт/инциденты/чёрный ящик, role context + landing), брендинг разморожен, GPS-трек заменён на parametric per-track shapes. Дорога открыта в M5 (опциональные экраны drop-zone/settings + polish). Критичный блокер для публичной демонстрации — деплой Vercel. Тёмная палитра остаётся отложенной как отдельный visual overhaul.
+UI-прототип облачной части TMS Telos с фирменным flagship-экраном античита, role-switcher TMS/клиент/гонщик, регламентом контракта и инфраструктурой Drop Zone; M0-M4 закрыты целиком, M5 закрыт по двум экранам (drop-zone, settings) из трёх — остался polish (motion-переходы + loading skeletons); 8 dashboards плюс landing, брендинг разморожен, GPS-трек заменён на parametric per-track shapes, развёрнуто на https://virtual-pitwall.vercel.app (autodeploy из main). Тёмная палитра + polish остаются отложенными как объединённый visual overhaul под фиксацию брендинга TMS.
