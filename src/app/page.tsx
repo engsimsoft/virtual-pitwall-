@@ -7,6 +7,8 @@ import {
   FileText,
   Server,
   ShieldCheck,
+  SlidersHorizontal,
+  Wifi,
   type LucideIcon,
 } from 'lucide-react'
 import Navigation from '@/components/Navigation'
@@ -61,6 +63,20 @@ const SCREENS: ScreenCard[] = [
     icon: Archive,
     href: '/demos/black-box',
   },
+  {
+    title: 'Drop Zone',
+    description:
+      'Статус WiFi-инфраструктуры на Казань-Ринге: точка доступа, edge-сервер, LTE backup, очередь блоков в облако.',
+    icon: Wifi,
+    href: '/demos/drop-zone',
+  },
+  {
+    title: 'Регламент',
+    description:
+      'Лимиты RPM/boost/temp на контракт клиента с привязкой к связанным инцидентам по моторам клиента.',
+    icon: SlidersHorizontal,
+    href: '/demos/settings',
+  },
 ]
 
 export default function Home() {
@@ -92,7 +108,7 @@ export default function Home() {
                 Экраны прототипа
               </div>
               <div className="text-base font-semibold text-gray-900">
-                6 экранов · 3 уровня доступа
+                8 экранов · 3 уровня доступа
               </div>
             </div>
             <div className="hidden max-w-md text-right text-xs text-gray-500 sm:block">
