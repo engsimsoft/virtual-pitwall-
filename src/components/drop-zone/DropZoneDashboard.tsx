@@ -1,0 +1,216 @@
+'use client'
+
+import {
+  HardDrive,
+  Radio,
+  Wifi,
+  type LucideIcon,
+} from 'lucide-react'
+import type {
+  DropZoneComponent,
+  DropZoneComponentKind,
+  DropZoneComponentStatus,
+  DropZoneSite,
+  Track,
+} from '@/lib/mockData/types'
+import { useRole } from '@/lib/role/RoleContext'
+import { dashboardVisibleToRole } from '@/lib/role/access'
+import { DashboardTopBar } from '@/components/ui/DashboardTopBar'
+import { EmptyForRole } from '@/components/role/EmptyForRole'
+
+interface SiteRow {
+  site: DropZoneSite
+  track: Track | null
+}
+
+interface Props {
+  sites: SiteRow[]
+}
+
+const ICON_BY_KIND: Record<DropZoneComponentKind, LucideIcon> = {
+  'wifi-ap': Wifi,
+  'edge-server': HardDrive,
+  'lte-backup': Radio,
+}
+
+const KIND_LABEL: Record<DropZoneComponentKind, string> = {
+  'wifi-ap': 'WiFi 6 точка доступа',
+  'edge-server': 'Edge-сервер',
+  'lte-backup': 'LTE backup-аплинк',
+}
+
+const STATUS_LABEL: Record<DropZoneComponentStatus, string> = {
+  online: 'online',
+  degraded: 'degraded',
+  offline: 'offline',
+}
+
+const STATUS_CLASSES: Record<DropZoneComponentStatus, string> = {
+  online: 'bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20',
+  degraded: 'bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/30',
+  offline: 'bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20',
+}
+
+export function DropZoneDashboard({ sites }: Props) {
+  const { role } = useRole()
+  const hasAccess = dashboardVisibleToRole('drop-zone', role)
+
+  if (!hasAccess) {
+    return (
+      <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
+        <DashboardTopBar />
+        <header className="border-b border-gray-200 bg-white px-3 py-2">
+          <div className="text-base font-semibold text-gray-900">Drop Zone</div>
+          <div className="text-[11px] text-gray-500">
+            Инфраструктура связи на проблемных трассах
+          </div>
+        </header>
+        <EmptyForRole entity="доступа к инфраструктуре Drop Zone" />
+      </div>
+    )
+  }
+
+  if (sites.length === 0) {
+    return (
+      <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
+        <DashboardTopBar />
+        <EmptyForRole entity="развёрнутых Drop Zone-комплектов" />
+      </div>
+    )
+  }
+
+  // Прототип: один сайт. Если будут несколько — добавится селектор. Сейчас
+  // безопасно брать первый.
+  const { site, track } = sites[0]
+  const aggregate = aggregateStatus(site.components)
+
+  return (
+    <div className="flex h-screen flex-col bg-gray-50 text-gray-900">
+      <DashboardTopBar />
+      <header className="flex items-baseline justify-between gap-4 border-b border-gray-200 bg-white px-3 py-2">
+        <div>
+          <div className="text-base font-semibold text-gray-900">
+            {site.name}
+          </div>
+          <div className="text-[11px] text-gray-500">
+            {track ? `${track.name} · ${track.city}` : '—'} · комплект{' '}
+            {site.id}
+          </div>
+        </div>
+        <span
+          className={`rounded-sm px-2 py-1 font-mono text-[10px] uppercase tracking-wider ${STATUS_CLASSES[aggregate]}`}
+        >
+          {STATUS_LABEL[aggregate]}
+        </span>
+      </header>
+
+      <main className="grid flex-1 min-h-0 grid-cols-[2fr_1fr] gap-2 p-2">
+        <section className="grid min-h-0 grid-rows-3 gap-2">
+          {site.components.map((component) => (
+            <ComponentCard key={component.id} component={component} />
+          ))}
+        </section>
+
+        <aside className="flex min-h-0 flex-col rounded-md border border-gray-200 bg-white">
+          <div className="border-b border-gray-100 px-3 py-1.5">
+            <div className="text-xs font-semibold uppercase tracking-wide text-gray-700">
+              Очередь в облако
+            </div>
+            <div className="truncate text-[11px] text-gray-500">
+              Состояние edge-буфера и канала к Telos Cloud
+            </div>
+          </div>
+          <div className="flex flex-col gap-3 p-3 text-[12px]">
+            <SummaryRow
+              label="Последняя синхронизация"
+              value={`${site.lastSyncMinutesAgo} мин назад`}
+            />
+            <SummaryRow
+              label="Сессий в буфере"
+              value={String(site.bufferSessions)}
+            />
+            <SummaryRow
+              label="Подписанных блоков"
+              value={String(site.bufferBlocks)}
+            />
+            <SummaryRow
+              label="Стоимость комплекта"
+              value={`${(site.costRub / 1000).toFixed(0)} тыс ₽`}
+            />
+          </div>
+          <div className="mt-auto border-t border-gray-100 bg-gray-50 px-3 py-1.5 text-[11px] text-gray-500">
+            Edge-узел продолжает приём WiFi-потоков даже при деградации
+            LTE-канала — данные накапливаются в буфере и синхронизируются с
+            облаком, когда аплинк стабилизируется. Buffer = 0 означает, что
+            всё уже доставлено.
+          </div>
+        </aside>
+      </main>
+    </div>
+  )
+}
+
+function aggregateStatus(
+  components: DropZoneComponent[],
+): DropZoneComponentStatus {
+  if (components.some((c) => c.status === 'offline')) return 'offline'
+  if (components.some((c) => c.status === 'degraded')) return 'degraded'
+  return 'online'
+}
+
+function ComponentCard({ component }: { component: DropZoneComponent }) {
+  const Icon = ICON_BY_KIND[component.kind]
+  return (
+    <div className="flex min-h-0 flex-col rounded-md border border-gray-200 bg-white">
+      <div className="flex items-center justify-between gap-3 border-b border-gray-100 px-3 py-1.5">
+        <div className="flex items-center gap-2">
+          <div className="flex h-7 w-7 items-center justify-center rounded-sm bg-gray-100 text-tms-graphite">
+            <Icon className="h-4 w-4" />
+          </div>
+          <div>
+            <div className="text-[11px] uppercase tracking-wider text-gray-500">
+              {KIND_LABEL[component.kind]}
+            </div>
+            <div className="text-[13px] font-semibold text-gray-900">
+              {component.model}
+            </div>
+          </div>
+        </div>
+        <span
+          className={`rounded-sm px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider ${STATUS_CLASSES[component.status]}`}
+        >
+          {STATUS_LABEL[component.status]}
+        </span>
+      </div>
+      <div className="grid flex-1 min-h-0 grid-cols-4 gap-px bg-gray-100">
+        {component.metrics.map((m) => (
+          <div key={m.label} className="bg-white p-2">
+            <div className="mb-0.5 text-[10px] uppercase tracking-wider text-gray-500">
+              {m.label}
+            </div>
+            <div className="font-mono text-[12px] text-tms-graphite">
+              {m.value}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="flex items-center justify-between gap-3 border-t border-gray-100 bg-gray-50 px-3 py-1.5">
+        <div className="text-[11px] text-gray-500">{component.note}</div>
+        <div className="font-mono text-[10px] uppercase tracking-wider text-gray-400">
+          uptime {component.uptimeHours} ч
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function SummaryRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-baseline justify-between gap-3">
+      <span className="text-[11px] text-gray-500">{label}</span>
+      <span className="font-mono text-[13px] font-semibold text-tms-graphite">
+        {value}
+      </span>
+    </div>
+  )
+}
