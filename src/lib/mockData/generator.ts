@@ -17,14 +17,57 @@ export const SAMPLE_INTERVAL_MS = 1000 / SAMPLE_RATE_HZ
 const LAP_DURATION_MS = 90_000
 const BLOCK_DURATION_MS = 60_000
 
-// Approximate centroid coordinates of each circuit. Used to position the
-// synthetic GPS oval; not intended as accurate track geometry.
+// Approximate centroid coordinates of each circuit. Used as anchor for the
+// synthetic GPS trace; not intended as accurate track geometry.
 const TRACK_CENTROIDS: Record<TrackId, { lat: number; lon: number; altM: number }> = {
   'TRK-01': { lat: 56.060, lon: 35.815, altM: 200 },
   'TRK-02': { lat: 55.780, lon: 49.180, altM: 80 },
   'TRK-03': { lat: 43.405, lon: 39.957, altM: 8 },
   'TRK-04': { lat: 60.658, lon: 30.182, altM: 90 },
   'TRK-05': { lat: 55.587, lon: 37.992, altM: 130 },
+}
+
+// Parametric track shape per circuit, t in [0, 2π], returns normalized (x, y)
+// roughly in [-1.2, 1.2]. Hand-tuned harmonics give each track a distinct
+// silhouette — oval с шиканой, длинный круг, технический S-комбинат. Это всё
+// ещё синтетика «в духе»: не реальная топология автодрома, но визуально
+// читается как гоночная трасса вместо овала. Замкнутость гарантируется
+// 2π-периодичностью гармоник.
+function trackShape(trackId: TrackId, t: number): { x: number; y: number } {
+  switch (trackId) {
+    case 'TRK-01':
+      // Москва Рейсинг: вытянутый овал с одной шиканой
+      return {
+        x: Math.cos(t) + 0.18 * Math.cos(3 * t),
+        y: 0.7 * Math.sin(t) + 0.1 * Math.sin(4 * t),
+      }
+    case 'TRK-02':
+      // Казань-ринг: технический трек с S-связкой
+      return {
+        x: 0.95 * Math.cos(t) + 0.22 * Math.sin(2 * t),
+        y: 0.6 * Math.sin(t) - 0.18 * Math.cos(3 * t),
+      }
+    case 'TRK-03':
+      // Сочи: длинный овал с медленным разворотом
+      return {
+        x: 1.1 * Math.cos(t),
+        y: 0.55 * Math.sin(t) + 0.14 * Math.sin(3 * t),
+      }
+    case 'TRK-04':
+      // Игора Драйв: северная техничка с двумя шиканами
+      return {
+        x: Math.cos(t) + 0.15 * Math.sin(2 * t),
+        y: 0.65 * Math.sin(t) + 0.22 * Math.cos(2 * t) - 0.1 * Math.sin(4 * t),
+      }
+    case 'TRK-05':
+      // ADM Raceway: овал со встречной шиканой на короткой прямой
+      return {
+        x: Math.cos(t) - 0.12 * Math.cos(2 * t),
+        y: 0.7 * Math.sin(t) + 0.15 * Math.sin(2 * t),
+      }
+    default:
+      return { x: Math.cos(t), y: 0.7 * Math.sin(t) }
+  }
 }
 
 // Deterministic PRNG so the same session ID always produces the same trace.
@@ -149,8 +192,12 @@ export function synthesizeSamples(spec: SynthSpec): TelemetrySample[] {
       vGpsKmh = 15 + mulberry32(r) * 10
     }
 
-    const lat = centroid.lat + 0.005 * Math.sin(lapPhase * Math.PI * 2)
-    const lon = centroid.lon + 0.008 * Math.cos(lapPhase * Math.PI * 2)
+    const lapTheta = lapPhase * Math.PI * 2
+    const shape = trackShape(spec.trackId, lapTheta)
+    // 0.006° широты ≈ 670 м; 0.010° долготы на 55-60° широты ≈ 560 м. Это
+    // даёт трассу ~1.2 × 1.3 км, разумный масштаб для русских автодромов.
+    const lat = centroid.lat + 0.006 * shape.y
+    const lon = centroid.lon + 0.010 * shape.x
     const altM = centroid.altM + 5 * Math.sin(lapPhase * Math.PI * 4)
 
     const accLongG = ((throttlePct - 50) / 50) * 0.6 + (mulberry32(r) - 0.5) * 0.1
