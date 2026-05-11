@@ -144,3 +144,32 @@ export interface MaintenanceEvent {
   runHoursAtEvent: number
   summary: string
 }
+
+export type DropZoneComponentKind = 'wifi-ap' | 'edge-server' | 'lte-backup'
+export type DropZoneComponentStatus = 'online' | 'degraded' | 'offline'
+
+export interface DropZoneComponentMetric {
+  label: string
+  value: string
+}
+
+export interface DropZoneComponent {
+  id: string
+  kind: DropZoneComponentKind
+  model: string
+  status: DropZoneComponentStatus
+  uptimeHours: number
+  metrics: DropZoneComponentMetric[]
+  note?: string
+}
+
+export interface DropZoneSite {
+  id: string
+  trackId: TrackId
+  name: string
+  costRub: number
+  lastSyncMinutesAgo: number
+  bufferSessions: number
+  bufferBlocks: number
+  components: DropZoneComponent[]
+}
