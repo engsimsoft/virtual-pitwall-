@@ -12,6 +12,8 @@ export type Dashboard =
   | 'live-session'
   | 'anti-cheat-replay'
   | 'black-box'
+  | 'drop-zone'
+  | 'settings'
 
 const ACCESS: Record<Dashboard, ReadonlyArray<Role>> = {
   fleet: ['tms-engineer', 'client'],
@@ -20,6 +22,11 @@ const ACCESS: Record<Dashboard, ReadonlyArray<Role>> = {
   'live-session': ['tms-engineer', 'client', 'driver'],
   'anti-cheat-replay': ['tms-engineer', 'client'],
   'black-box': ['tms-engineer', 'client'],
+  // Инфраструктура трассы — операционная зона TMS, клиенту/гонщику невидима.
+  'drop-zone': ['tms-engineer'],
+  // Регламент: TMS редактирует, клиент видит только свой контракт (через
+  // PINNED_CLIENT_ID-фильтр в самом экране), гонщик не работает с лимитами.
+  settings: ['tms-engineer', 'client'],
 }
 
 export function dashboardVisibleToRole(dashboard: Dashboard, role: Role): boolean {
