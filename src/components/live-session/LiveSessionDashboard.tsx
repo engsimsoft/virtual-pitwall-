@@ -160,38 +160,53 @@ export function LiveSessionDashboard({
       />
 
       {/* Main charts area */}
-      <main className="grid flex-1 min-h-0 grid-cols-1 gap-2 overflow-y-auto p-2 lg:grid-cols-3 lg:overflow-hidden">
+      <main className="flex-1 min-h-0 grid grid-cols-1 gap-2 overflow-y-auto p-2 lg:grid-cols-3 lg:overflow-hidden">
         {/* LEFT COLUMN — 2/3 width on desktop */}
         <section className="flex min-h-0 flex-col gap-2 lg:col-span-2">
-          <Card
-            title="Обороты"
-            subtitle="CAN vs Gen (независимый импульсный канал)"
-            badge={<DeltaBadge delta={delta} severity={severity} />}
-          >
-            <RpmChart samples={windowed} />
-          </Card>
-
-          <div className="grid flex-1 min-h-0 grid-cols-1 gap-2 md:grid-cols-2">
-            <Card title="Наддув" subtitle="декларация CAN vs оценка">
-              <BoostChart samples={windowed} />
+          <div className="flex-[1.3] min-h-[200px] flex flex-col">
+            <Card
+              title="Обороты"
+              subtitle="CAN vs Gen (независимый импульсный канал)"
+              badge={<DeltaBadge delta={delta} severity={severity} />}
+              className="h-full"
+            >
+              <div className="h-full w-full">
+                <RpmChart samples={windowed} />
+              </div>
             </Card>
-            <Card title="Скорость и газ" subtitle="GPS км/ч, throttle %">
-              <SpeedThrottleChart samples={windowed} />
+          </div>
+
+          <div className="flex-1 min-h-[180px] grid grid-cols-1 gap-2 md:grid-cols-2">
+            <Card title="Наддув" subtitle="декларация CAN vs оценка" className="h-full">
+              <div className="h-full w-full">
+                <BoostChart samples={windowed} />
+              </div>
+            </Card>
+            <Card title="Скорость и газ" subtitle="GPS км/ч, throttle %" className="h-full">
+              <div className="h-full w-full">
+                <SpeedThrottleChart samples={windowed} />
+              </div>
             </Card>
           </div>
         </section>
 
         {/* RIGHT COLUMN — 1/3 width on desktop */}
         <aside className="flex min-h-0 flex-col gap-2">
-          <Card title="Текущие значения">
-            <CurrentValues sample={current} />
-          </Card>
-          <div className="grid flex-1 min-h-0 grid-cols-2 gap-2">
-            <Card title="IMU">
-              <ImuWidget sample={current} />
+          <div className="flex-1 min-h-[180px] flex flex-col">
+            <Card title="Текущие значения" className="h-full">
+              <CurrentValues sample={current} />
             </Card>
-            <Card title="GPS-трек" subtitle={`${samples.length} точек`}>
-              <GpsTrack samples={samples} currentIndex={pointer} />
+          </div>
+          <div className="flex-1 min-h-[180px] grid grid-cols-2 gap-2">
+            <Card title="IMU" className="h-full">
+              <div className="h-full w-full">
+                <ImuWidget sample={current} />
+              </div>
+            </Card>
+            <Card title="GPS-трек" subtitle={`${samples.length} точек`} className="h-full">
+              <div className="h-full w-full">
+                <GpsTrack samples={samples} currentIndex={pointer} />
+              </div>
             </Card>
           </div>
         </aside>
