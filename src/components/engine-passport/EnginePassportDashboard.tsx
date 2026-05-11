@@ -6,20 +6,20 @@ import type {
   DynoCurve,
   Engine,
   EngineStatus,
-  Incident,
   MaintenanceEvent,
 } from '@/lib/mockData/types'
 import { DynoCard } from './DynoCard'
 import { EngineSelector } from './EngineSelector'
 import { SessionsLog, type SessionLogRow } from './SessionsLog'
 import { MaintenanceLog } from './MaintenanceLog'
+import { IncidentsLog, type IncidentLogRow } from './IncidentsLog'
 
 export interface PassportBundle {
   engine: Engine
   client: Client | null
   dyno: DynoCurve | null
   sessions: SessionLogRow[]
-  incidents: Incident[]
+  incidents: IncidentLogRow[]
   maintenance: MaintenanceEvent[]
 }
 
@@ -80,7 +80,13 @@ export function EnginePassportDashboard({ bundles, defaultEngineId }: Props) {
         <section className="flex min-h-0 flex-col gap-2">
           <DynoCard engine={engine} dyno={dyno} />
         </section>
-        <aside className="grid min-h-0 grid-rows-2 gap-2">
+        <aside className="grid min-h-0 grid-rows-3 gap-2">
+          <LogCard
+            title="Инциденты мотора"
+            subtitle={incidentSummaryLine(bundle.incidents)}
+          >
+            <IncidentsLog rows={bundle.incidents} />
+          </LogCard>
           <LogCard
             title="Журнал сессий"
             subtitle="newest first · клик ведёт в сессию-отчёт"
@@ -97,6 +103,18 @@ export function EnginePassportDashboard({ bundles, defaultEngineId }: Props) {
       </main>
     </div>
   )
+}
+
+function incidentSummaryLine(rows: IncidentLogRow[]): string {
+  if (rows.length === 0) return 'без зафиксированных событий'
+  const violations = rows.filter((r) => r.incident.severity === 'violation').length
+  const warns = rows.filter((r) => r.incident.severity === 'warn').length
+  const infos = rows.filter((r) => r.incident.severity === 'info').length
+  const parts: string[] = []
+  if (violations) parts.push(`${violations} violation`)
+  if (warns) parts.push(`${warns} warn`)
+  if (infos) parts.push(`${infos} info`)
+  return parts.join(' · ')
 }
 
 function LogCard({

@@ -64,4 +64,48 @@ export const INCIDENTS: Incident[] = [
     summary: 'Boost 1.1 бар при V_GPS 18 км/ч — признак launch control',
     evidence: { observed: 1.1, threshold: 0.8, unit: 'bar' },
   },
+  // Mis-shift overrev-инциденты: ошибка пилота при переключении передач,
+  // не нарушение регламента (severity=warn, не violation). Кратковременные
+  // (~0.5-1 с) пики RPM за redline. Бывают и на разгоне (вместо V включена
+  // III), и на торможении (downshift в слишком низкую передачу).
+  {
+    id: 'INC-007',
+    sessionId: 'SES-009',
+    engineId: 'ENG-009',
+    kind: 'overrev',
+    severity: 'warn',
+    tMs: 94_000,
+    summary: 'Mis-shift на разгоне: вместо V включена III, кратковременный overrev 9100 об/мин (~0.6 с)',
+    evidence: { observed: 9100, threshold: 8800, unit: 'rpm' },
+  },
+  {
+    id: 'INC-008',
+    sessionId: 'SES-010',
+    engineId: 'ENG-009',
+    kind: 'overrev',
+    severity: 'warn',
+    tMs: 138_000,
+    summary: 'Downshift overrev на торможении: III вместо IV, пик 9300 об/мин (~0.4 с)',
+    evidence: { observed: 9300, threshold: 8800, unit: 'rpm' },
+  },
+  {
+    id: 'INC-009',
+    sessionId: 'SES-001',
+    engineId: 'ENG-001',
+    kind: 'overrev',
+    severity: 'warn',
+    tMs: 108_000,
+    summary: 'Mis-shift на разгоне: peak 9100 об/мин (~0.7 с), не нарушение регламента',
+    evidence: { observed: 9100, threshold: 8800, unit: 'rpm' },
+  },
+  {
+    id: 'INC-010',
+    sessionId: 'SES-002',
+    engineId: 'ENG-007',
+    kind: 'overrev',
+    severity: 'warn',
+    tMs: 162_000,
+    summary: 'Downshift overrev в конце прямой: пик 9400 об/мин (~0.5 с), ошибка переключения',
+    evidence: { observed: 9400, threshold: 8800, unit: 'rpm' },
+  },
 ]

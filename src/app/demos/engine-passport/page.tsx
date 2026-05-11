@@ -14,11 +14,14 @@ import {
   type PassportBundle,
 } from '@/components/engine-passport/EnginePassportDashboard'
 import type { SessionLogRow } from '@/components/engine-passport/SessionsLog'
+import type { IncidentLogRow } from '@/components/engine-passport/IncidentsLog'
 
 const DEFAULT_ENGINE_ID = 'ENG-001'
 
 const LIVE_SESSION_IDS = new Set(['SES-008'])
 const REPLAY_SESSION_IDS = new Set(['SES-003', 'SES-004', 'SES-005', 'SES-006'])
+
+const SEVERITY_RANK = { violation: 0, warn: 1, info: 2 } as const
 
 export default async function EnginePassportPage({
   searchParams,
@@ -57,6 +60,20 @@ export default async function EnginePassportPage({
         }
       })
 
+    const incidentRows: IncidentLogRow[] = INCIDENTS.filter((i) => i.engineId === engine.id)
+      .slice()
+      .sort(
+        (a, b) =>
+          SEVERITY_RANK[a.severity] - SEVERITY_RANK[b.severity] || b.tMs - a.tMs
+      )
+      .map((incident) => {
+        let href: string | null = null
+        if (LIVE_SESSION_IDS.has(incident.sessionId)) href = '/demos/live-session'
+        else if (REPLAY_SESSION_IDS.has(incident.sessionId))
+          href = `/demos/anti-cheat-replay?session=${incident.sessionId}&seek=${incident.tMs}`
+        return { incident, href }
+      })
+
     return {
       engine,
       client: engine.clientId
@@ -64,7 +81,7 @@ export default async function EnginePassportPage({
         : null,
       dyno: DYNO_CURVES.find((d) => d.engineId === engine.id) ?? null,
       sessions: sessionRows,
-      incidents: INCIDENTS.filter((i) => i.engineId === engine.id),
+      incidents: incidentRows,
       maintenance: MAINTENANCE.filter((m) => m.engineId === engine.id)
         .slice()
         .sort((a, b) => b.date.localeCompare(a.date)),

@@ -140,6 +140,34 @@ const SPECS: SessionSpec[] = [
     durationMs: LIVE_DURATION_MS,
     violations: [],
   },
+  // Исторические сессии ENG-009 — без CAN/Gen-нарушений, но в эти заезды
+  // случились mis-shift overrev-инциденты (pilot error), которые в сумме
+  // дали внеплановый overhaul (MNT-008). Без telemetry-пиков generator
+  // их не воспроизводит — для прототипа важна метаданная видимость в UI.
+  {
+    id: 'SES-009',
+    engineId: 'ENG-009',
+    trackId: 'TRK-02',
+    driverId: 'DRV-04',
+    clientId: 'CLI-03',
+    startedAt: '2025-09-15T10:30:00.000Z',
+    status: 'completed',
+    recordedOffline: false,
+    durationMs: FULL_DURATION_MS,
+    violations: [],
+  },
+  {
+    id: 'SES-010',
+    engineId: 'ENG-009',
+    trackId: 'TRK-04',
+    driverId: 'DRV-05',
+    clientId: 'CLI-03',
+    startedAt: '2025-10-22T14:00:00.000Z',
+    status: 'completed',
+    recordedOffline: false,
+    durationMs: FULL_DURATION_MS,
+    violations: [],
+  },
 ]
 
 function endedAtFor(spec: SessionSpec): string | null {
