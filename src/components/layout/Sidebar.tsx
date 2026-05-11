@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import Image from 'next/image'
 import {
   Activity,
   AlertTriangle,
@@ -49,17 +48,9 @@ export function Sidebar({ onNavigate }: SidebarProps) {
 
   return (
     <aside className="flex h-dvh w-56 flex-col border-r border-border bg-surface">
-      {/* Logo */}
-      <div className="flex h-14 items-center gap-2 border-b border-border px-4">
-        <Image
-          src="/tms-logo-graphite.svg"
-          alt="TMS"
-          width={80}
-          height={20}
-          priority
-          className="h-5 w-auto invert"
-        />
-        <span className="text-sm font-bold text-text-primary">Telos</span>
+      {/* Product mark */}
+      <div className="flex h-14 items-center border-b border-border px-4">
+        <span className="text-base font-bold tracking-tight text-text-primary">Telos</span>
       </div>
 
       {/* Navigation */}

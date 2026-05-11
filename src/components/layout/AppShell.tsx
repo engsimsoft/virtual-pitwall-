@@ -10,6 +10,18 @@ interface AppShellProps {
   children: React.ReactNode
 }
 
+const PAGE_TITLES: Record<string, string> = {
+  '/': 'Dashboard',
+  '/demos/live-session': 'Live Session',
+  '/demos/anti-cheat-replay': 'Anti-Cheat',
+  '/demos/fleet': 'Fleet',
+  '/demos/engine-passport': 'Engine Passport',
+  '/demos/incidents': 'Incidents',
+  '/demos/black-box': 'Black Box',
+  '/demos/drop-zone': 'Drop Zone',
+  '/demos/settings': 'Regulations',
+}
+
 export function AppShell({ children }: AppShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const pathname = usePathname()
@@ -45,8 +57,8 @@ export function AppShell({ children }: AppShellProps) {
           >
             <Menu className="h-5 w-5" />
           </button>
-          <span className="text-xs font-semibold uppercase tracking-wider text-text-muted">
-            TMS Telos
+          <span className="text-sm font-semibold text-text-primary">
+            {PAGE_TITLES[pathname] || 'Telos'}
           </span>
           <div className="w-9" />
         </div>

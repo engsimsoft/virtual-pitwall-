@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
 import {
   Activity,
   AlertTriangle,
@@ -79,16 +78,6 @@ export default function Home() {
     <AppShell>
       <div className="mx-auto max-w-5xl px-4 py-8">
         <section className="mb-8">
-          <div className="mb-2 flex items-center gap-3">
-            <Image
-              src="/tms-logo-graphite.svg"
-              alt="TMS"
-              width={100}
-              height={24}
-              className="h-5 w-auto invert"
-            />
-            <span className="text-xl font-bold text-text-primary">Telos</span>
-          </div>
           <h1 className="mb-3 text-2xl font-semibold text-text-primary">
             Облачная часть системы Telos
           </h1>
