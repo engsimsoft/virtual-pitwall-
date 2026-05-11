@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, X, ChevronDown } from 'lucide-react'
+import { RoleSwitcher } from '@/components/role/RoleSwitcher'
 
 interface NavigationProps {
   title?: string
@@ -49,9 +50,9 @@ export default function Navigation({ title = "Telos" }: NavigationProps) {
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center h-16">
+        <div className="flex h-16 items-center gap-4">
           {/* Logo/Brand */}
-          <div className="flex items-center space-x-4">
+          <div className="flex shrink-0 items-center space-x-4">
             <Link href="/" className="flex items-center space-x-2 group">
               <Image
                 src="/tms-logo-graphite.svg"
@@ -66,7 +67,7 @@ export default function Navigation({ title = "Telos" }: NavigationProps) {
           </div>
 
           {/* Desktop Navigation - Centered */}
-          <div className="hidden lg:flex items-center space-x-6 flex-1 justify-center">
+          <div className="hidden flex-1 items-center justify-center space-x-6 lg:flex">
             {mainLinks.map((link) => (
               <Link
                 key={link.href}
@@ -76,7 +77,7 @@ export default function Navigation({ title = "Telos" }: NavigationProps) {
                 {link.label}
               </Link>
             ))}
-            
+
             {/* Dropdown "Ещё" */}
             {dropdownSections.length > 0 && (
               <div className="relative">
@@ -117,8 +118,13 @@ export default function Navigation({ title = "Telos" }: NavigationProps) {
             )}
           </div>
 
+          {/* Role switcher - desktop only */}
+          <div className="hidden shrink-0 items-center lg:flex">
+            <RoleSwitcher />
+          </div>
+
           {/* Mobile menu button */}
-          <div className="lg:hidden">
+          <div className="ml-auto lg:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-2 rounded-lg text-gray-700 hover:text-tms-orange hover:bg-gray-100 transition-colors"
@@ -144,6 +150,11 @@ export default function Navigation({ title = "Telos" }: NavigationProps) {
                   {link.label}
                 </Link>
               ))}
+
+              {/* Role switcher on mobile */}
+              <div className="px-4 pt-2">
+                <RoleSwitcher />
+              </div>
               
               {/* Dropdown sections */}
               {dropdownSections.map((section) => (

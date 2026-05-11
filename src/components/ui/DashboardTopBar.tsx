@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
+import { RoleSwitcher } from '@/components/role/RoleSwitcher'
 
 export function DashboardTopBar() {
   return (
@@ -11,9 +12,12 @@ export function DashboardTopBar() {
         <ChevronLeft className="h-3.5 w-3.5" />
         <span>На главную</span>
       </Link>
-      <span className="font-mono uppercase tracking-wider text-gray-400">
-        TMS Telos · UI Prototype
-      </span>
+      <div className="flex items-center gap-3">
+        <span className="hidden font-mono uppercase tracking-wider text-gray-400 sm:inline">
+          TMS Telos · UI Prototype
+        </span>
+        <RoleSwitcher />
+      </div>
     </div>
   )
 }
