@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import type { EngineStatus } from '@/lib/mockData/types'
 import { MonoNumber } from '@/components/MonoNumber'
 import type { FleetEngineRow } from './FleetDashboard'
@@ -26,7 +27,10 @@ export function EngineCard({ row }: Props) {
   const revolutionsM = (engine.totalRevolutions / 1_000_000).toFixed(1)
 
   return (
-    <div className="flex min-h-0 flex-col gap-1.5 rounded-md border border-gray-200 bg-white p-2">
+    <Link
+      href={`/demos/engine-passport?engine=${engine.id}`}
+      className="flex min-h-0 flex-col gap-1.5 rounded-md border border-gray-200 bg-white p-2 transition-colors hover:border-tms-orange"
+    >
       <div className="flex items-baseline justify-between gap-2">
         <MonoNumber className="text-[11px] font-semibold text-gray-900">{engine.id}</MonoNumber>
         <StatusBadge status={status} liveSessionId={liveSession?.id ?? null} />
@@ -47,7 +51,7 @@ export function EngineCard({ row }: Props) {
         <Stat label="Сессий" value={`${sessionCount}`} />
         <Stat label="Инцидентов" value={`${incidentCount}`} tone={incidentCount > 0 ? 'text-amber-700' : 'text-gray-700'} />
       </div>
-    </div>
+    </Link>
   )
 }
 

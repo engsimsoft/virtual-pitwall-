@@ -133,3 +133,14 @@ export interface Regulation {
   oilLimitC: number
   violationDwellMs: number
 }
+
+export type MaintenanceKind = 'service' | 'overhaul' | 'inspection' | 'decommission'
+
+export interface MaintenanceEvent {
+  id: string
+  engineId: EngineId
+  kind: MaintenanceKind
+  date: string
+  runHoursAtEvent: number
+  summary: string
+}
