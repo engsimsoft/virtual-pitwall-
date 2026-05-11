@@ -58,7 +58,7 @@ export function ScrubTimeline({ durationMs, currentMs, violations, onSeek }: Pro
             <div
               key={idx}
               style={{ left: `${left}%`, width: `${width}%` }}
-              className="absolute top-0 h-full bg-red-200/70"
+              className="absolute top-0 h-full bg-status-critical/40"
               title={`${v.kind} · ${formatLapTime(v.startMs)}–${formatLapTime(v.endMs)}`}
             />
           )

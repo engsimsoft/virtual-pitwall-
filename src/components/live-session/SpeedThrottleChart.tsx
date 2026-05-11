@@ -18,14 +18,14 @@ export function SpeedThrottleChart({ samples }: Props) {
             dataKey="tMs"
             tickFormatter={(v: number) => `${Math.floor(v / 1000)}с`}
             stroke="var(--text-muted)"
-            tick={{ fontSize: 10, fill: '#6b7280' }}
+            tick={{ fontSize: 10, fill: 'var(--text-secondary)' }}
             minTickGap={32}
           />
           <YAxis
             yAxisId="speed"
             domain={[0, 260]}
             stroke="var(--text-muted)"
-            tick={{ fontSize: 10, fill: '#6b7280' }}
+            tick={{ fontSize: 10, fill: 'var(--text-secondary)' }}
             width={36}
           />
           <YAxis
@@ -33,12 +33,16 @@ export function SpeedThrottleChart({ samples }: Props) {
             orientation="right"
             domain={[0, 100]}
             stroke="var(--text-muted)"
-            tick={{ fontSize: 10, fill: '#6b7280' }}
+            tick={{ fontSize: 10, fill: 'var(--text-secondary)' }}
             width={32}
             tickFormatter={(v: number) => `${v}%`}
           />
           <Tooltip
             contentStyle={{
+              background: 'var(--surface)',
+              border: '1px solid var(--border)',
+              borderRadius: '4px',
+              color: 'var(--text-primary)',
               fontSize: 11,
               fontFamily: 'var(--font-geist-mono)',
               padding: '6px 8px',
@@ -50,7 +54,7 @@ export function SpeedThrottleChart({ samples }: Props) {
             yAxisId="speed"
             type="monotone"
             dataKey="vGpsKmh"
-            stroke="#0f766e"
+            stroke="var(--data-gps)"
             strokeWidth={1.5}
             dot={false}
             isAnimationActive={false}
@@ -60,7 +64,7 @@ export function SpeedThrottleChart({ samples }: Props) {
             yAxisId="throttle"
             type="monotone"
             dataKey="throttlePct"
-            stroke="#ea580c"
+            stroke="var(--data-gen)"
             strokeWidth={1.5}
             dot={false}
             isAnimationActive={false}

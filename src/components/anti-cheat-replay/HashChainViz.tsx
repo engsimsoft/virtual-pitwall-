@@ -20,9 +20,9 @@ export function HashChainViz({ blocks, violations, currentMs }: Props) {
   return (
     <div className="flex h-full flex-col p-2 text-[11px]">
       <div className="mb-2 flex items-center gap-2 text-[10px] text-text-muted">
-        <span className="inline-block h-2 w-2 rounded-sm bg-status-ok-dim ring-1 ring-emerald-300" />
+        <span className="inline-block h-2 w-2 rounded-sm bg-status-ok-dim ring-1 ring-status-ok" />
         активный блок
-        <span className="ml-2 inline-block h-2 w-2 rounded-sm bg-red-100 ring-1 ring-red-300" />
+        <span className="ml-2 inline-block h-2 w-2 rounded-sm bg-status-critical-dim ring-1 ring-status-critical" />
         содержит нарушение
       </div>
       <div className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-auto">
@@ -30,9 +30,9 @@ export function HashChainViz({ blocks, violations, currentMs }: Props) {
           const active = currentMs >= b.startMs && currentMs < b.endMs
           const hasViolation = violations.some((v) => v.startMs < b.endMs && v.endMs > b.startMs)
           const bgColor = active
-            ? 'bg-status-ok-dim border-emerald-300'
+            ? 'bg-status-ok-dim border-status-ok'
             : hasViolation
-              ? 'bg-status-critical-dim border-red-300'
+              ? 'bg-status-critical-dim border-status-critical'
               : 'bg-surface border-border'
           return (
             <div key={b.index} className={`rounded-sm border px-2 py-1.5 ${bgColor}`}>

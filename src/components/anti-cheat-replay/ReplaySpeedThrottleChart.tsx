@@ -31,7 +31,7 @@ export function ReplaySpeedThrottleChart({ samples, violations, currentMs }: Pro
             dataKey="tMs"
             tickFormatter={(v: number) => `${Math.floor(v / 1000)}с`}
             stroke="var(--text-muted)"
-            tick={{ fontSize: 10, fill: '#6b7280' }}
+            tick={{ fontSize: 10, fill: 'var(--text-secondary)' }}
             minTickGap={36}
             type="number"
             domain={['dataMin', 'dataMax']}
@@ -40,7 +40,7 @@ export function ReplaySpeedThrottleChart({ samples, violations, currentMs }: Pro
             yAxisId="speed"
             domain={[0, 260]}
             stroke="var(--text-muted)"
-            tick={{ fontSize: 10, fill: '#6b7280' }}
+            tick={{ fontSize: 10, fill: 'var(--text-secondary)' }}
             width={36}
           />
           <YAxis
@@ -48,7 +48,7 @@ export function ReplaySpeedThrottleChart({ samples, violations, currentMs }: Pro
             orientation="right"
             domain={[0, 100]}
             stroke="var(--text-muted)"
-            tick={{ fontSize: 10, fill: '#6b7280' }}
+            tick={{ fontSize: 10, fill: 'var(--text-secondary)' }}
             width={32}
             tickFormatter={(v: number) => `${v}%`}
           />
@@ -66,12 +66,16 @@ export function ReplaySpeedThrottleChart({ samples, violations, currentMs }: Pro
           <ReferenceLine
             yAxisId="speed"
             x={currentMs}
-            stroke="var(--text-primary)"
-            strokeWidth={1}
+            stroke="var(--accent)"
+            strokeWidth={1.5}
             ifOverflow="extendDomain"
           />
           <Tooltip
             contentStyle={{
+              background: 'var(--surface)',
+              border: '1px solid var(--border)',
+              borderRadius: '4px',
+              color: 'var(--text-primary)',
               fontSize: 11,
               fontFamily: 'var(--font-geist-mono)',
               padding: '6px 8px',
@@ -83,7 +87,7 @@ export function ReplaySpeedThrottleChart({ samples, violations, currentMs }: Pro
             yAxisId="speed"
             type="monotone"
             dataKey="vGpsKmh"
-            stroke="#0f766e"
+            stroke="var(--data-gps)"
             strokeWidth={1.2}
             dot={false}
             isAnimationActive={false}
@@ -93,7 +97,7 @@ export function ReplaySpeedThrottleChart({ samples, violations, currentMs }: Pro
             yAxisId="throttle"
             type="monotone"
             dataKey="throttlePct"
-            stroke="#ea580c"
+            stroke="var(--data-gen)"
             strokeWidth={1.2}
             dot={false}
             isAnimationActive={false}

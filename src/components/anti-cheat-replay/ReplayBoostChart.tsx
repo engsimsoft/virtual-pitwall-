@@ -51,7 +51,7 @@ export function ReplayBoostChart({ samples, violations, currentMs }: Props) {
             dataKey="tMs"
             tickFormatter={(v: number) => `${Math.floor(v / 1000)}с`}
             stroke="var(--text-muted)"
-            tick={{ fontSize: 10, fill: '#6b7280' }}
+            tick={{ fontSize: 10, fill: 'var(--text-secondary)' }}
             minTickGap={36}
             type="number"
             domain={['dataMin', 'dataMax']}
@@ -59,7 +59,7 @@ export function ReplayBoostChart({ samples, violations, currentMs }: Props) {
           <YAxis
             domain={[0, 2.2]}
             stroke="var(--text-muted)"
-            tick={{ fontSize: 10, fill: '#6b7280' }}
+            tick={{ fontSize: 10, fill: 'var(--text-secondary)' }}
             width={36}
             tickFormatter={(v: number) => v.toFixed(1)}
           />
@@ -71,13 +71,17 @@ export function ReplayBoostChart({ samples, violations, currentMs }: Props) {
                 x1={v.startMs}
                 x2={v.endMs}
                 fill="var(--status-critical)"
-                fillOpacity={0.15}
+                fillOpacity={0.35}
                 stroke="none"
               />
             ))}
-          <ReferenceLine x={currentMs} stroke="var(--text-primary)" strokeWidth={1} ifOverflow="extendDomain" />
+          <ReferenceLine x={currentMs} stroke="var(--accent)" strokeWidth={1.5} ifOverflow="extendDomain" />
           <Tooltip
             contentStyle={{
+              background: 'var(--surface)',
+              border: '1px solid var(--border)',
+              borderRadius: '4px',
+              color: 'var(--text-primary)',
               fontSize: 11,
               fontFamily: 'var(--font-geist-mono)',
               padding: '6px 8px',

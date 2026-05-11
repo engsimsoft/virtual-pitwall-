@@ -34,18 +34,22 @@ export function BoostChart({ samples }: Props) {
             dataKey="tMs"
             tickFormatter={(v: number) => `${Math.floor(v / 1000)}с`}
             stroke="var(--text-muted)"
-            tick={{ fontSize: 10, fill: '#6b7280' }}
+            tick={{ fontSize: 10, fill: 'var(--text-secondary)' }}
             minTickGap={32}
           />
           <YAxis
             domain={[0, 2.2]}
             stroke="var(--text-muted)"
-            tick={{ fontSize: 10, fill: '#6b7280' }}
+            tick={{ fontSize: 10, fill: 'var(--text-secondary)' }}
             width={36}
             tickFormatter={(v: number) => v.toFixed(1)}
           />
           <Tooltip
             contentStyle={{
+              background: 'var(--surface)',
+              border: '1px solid var(--border)',
+              borderRadius: '4px',
+              color: 'var(--text-primary)',
               fontSize: 11,
               fontFamily: 'var(--font-geist-mono)',
               padding: '6px 8px',
